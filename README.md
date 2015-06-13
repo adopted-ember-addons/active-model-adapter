@@ -1,4 +1,4 @@
-# Active-model-adapter
+# Ember Data ActiveModel Adapter [![Build Status](https://travis-ci.org/ember-data/active-model-adapter.svg?branch=master)](https://travis-ci.org/ember-data/active-model-adapter)
 
 This README outlines the details of collaborating on this Ember addon.
 
