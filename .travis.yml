@@ -32,7 +32,7 @@ after_success:
 - ember build --environment=production
 - bin/release
 before_deploy:
-- '[[ test -d "dist" ]] || ember build --environment=production'
+- '[[ -d "./dist" ]] || ember build --environment=production'
 deploy:
 - provider: rubygems
   on:
