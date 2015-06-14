@@ -29,6 +29,7 @@ install:
 script:
 - ember try $EMBER_TRY_SCENARIO test
 after_success:
+- ember try:reset
 - ember build --environment=production
 - bin/release
 before_deploy:
