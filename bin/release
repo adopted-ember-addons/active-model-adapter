@@ -2,7 +2,7 @@
 
 ruby -e 'exit (ENV["TRAVIS_BRANCH"] && ENV["TRAVIS_BRANCH"].match(/v\d+\.\d+\.\d+/) ? 0 : 1)'
 
-if [[ $TRAVIS_PULL_REQUEST != "" ]]; then
+if [[ $TRAVIS_PULL_REQUEST != "false" ]]; then
   echo "This is a pull request! not publishing!"
   exit 0
 fi

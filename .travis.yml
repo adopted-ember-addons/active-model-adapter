@@ -35,6 +35,7 @@ before_deploy:
 - '[[ -d "./dist" ]] || ember build --environment=production'
 deploy:
 - provider: rubygems
+  gemspec: active-model-adapter-source.gemspec
   on:
     tags: true
   api_key:
