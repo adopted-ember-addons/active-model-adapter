@@ -14,5 +14,5 @@ Gem::Specification.new do |gem|
 
   gem.add_dependency "ember-source", ">= 1.8", "< 3.0"
 
-  gem.files = %w(package.json) + Dir['dist/active-model*.js', 'lib/ember/data/*.rb']
+  gem.files = %w(package.json) + Dir['dist/active-model*.js'] + Dir['lib/ember/data/*.rb']
 end
