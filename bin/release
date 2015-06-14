@@ -18,7 +18,7 @@ set -e
 $PWD/bin/check-package-version
 
 DIST_DIR=active-model-adapter-dist
-ACTIVE_MODEL_ADAPTER_DIST_REPO="https://$GITHUB_USER:$GITHUB_ACCESS_TOKEN@github.com/ember-data/active-model-adapter-dist.git"
+ACTIVE_MODEL_ADAPTER_DIST_REPO="https://$GITHUB_USER:$GITHUB_AUTH_TOKEN@github.com/ember-data/active-model-adapter-dist.git"
 
 set +e
 
