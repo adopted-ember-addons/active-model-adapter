@@ -18,16 +18,28 @@ set -e
 $PWD/bin/check-package-version
 
 DIST_DIR=active-model-adapter-dist
-ACTIVE_MODEL_ADAPTER_DIST_REPO="https://$GITHUB_USER:$GITHUB_ACCESS_TOKEN@github.com/ember-data/active-model-adapter.git"
+ACTIVE_MODEL_ADAPTER_DIST_REPO="https://$GITHUB_USER:$GITHUB_ACCESS_TOKEN@github.com/ember-data/active-model-adapter-dist.git"
 
-git clone $ACTIVE_MODEL_ADAPTER_DIST_REPO $DIST_DIR
+set +e
+
+git clone $ACTIVE_MODEL_ADAPTER_DIST_REPO $DIST_DIR 2>&1 > /dev/null
 cp dist/*.js $DIST_DIR
 
 cd $DIST_DIR
+# Check to see if tag exists
+git show-ref --tags | egrep -q "refs/tags/$TRAVIS_BRANCH$"
+
+if [[ $? -eq 0 ]]; then
+  echo "tag already exists; not doing anything"
+  exit 0
+fi
+
 git config --local user.name "Tomster Automated Release"
 git config --local user.email "noreply@emberjs.com"
 git add active-model-adapter.js
 git commit -a -m "release ${VERSION}"
 git tag $VERSION
-git push origin master
-git push origin --tags
+
+# Prevent leaking of credentials
+git push origin master 2>&1 > /dev/null
+git push origin --tags 2>&1 > /dev/null
