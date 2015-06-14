@@ -37,8 +37,8 @@ fi
 git config --local user.name "Tomster Automated Release"
 git config --local user.email "noreply@emberjs.com"
 git add active-model-adapter.js
-git commit -a -m "release ${VERSION}"
-git tag $VERSION
+git commit -a -m "release ${TRAVIS_BRANCH}"
+git tag $TRAVIS_BRANCH
 
 # Prevent leaking of credentials
 git push origin master 2>&1 > /dev/null
