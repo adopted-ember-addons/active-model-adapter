@@ -1,0 +1,32 @@
+#!/bin/bash
+
+ruby -e 'exit (ENV["TRAVIS_BRANCH"] && ENV["TRAVIS_BRANCH"].match(/v\d+\.\d+\.\d+/) ? 0 : 1)'
+
+if [[ $TRAVIS_PULL_REQUEST != "" ]]; then
+  echo "This is a pull request! not publishing!"
+  exit 0
+fi
+
+if [[ $? -ne 0 ]]; then
+  echo "this branch is not a release branch, it does not start with 'v'"
+  echo "not publishing to bower, npm, or rubygems"
+  exit 0
+fi
+
+set -e
+
+$PWD/bin/check-package-version
+
+DIST_DIR=active-model-adapter-dist
+ACTIVE_MODEL_ADAPTER_DIST_REPO="https://$GITHUB_USER:$GITHUB_ACCESS_TOKEN@github.com/ember-data/active-model-adapter.git"
+
+git clone $ACTIVE_MODEL_ADAPTER_DIST_REPO $DIST_DIR
+cp dist/*.js $DIST_DIR
+
+cd $DIST_DIR
+git config --local user.name "Tomster Automated Release"
+git config --local user.email "noreply@emberjs.com"
+git commit -a -m "release ${VERSION}"
+git tag $VERSION
+git push origin master
+git push origin --tags
