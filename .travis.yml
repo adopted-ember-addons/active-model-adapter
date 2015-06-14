@@ -1,34 +1,46 @@
----
 language: node_js
 node_js:
-  - "0.12"
-
+- '0.12'
 sudo: false
-
 cache:
   directories:
-    - node_modules
-
+  - node_modules
 env:
+  matrix:
   - EMBER_TRY_SCENARIO=default
   - EMBER_TRY_SCENARIO=ember-release
   - EMBER_TRY_SCENARIO=ember-beta
   - EMBER_TRY_SCENARIO=ember-canary
-
+  global:
+    - GITHUB_USER=tomster-strudel
+    - secure: ZuEENBDKyFtqjp7em/ajkoj+CMOwtMCp20vv7de+jguGvQwDbrKRcQZ+Ai87bGTjoyolXFlXtFFb+4aqiqY1JeNj8HA+OTLVaad0WxxSbW/+Oz/1UPoMkbqkfdepqH3lXjo2lCnJbDUa5aI8Em0W0Iuq1YX3iSEzi+b1Bi4A8ZM50nIgTIQxHeMKBvAKBuz0QUhpEhFFbdlD0BMUD+fbUaaBQ2kxiXGISGCRohkaqhDD68wQhVYdlNBn+Z2yp/YM0+kUZp9FqX8XA47vJkVKBLPydMp0x9GhOfF2FPnqksl0M1LTiuvMTNazOwXkNSoLV8aQxS8GCtVi3RhpEkK8KUF/+rX0AG6TZPQTaQ+yVaXb2+7UqpyUs630TZGIe2nFfWeBCYw/Hw+hjD9EQhCc8r6CinCGYd2diiszGDRQYItM5VZDuBwQu0WxDVOj+BDRFFHoYn7am3hFhX2ERsHllBpXN5eZZC1peVwHIsCRsHIiyC77vxQl+BBqAljUHoAg5TEB+K9exCnp4G73eImDwJvBrPuLpKVWT6Zxh7N8ItXUHM/lX0VWor8fbILGSQ2v3YEzzrITDHmEBoc89lAms6Bkva+tw/OpM6ZPPi/Xmxm+otsTNHKOEw5G+tTnUIetRSqWHjSv7Q0PN2v7MLcVuUSL8bedIRmyz9jeCmzlTX0=
 matrix:
   fast_finish: true
   allow_failures:
-    - env: EMBER_TRY_SCENARIO=ember-canary
-
+  - env: EMBER_TRY_SCENARIO=ember-canary
 before_install:
-  - export PATH=/usr/local/phantomjs-2.0.0/bin:$PATH
-  - "npm config set spin false"
-  - "npm install -g npm@^2"
-
+- export PATH=/usr/local/phantomjs-2.0.0/bin:$PATH
+- npm config set spin false
+- npm install -g npm@^2
 install:
-  - npm install -g bower
-  - npm install
-  - bower install
-
+- npm install -g bower
+- npm install
+- bower install
 script:
-  - ember try $EMBER_TRY_SCENARIO test
+- ember try $EMBER_TRY_SCENARIO test
+after_success:
+- ember build --environment=production
+- bin/release
+before_deploy:
+- '[[ test -d "dist" ]] || ember build --environment=production'
+deploy:
+- provider: rubygems
+  on:
+    tags: true
+  api_key:
+    secure: YvteKCVI2YX72EkdA5tqMbnsLbPxPfMDCqlgJV2IkXeG6BpiZFaSPczEcol96mFXrtK/ReWMS32nNQ5hJDHOD1BQUHKPJHGeFV8rBiVTjsZgMiKe58yDDKx2HCyXxIfywHnSSDXOLkiJwsJn3dBoWZvxRm57RNbJe99pIpvC//hqgY7GbsvYJEI/7f5dJRhmmb6GeAv1yZUt3k+QQzTvF0u6M5k2TFNp4jNsQHv8afAiqixGgFEHw39vjA/Hc16rFbsaM3YQR1kxpE5hs2GMWjRNDF+SO47frJp/jIObq7etrchlj5wjKqc+/RCPm8dNQuo4qwW4++prsOEuwC7Fuom9co1K/ByYOMrq8pAS3XAkxSAfGz3qrHTmFxg7zPL2zVIp19Kyzk4aQvzbhMZllJ48MBMS4CtdcQ3a2fIxso3NLUJfsKODuOLRRP7rIBfY6D18cpLHJIpavMV39DpukzrCiJFPCK+3slgE8V0RRX+0uo0QnbSSAKBxzAnkGklbVV20NyxLzrFDRMcominGefIgFptuYVbxBOTYZlvSmH+KMVgWkzYZJJjXUGbOck7moRw4tBjOdV37LLooLreJMJvccYeoEQ5uH6h6qxvWd4ClOiBwQIYN2tBJYPubOHVe3DVoUNFOR3JmUaJe/ybSIzdKdrEQ7ZE23CUNQKwN4C8=
+- provider: npm
+  on:
+    tags: true
+  api_key:
+    secure: maV3rhkMDRS3FiQ6ER7Yh7pGgY1wmitgJL6k7nl9d9GdIOqkN1EYeznpwSvQUYwYr1jlsWElAaReaJYekl0QPcHzYXPdrQA1Bie/9dp9IMkfhoKzVJoDtRO0cftJd+WI3+dYPe2M+ne7rWysjZeilstCBZeuLsZd2tv4bXjObqwXwNGFuYNXtMvvfMdWwcOVrmBv5/NUlglfySELVQBoGvRVpWqRPqB7Te6Q79u3AZOnB1Uxpdw1xcTVNgU4vgyovPY5o59WYqOSOBMSZSeN/+EWVwGuWM3R6FSM8B8DYXXV3Jzt8zM0C8wpleHwIkHFbwjSwstDOaUicG7uyT8SyNI5EA0Adkd63zh2U3ntXQvRpzcXwyAvRl7l34QaOdTwVNZM+qANHtxnEYyafWYEOquvuku8bH7lpYhE9eRhVZBXkv8wKaDNleuixK9LdMNgwx3rpQElE8+/VSXA/L95aKKVjV5NbjzRsHdc9Uy7Fb1zc3sJGSHOjUpG/jH650sc9rZOSDHqITnxUesPXJxNTTm7tQE6CpuAoW0yzdqRFKXmIG3REuqvSY0J84CjA1f52gXkRiiBRoFCkIvIB/o9DKvXJvuvtzmHCJiYSttiafFmshAUOSVLA7zDqWdmxdTZh3smOJzdhxGbsv1F4GsZ/SQduztJ+vZC/xqNa1AHY7A=
