@@ -40,13 +40,13 @@
     "ember-disable-proxy-controllers": "^1.0.0",
     "ember-export-application-global": "^1.0.2",
     "ember-try": "0.0.6",
-    "broccoli-replace": "^0.3.1",
-    "ember-cli-babel": "^5.0.0"
+    "broccoli-replace": "^0.3.1"
   },
   "keywords": [
     "ember-addon"
   ],
   "dependencies": {
+    "ember-cli-babel": "^5.0.0"
   },
   "ember-addon": {
     "configPath": "tests/dummy/config"
