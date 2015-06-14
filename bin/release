@@ -26,6 +26,7 @@ cp dist/*.js $DIST_DIR
 cd $DIST_DIR
 git config --local user.name "Tomster Automated Release"
 git config --local user.email "noreply@emberjs.com"
+gid add active-model-adapter.js
 git commit -a -m "release ${VERSION}"
 git tag $VERSION
 git push origin master

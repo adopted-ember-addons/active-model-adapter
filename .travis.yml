@@ -32,6 +32,7 @@ after_success:
 - ember try:reset
 - ember build --environment=production
 - bin/release
+- rm -rf active-model-adapter-dist
 before_deploy:
 - '[[ -d "./dist" ]] || ember build --environment=production'
 deploy:
