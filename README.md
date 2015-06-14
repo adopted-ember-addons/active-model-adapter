@@ -22,6 +22,28 @@ need
 
 `bower install --save active-model-adapter`
 
+## Usage
+
+You should make an `ApplicationAdapter` if you don't already have one:
+
+```js
+// app/adapters/application.js
+import ActiveModelAdapter from 'active-model-adapter';
+
+export default ActiveModelAdapter.extend();
+```
+
+If you need to subclass the `ActiveModelSerializer`, you can import it
+into your serializer:
+
+```js
+// app/serializers/post.js
+
+import {ActiveModelSerializer} from 'active-model-adapter';
+
+export default ActiveModelSerializer.extend();
+```
+
 ## Description
 
 The ActiveModelAdapter is a subclass of the RESTAdapter designed to integrate
