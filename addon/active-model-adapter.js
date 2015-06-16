@@ -8,7 +8,7 @@ import DS from 'ember-data';
 var decamelize = Ember.String.decamelize;
 var underscore = Ember.String.underscore;
 const {pluralize} = Ember.String;
-const {RESTAdapter, InvalidError} = DS;
+const {RESTAdapter, InvalidError, errorsHashToArray} = DS;
 
 /**
   The ActiveModelAdapter is a subclass of the RESTAdapter designed to integrate
@@ -123,9 +123,9 @@ var ActiveModelAdapter = RESTAdapter.extend({
   },
 
   /**
-    The ActiveModelAdapter overrides the `ajaxError` method
-    to return a DS.InvalidError for all 422 Unprocessable Entity
-    responses.
+    The ActiveModelAdapter overrides the `handleResponse` method
+    to format errors passed to a DS.InvalidError for all
+    422 Unprocessable Entity responses.
 
     A 422 HTTP response from the server generally implies that the request
     was well formed but the API was unable to process it because the
@@ -134,20 +134,36 @@ var ActiveModelAdapter = RESTAdapter.extend({
     For more information on 422 HTTP Error code see 11.2 WebDAV RFC 4918
     https://tools.ietf.org/html/rfc4918#section-11.2
 
-    @method ajaxError
-    @param {Object} jqXHR
-    @return error
+    @method handleResponse
+    @param  {Number} status
+    @param  {Object} headers
+    @param  {Object} payload
+    @return {Object | DS.AdapterError} response
   */
-  ajaxError: function(jqXHR) {
-    var error = this._super.apply(this, arguments);
+  handleResponse: function(status, headers, payload) {
+    if (this.isInvalid(status, headers, payload)) {
+      let errors = errorsHashToArray(payload.errors);
 
-    if (jqXHR && jqXHR.status === 422) {
-      var response = Ember.$.parseJSON(jqXHR.responseText);
-      return new InvalidError(response);
+      return new InvalidError(errors);
     } else {
-      return error;
+      return this._super(...arguments);
     }
   }
 });
+
+if (!errorsHashToArray) {
+  ActiveModelAdapter.reopen({
+    ajaxError: function(jqXHR) {
+      var error = this._super(...arguments);
+
+      if (jqXHR && jqXHR.status === 422) {
+        var response = Ember.$.parseJSON(jqXHR.responseText);
+        return new InvalidError(response);
+      } else {
+        return error;
+      }
+    }
+  });
+}
 
 export default ActiveModelAdapter;
