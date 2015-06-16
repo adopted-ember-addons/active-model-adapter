@@ -1,6 +1,6 @@
 {
   "name": "active-model-adapter",
-  "version": "1.13.0",
+  "version": "1.13.1",
   "repository": "https://github.com/ember-data/active-model-adapter.git",
   "description": "The default blueprint for ember-cli addons.",
   "directories": {
