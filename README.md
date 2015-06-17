@@ -14,8 +14,7 @@ specific version in your `Gemfile`, you can reference the
 `active-model-adapter-source` gem and it will get loaded by Ember Rails:
 
 ```ruby
-gem 'active-model-adapter-source', '~>1.13' # or whatever version you
-need
+gem 'active-model-adapter-source', '~>1.13' # or whatever version you need
 ```
 
 ### Bower
