@@ -12,7 +12,7 @@ Gem::Specification.new do |gem|
   gem.version       = Ember::Data::ActiveModel::Adapter::VERSION
   gem.license       = "MIT"
 
-  gem.add_dependency "ember-source", ">= 1.8", "< 3.0"
+  gem.add_dependency "ember-data-source", ">= 1.13", "< 3.0"
 
   gem.files = %w(package.json) + Dir['dist/active-model*.js'] + Dir['lib/ember/data/*.rb']
 end
