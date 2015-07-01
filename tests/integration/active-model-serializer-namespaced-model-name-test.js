@@ -41,8 +41,8 @@ module("integration/active_model - AMS-namespaced-model-names", {
     env.store.modelFor('evil-minions/yellow-minion');
     env.store.modelFor('doomsday-device');
     env.store.modelFor('mediocre-villain');
-    env.registry.register('serializer:application', ActiveModelSerializer);
-    env.registry.register('serializer:-active-model', ActiveModelSerializer);
+    env.registry.register('serializer:application', ActiveModelSerializer.extend({isNewSerializerAPI: true}));
+    env.registry.register('serializer:-active-model', ActiveModelSerializer.extend({isNewSerializerAPI: true}));
     env.registry.register('adapter:-active-model', ActiveModelAdapter);
     env.amsSerializer = env.container.lookup("serializer:-active-model");
     env.amsAdapter    = env.container.lookup("adapter:-active-model");

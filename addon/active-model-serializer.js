@@ -108,8 +108,6 @@ const {
 var ActiveModelSerializer = RESTSerializer.extend({
   // SERIALIZE
 
-  isNewSerializerAPI: true,
-
   /**
     Converts camelCased attributes to underscored when serializing.
 
