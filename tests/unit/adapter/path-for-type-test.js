@@ -1,11 +1,12 @@
-var env, adapter;
+import setupStore from '../../helpers/setup-store';
 import {module, test} from 'qunit';
-import setupStore from '../../../tests/helpers/setup-store';
+import {ActiveModelAdapter} from 'active-model-adapter';
 
+var env, adapter;
 module("unit/adapter/path_for_type - DS.ActiveModelAdapter#pathForType", {
   beforeEach: function() {
     env = setupStore({
-      adapter: '-active-model'
+      adapter: ActiveModelAdapter
     });
 
     adapter = env.adapter;

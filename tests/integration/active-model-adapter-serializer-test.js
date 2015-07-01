@@ -1,13 +1,10 @@
-import Ember from 'ember';
-import ActiveModelAdapter from 'active-model-adapter';
-import ActiveModelSerializer from 'active-model-adapter/active-model-serializer';
-import setupStore from '../helpers/setup-store';
+var env, store, adapter, User;
 
 import {module, test} from 'qunit';
-
-var env, store, adapter, User;
 var originalAjax;
-
+import setupStore from '../helpers/setup-store';
+import Ember from 'ember';
+import ActiveModelAdapter from 'active-model-adapter';
 
 module("integration/active_model_adapter_serializer - AMS Adapter and Serializer", {
   beforeEach: function() {
@@ -19,13 +16,13 @@ module("integration/active_model_adapter_serializer - AMS Adapter and Serializer
 
     env = setupStore({
       user: User,
-      adapter: '-active-model'
+      adapter: ActiveModelAdapter
     });
 
     store = env.store;
     adapter = env.adapter;
 
-    env.registry.register('serializer:application', ActiveModelSerializer);
+    env.registry.register('serializer:application', DS.ActiveModelSerializer);
   },
 
   afterEach: function() {
@@ -36,6 +33,7 @@ module("integration/active_model_adapter_serializer - AMS Adapter and Serializer
 test('errors are camelCased and are expected under the `errors` property of the payload', function(assert) {
   var jqXHR = {
     status: 422,
+    getAllResponseHeaders: function() { return ''; },
     responseText: JSON.stringify({
       errors: {
         first_name: ["firstName error"]
@@ -52,8 +50,8 @@ test('errors are camelCased and are expected under the `errors` property of the 
     user = store.push('user', { id: 1 });
   });
 
-  return Ember.run(function() {
-    return user.save().catch(function() {
+  Ember.run(function() {
+    user.save().then(null, function() {
       var errors = user.get('errors');
       assert.ok(errors.has('firstName'), "there are errors for the firstName attribute");
       assert.deepEqual(errors.errorsFor('firstName').getEach('message'), ['firstName error']);

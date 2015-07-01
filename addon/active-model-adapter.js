@@ -1,14 +1,22 @@
 import Ember from 'ember';
 import DS from 'ember-data';
 
-/**
-  @module active-model-adapter
-*/
 
-var decamelize = Ember.String.decamelize;
-var underscore = Ember.String.underscore;
-const {pluralize} = Ember.String;
-const {RESTAdapter, InvalidError, errorsHashToArray} = DS;
+const {
+  InvalidError,
+  errorsHashToArray,
+  RESTAdapter
+} = DS;
+
+const {
+  pluralize,
+  decamelize,
+  underscore
+} = Ember.String;
+
+/**
+  @module ember-data
+*/
 
 /**
   The ActiveModelAdapter is a subclass of the RESTAdapter designed to integrate
@@ -101,7 +109,7 @@ const {RESTAdapter, InvalidError, errorsHashToArray} = DS;
   @extends DS.RESTAdapter
 **/
 
-var ActiveModelAdapter = RESTAdapter.extend({
+const ActiveModelAdapter = RESTAdapter.extend({
   defaultSerializer: '-active-model',
   /**
     The ActiveModelAdapter overrides the `pathForType` method to build
@@ -134,11 +142,9 @@ var ActiveModelAdapter = RESTAdapter.extend({
     For more information on 422 HTTP Error code see 11.2 WebDAV RFC 4918
     https://tools.ietf.org/html/rfc4918#section-11.2
 
-    @method handleResponse
-    @param  {Number} status
-    @param  {Object} headers
-    @param  {Object} payload
-    @return {Object | DS.AdapterError} response
+    @method ajaxError
+    @param {Object} jqXHR
+    @return error
   */
   handleResponse: function(status, headers, payload) {
     if (this.isInvalid(status, headers, payload)) {
@@ -150,20 +156,5 @@ var ActiveModelAdapter = RESTAdapter.extend({
     }
   }
 });
-
-if (!errorsHashToArray) {
-  ActiveModelAdapter.reopen({
-    ajaxError: function(jqXHR) {
-      var error = this._super(...arguments);
-
-      if (jqXHR && jqXHR.status === 422) {
-        var response = Ember.$.parseJSON(jqXHR.responseText);
-        return new InvalidError(response);
-      } else {
-        return error;
-      }
-    }
-  });
-}
 
 export default ActiveModelAdapter;
