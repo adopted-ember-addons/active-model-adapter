@@ -21,6 +21,10 @@ gem 'active-model-adapter-source', '~>1.13' # or whatever version you need
 
 `bower install --save active-model-adapter`
 
+### Script Tags
+
+Grab a copy of active-model-adapter.js from http://github.com/ember-data/active-model-adapter-dist
+
 ## Usage
 
 You should make an `ApplicationAdapter` if you don't already have one:
