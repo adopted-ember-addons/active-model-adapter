@@ -1,0 +1,7 @@
+{
+  "name": "active-model-adapter",
+  "version": "VERSION_STRING_PLACEHOLDER",
+  "dependencies": {
+    "ember-data": ">= 1.13.3"
+  }
+}

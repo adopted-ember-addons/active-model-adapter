@@ -49,7 +49,7 @@ export default function setupStore(options) {
   registry.register('serializer:-rest-new', DS.RESTSerializer.extend({ isNewSerializerAPI: true }));
 
   registry.register('adapter:-active-model', ActiveModelAdapter);
-  registry.register('serializer:-active-model', ActiveModelSerializer);
+  registry.register('serializer:-active-model', ActiveModelSerializer.extend({isNewSerializerAPI: true}));
 
   registry.register('adapter:-rest', DS.RESTAdapter);
 
@@ -67,4 +67,3 @@ export default function setupStore(options) {
 
   return env;
 }
-

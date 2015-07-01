@@ -1,12 +1,22 @@
-/**
-  @module active-model-adapter
-*/
-import Ember from 'ember';
 import DS from 'ember-data';
+import Ember from 'ember';
 
-const {forEach} = Ember.EnumerableUtils;
-const {singularize, camelize, classify, decamelize, underscore} = Ember.String;
-const {RESTSerializer} = DS;
+/**
+  @module ember-data
+ */
+
+const {
+  singularize,
+  classify,
+  decamelize,
+  camelize,
+  underscore
+} = Ember.String;
+
+const {
+  RESTSerializer,
+  normalizeModelName
+} = DS;
 
 /**
   The ActiveModelSerializer is a subclass of the RESTSerializer designed to integrate
@@ -174,9 +184,7 @@ var ActiveModelSerializer = RESTSerializer.extend({
     if (Ember.isNone(belongsTo)) {
       json[jsonKey] = null;
     } else {
-      json[jsonKey] = classify(belongsTo.modelName).replace(/(\/)([a-z])/g, function(match, separator, chr) {
-        return match.toUpperCase();
-      }).replace('/', '::');
+      json[jsonKey] = classify(belongsTo.modelName).replace('/', '::');
     }
   },
 
@@ -276,10 +284,7 @@ var ActiveModelSerializer = RESTSerializer.extend({
           if (payload && payload.type) {
             payload.type = this.modelNameFromPayloadKey(payload.type);
           } else if (payload && relationship.kind === "hasMany") {
-            var self = this;
-            forEach(payload, function(single) {
-              single.type = self.modelNameFromPayloadKey(single.type);
-            });
+            payload.forEach((single) => single.type = this.modelNameFromPayloadKey(single.type));
           }
         } else {
           payloadKey = this.keyForRelationship(key, relationship.kind, "deserialize");
@@ -296,10 +301,8 @@ var ActiveModelSerializer = RESTSerializer.extend({
     }
   },
   modelNameFromPayloadKey: function(key) {
-    var convertedFromRubyModule = camelize(singularize(key)).replace(/(^|\:)([A-Z])/g, function(match, separator, chr) {
-      return match.toLowerCase();
-    }).replace('::', '/');
-    return this._super(convertedFromRubyModule);
+    var convertedFromRubyModule = singularize(key.replace('::', '/'));
+    return normalizeModelName(convertedFromRubyModule);
   }
 });
 

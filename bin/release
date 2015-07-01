@@ -25,6 +25,7 @@ set +e
 
 git clone $ACTIVE_MODEL_ADAPTER_DIST_REPO $DIST_DIR 2>&1 > /dev/null
 cp dist/*.js $DIST_DIR
+cp dist/*.json $DIST_DIR
 
 cd $DIST_DIR
 # Check to see if tag exists
@@ -38,6 +39,7 @@ fi
 git config --local user.name "Tomster Automated Release"
 git config --local user.email "noreply@emberjs.com"
 git add active-model-adapter.js
+git add bower.json
 git commit -a -m "release ${VERSION}"
 git tag $VERSION
 

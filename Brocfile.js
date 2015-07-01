@@ -50,8 +50,13 @@ var concatted = concat(combined, {
   outputFile: '/active-model-adapter.js'
 });
 
+var bower = stew.mv('config', '/');
+var bower = stew.find(bower, 'bower.json');
+
+concatted = merge([concatted, bower]);
+
 concatted = replace(concatted, {
-  files: ['**/*.js'],
+  files: ['**/*.{js,json}'],
   patterns: [
     {
       match: /VERSION_STRING_PLACEHOLDER/g,

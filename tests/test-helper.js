@@ -4,7 +4,7 @@ import {
   setResolver
 } from 'ember-qunit';
 
-delete DS.ActiveModelAdapter;
-delete DS.ActiveModelSerializer;
+DS.ActiveModelAdapter = null;
+DS.ActiveModelSerializer = null;
 
 setResolver(resolver);
