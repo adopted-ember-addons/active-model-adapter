@@ -336,7 +336,7 @@ test("extractPolymorphic belongsTo", function(assert) {
 
   var json_hash = {
     doomsday_device: { id: 1, name: "DeathRay", evil_minion_id: { type: "yellow_minion", id: 12 } },
-    yellow_minions:    [{ id: 12, name: "Alex", doomsday_device_ids: [1] }]
+    yellow_minions:    [{ id: 12, name: "Alex" }]
   };
   var json;
 
@@ -368,10 +368,104 @@ test("extractPolymorphic belongsTo", function(assert) {
   });
 });
 
+test("extractPolymorphic belongsTo (weird format)", function(assert) {
+  env.registry.register('adapter:yellowMinion', ActiveModelAdapter);
+  EvilMinion.toString   = function() { return "EvilMinion"; };
+  YellowMinion.toString = function() { return "YellowMinion"; };
+
+  var json_hash = {
+    doomsday_device: {
+      id: 1,
+      name: "DeathRay",
+      evil_minion_id: 12,
+      evil_minion_type: "yellow_minion"
+    },
+    yellow_minions:    [{ id: 12, name: "Alex" }]
+  };
+  var json;
+
+  run(function() {
+    json = env.amsSerializer.normalizeResponse(env.store, DoomsdayDevice, json_hash, '1', 'findRecord');
+  });
+
+  assert.deepEqual(json, {
+    "data": {
+      "id": "1",
+      "type": "doomsday-device",
+      "attributes": {
+        "name": "DeathRay"
+      },
+      "relationships": {
+        "evilMinion": {
+          "data": { "id": "12", "type": "yellow-minion" }
+        }
+      }
+    },
+    "included": [{
+      "id": "12",
+      "type": "yellow-minion",
+      "attributes": {
+        "name": "Alex"
+      },
+      "relationships": {}
+    }]
+  });
+});
+
+test("belongsTo (weird format) does not screw if there is a relationshipType attribute", function(assert) {
+  env.registry.register('adapter:yellowMinion', ActiveModelAdapter);
+  EvilMinion.toString   = function() { return "EvilMinion"; };
+  YellowMinion.toString = function() { return "YellowMinion"; };
+  DoomsdayDevice.reopen({
+    evilMinionType: DS.attr()
+  });
+
+  var json_hash = {
+    doomsday_device: {
+      id: 1,
+      name: "DeathRay",
+      evil_minion_id: {
+        id: 12,
+        type: 'yellow_minion'
+      },
+      evil_minion_type: "what a minion" },
+    yellow_minions:    [{ id: 12, name: "Alex" }]
+  };
+  var json;
+
+  run(function() {
+    json = env.amsSerializer.normalizeResponse(env.store, DoomsdayDevice, json_hash, '1', 'findRecord');
+  });
+
+  assert.deepEqual(json, {
+    "data": {
+      "id": "1",
+      "type": "doomsday-device",
+      "attributes": {
+        "name": "DeathRay",
+        "evilMinionType": "what a minion"
+      },
+      "relationships": {
+        "evilMinion": {
+          "data": { "id": "12", "type": "yellow-minion"  }
+        }
+      }
+    },
+    "included": [{
+      "id": "12",
+      "type": "yellow-minion",
+      "attributes": {
+        "name": "Alex"
+      },
+      "relationships": {}
+    }]
+  });
+});
+
 test("extractPolymorphic when the related data is not specified", function(assert) {
   var json = {
     doomsday_device: { id: 1, name: "DeathRay" },
-    evil_minions:    [{ id: 12, name: "Alex", doomsday_device_ids: [1] }]
+    evil_minions:    [{ id: 12, name: "Alex" }]
   };
 
   run(function() {

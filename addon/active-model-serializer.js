@@ -300,6 +300,24 @@ var ActiveModelSerializer = RESTSerializer.extend({
       }, this);
     }
   },
+
+  extractRelationships: function(modelClass, resourceHash) {
+    modelClass.eachRelationship(function (key, relationshipMeta) {
+      var relationshipKey = this.keyForRelationship(key, relationshipMeta.kind, "deserialize");
+      if (resourceHash.hasOwnProperty(relationshipKey) && typeof resourceHash[relationshipKey] !== 'object') {
+        var polymorphicTypeKey = this.keyForRelationship(key) + '_type';
+        if (resourceHash[polymorphicTypeKey] && relationshipMeta.options.polymorphic) {
+          let id = resourceHash[relationshipKey];
+          let type = resourceHash[polymorphicTypeKey];
+          delete resourceHash[polymorphicTypeKey];
+          delete resourceHash[relationshipKey];
+          resourceHash[relationshipKey] = { id: id, type: type };
+        }
+      }
+    },this);
+    return this._super.apply(this, arguments);
+  },
+
   modelNameFromPayloadKey: function(key) {
     var convertedFromRubyModule = singularize(key.replace('::', '/'));
     return normalizeModelName(convertedFromRubyModule);
