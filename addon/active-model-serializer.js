@@ -304,6 +304,13 @@ var ActiveModelSerializer = RESTSerializer.extend({
   extractRelationships: function(modelClass, resourceHash) {
     modelClass.eachRelationship(function (key, relationshipMeta) {
       var relationshipKey = this.keyForRelationship(key, relationshipMeta.kind, "deserialize");
+
+      // prefer the format the AMS gem expects, e.g.:
+      // relationship: {id: id, type: type}
+      if (relationshipMeta.options.polymorphic) {
+        extractPolymorphicRelationships(key, relationshipMeta, resourceHash, relationshipKey);
+      }
+      // If the preferred format is not found, use {relationship_name_id, relationship_name_type}
       if (resourceHash.hasOwnProperty(relationshipKey) && typeof resourceHash[relationshipKey] !== 'object') {
         var polymorphicTypeKey = this.keyForRelationship(key) + '_type';
         if (resourceHash[polymorphicTypeKey] && relationshipMeta.options.polymorphic) {
@@ -323,5 +330,32 @@ var ActiveModelSerializer = RESTSerializer.extend({
     return normalizeModelName(convertedFromRubyModule);
   }
 });
+
+function extractPolymorphicRelationships(key, relationshipMeta, resourceHash, relationshipKey) {
+  let polymorphicKey = decamelize(key);
+  if (polymorphicKey in resourceHash && typeof resourceHash[polymorphicKey] === 'object') {
+    if (relationshipMeta.kind === 'belongsTo') {
+      let hash = resourceHash[polymorphicKey];
+      let {id, type} = hash;
+      resourceHash[relationshipKey] = {id, type};
+    // otherwise hasMany
+    } else {
+      let hashes = resourceHash[polymorphicKey];
+
+      if (!hashes) {
+        return;
+      }
+
+      // TODO: replace this with map when ActiveModelAdapter branches for Ember Data 2.0
+      var array = [];
+      for (let i = 0, length = hashes.length; i < length; i++) {
+        let hash = hashes[i];
+        let {id, type} = hash;
+        array.push({id, type});
+      }
+      resourceHash[relationshipKey] = array;
+    }
+  }
+}
 
 export default ActiveModelSerializer;
