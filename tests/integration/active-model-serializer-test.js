@@ -547,7 +547,7 @@ test("extractErrors camelizes keys", function(assert) {
         source: {
           pointer: 'data/attributes/first_name'
         },
-        details: "firstName not evil enough"
+        detail: "firstName not evil enough"
       }
     ]
   };
@@ -561,4 +561,61 @@ test("extractErrors camelizes keys", function(assert) {
   assert.deepEqual(payload, {
     firstName: ["firstName not evil enough"]
   });
+});
+
+test('supports the default format for polymorphic belongsTo', function(assert) {
+  var payload = {
+    doomsday_devices: [
+      {
+        id: 1,
+        evil_minion: {
+          id: 1,
+          type: 'yellow_minion'
+        }
+      }
+    ],
+    yellow_minions: [
+      {
+        id: 1,
+        name: 'Sally'
+      }
+    ]
+  };
+  var json, minion;
+
+  run(() => {
+    json = env.amsSerializer.normalizeResponse(env.store, DoomsdayDevice, payload, '1', 'findRecord');
+    env.store.push(json);
+    minion = env.store.findRecord('doomsday-device', 1);
+  });
+
+  assert.equal(minion.get('evilMinion.name'), 'Sally');
+});
+
+test('supports the default format for polymorphic hasMany', function(assert) {
+  var payload = {
+    mediocre_villain: {
+      id: 1,
+      evil_minions: [{
+        id: 1,
+        type: 'evil_minion'
+      }]
+    },
+    evil_minions: [
+      {
+        id: 1,
+        name: 'Harry'
+      }
+    ]
+  };
+
+  var json, villain;
+
+  run(() => {
+    json = env.amsSerializer.normalizeResponse(env.store, MediocreVillain, payload, '1', 'findRecord');
+    env.store.push(json);
+    villain = env.store.findRecord('mediocre-villain', '1');
+  });
+
+  assert.equal(villain.get('evilMinions.firstObject.name'), 'Harry');
 });
