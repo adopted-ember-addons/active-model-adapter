@@ -27,7 +27,7 @@ demo should be fully operational with the exception of the bug you want to
 demonstrate. The more pared down, the better. A preconfigured [JSBin][1] is
 available.
 
-[1]: http://emberjs.jsbin.com/rofida/1/edit?html,js,output
+[1]: http://emberjs.jsbin.com/hasoli/1/edit?html,js,output
 
 4. If possible, submit a Pull Request with a failing test. Better yet, take
 a stab at fixing the bug yourself if you can!
