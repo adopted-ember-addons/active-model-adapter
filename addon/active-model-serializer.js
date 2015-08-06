@@ -292,6 +292,10 @@ var ActiveModelSerializer = RESTSerializer.extend({
           payload = hash[payloadKey];
         }
 
+        if (!hash.hasOwnProperty(payloadKey)) {
+          return;
+        }
+
         hash[key] = payload;
 
         if (key !== payloadKey) {
@@ -333,9 +337,9 @@ var ActiveModelSerializer = RESTSerializer.extend({
 
 function extractPolymorphicRelationships(key, relationshipMeta, resourceHash, relationshipKey) {
   let polymorphicKey = decamelize(key);
-  if (polymorphicKey in resourceHash && typeof resourceHash[polymorphicKey] === 'object') {
+  let hash = resourceHash[polymorphicKey];
+  if (hash !== null && typeof hash === 'object') {
     if (relationshipMeta.kind === 'belongsTo') {
-      let hash = resourceHash[polymorphicKey];
       let {id, type} = hash;
       resourceHash[relationshipKey] = {id, type};
     // otherwise hasMany
