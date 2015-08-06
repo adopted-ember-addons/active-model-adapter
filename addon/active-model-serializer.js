@@ -280,7 +280,9 @@ var ActiveModelSerializer = RESTSerializer.extend({
         var payloadKey, payload;
         if (relationship.options.polymorphic) {
           payloadKey = this.keyForAttribute(key, "deserialize");
+          if (!hash.hasOwnProperty(payloadKey)) { return; }
           payload = hash[payloadKey];
+          
           if (payload && payload.type) {
             payload.type = this.modelNameFromPayloadKey(payload.type);
           } else if (payload && relationship.kind === "hasMany") {
@@ -290,10 +292,6 @@ var ActiveModelSerializer = RESTSerializer.extend({
           payloadKey = this.keyForRelationship(key, relationship.kind, "deserialize");
           if (!hash.hasOwnProperty(payloadKey)) { return; }
           payload = hash[payloadKey];
-        }
-
-        if (!hash.hasOwnProperty(payloadKey)) {
-          return;
         }
 
         hash[key] = payload;
