@@ -292,9 +292,10 @@ var ActiveModelSerializer = RESTSerializer.extend({
           payload = hash[payloadKey];
         }
 
-        if (!payload) {
+        if (!hash.hasOwnProperty(payloadKey)) {
           return;
         }
+
         hash[key] = payload;
 
         if (key !== payloadKey) {
