@@ -32,7 +32,7 @@ module(`ActiveModelAdapter, full stack integration tests for old serializer api`
 });
 
 // From upstream Ember Data issue: https://github.com/emberjs/data/issues/3630
-test(`does not assert if the payload key is missing for a polymorophic relationship`, (assert) => {
+test(`does not assert if the payload key is missing for a polymorphic relationship`, (assert) => {
   assert.expect(1);
 
   pretender.get('/books/:id', (req) => {

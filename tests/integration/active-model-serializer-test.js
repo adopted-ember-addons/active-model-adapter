@@ -249,6 +249,29 @@ test("normalizeResponse", function(assert) {
   });
 });
 
+test("normalizeResponse - polymorphic with empty value for polymorphic relationship", (assert) => {
+  let array;
+  const payload = {
+    doomsday_devices: [
+      {
+        id: 12,
+        evil_minion: null
+      }
+    ]
+
+  };
+
+  run(function() {
+    array = env.amsSerializer.normalizeResponse(env.store, DoomsdayDevice, payload, null, 'findAll');
+  });
+
+  run(() => env.store.push(array));
+
+  return run(() => env.store.findRecord('doomsdayDevice', 12)).then((device) => {
+    assert.equal(device.get('evilMinion'), null);
+  });
+});
+
 test("serialize polymorphic", function(assert) {
   var tom, ray;
   run(function() {
