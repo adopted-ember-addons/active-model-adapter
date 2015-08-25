@@ -18,6 +18,6 @@ export default {
     }
 
     registry.register('adapter:-active-model', ActiveModelAdapter);
-    registry.register('serializer:-active-model', ActiveModelSerializer.extend({ isNewSerializerAPI: true }));
+    registry.register('serializer:-active-model', ActiveModelSerializer);
   }
 };

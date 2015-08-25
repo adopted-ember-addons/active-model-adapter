@@ -155,7 +155,7 @@ var ActiveModelSerializer = RESTSerializer.extend({
   /*
     Does not serialize hasMany relationships by default.
   */
-  serializeHasMany: Ember.K,
+  serializeHasMany: function() {},
 
   /**
    Underscores the JSON root keys when serializing.
@@ -187,8 +187,6 @@ var ActiveModelSerializer = RESTSerializer.extend({
       json[jsonKey] = classify(belongsTo.modelName).replace('/', '::');
     }
   },
-
-  // EXTRACT
 
   /**
     Add extra step to `DS.RESTSerializer.normalize` so links are normalized.
@@ -250,59 +248,6 @@ var ActiveModelSerializer = RESTSerializer.extend({
     }
   },
 
-  /**
-    Normalize the polymorphic type from the JSON.
-
-    Normalize:
-    ```js
-      {
-        id: "1"
-        minion: { type: "evil_minion", id: "12"}
-      }
-    ```
-
-    To:
-    ```js
-      {
-        id: "1"
-        minion: { type: "evilMinion", id: "12"}
-      }
-    ```
-
-    @param {Subclass of DS.Model} typeClass
-    @method normalizeRelationships
-    @private
-  */
-  normalizeRelationships: function(typeClass, hash) {
-
-    if (this.keyForRelationship) {
-      typeClass.eachRelationship(function(key, relationship) {
-        var payloadKey, payload;
-        if (relationship.options.polymorphic) {
-          payloadKey = this.keyForAttribute(key, "deserialize");
-          if (!hash.hasOwnProperty(payloadKey)) { return; }
-          payload = hash[payloadKey];
-          
-          if (payload && payload.type) {
-            payload.type = this.modelNameFromPayloadKey(payload.type);
-          } else if (payload && relationship.kind === "hasMany") {
-            payload.forEach((single) => single.type = this.modelNameFromPayloadKey(single.type));
-          }
-        } else {
-          payloadKey = this.keyForRelationship(key, relationship.kind, "deserialize");
-          if (!hash.hasOwnProperty(payloadKey)) { return; }
-          payload = hash[payloadKey];
-        }
-
-        hash[key] = payload;
-
-        if (key !== payloadKey) {
-          delete hash[payloadKey];
-        }
-      }, this);
-    }
-  },
-
   extractRelationships: function(modelClass, resourceHash) {
     modelClass.eachRelationship(function (key, relationshipMeta) {
       var relationshipKey = this.keyForRelationship(key, relationshipMeta.kind, "deserialize");
@@ -338,26 +283,18 @@ function extractPolymorphicRelationships(key, relationshipMeta, resourceHash, re
   let hash = resourceHash[polymorphicKey];
   if (hash !== null && typeof hash === 'object') {
     if (relationshipMeta.kind === 'belongsTo') {
-      let {id, type} = hash;
-      resourceHash[relationshipKey] = {id, type};
+      resourceHash[relationshipKey] = extractIDAndType(hash);
     // otherwise hasMany
-    } else {
-      let hashes = resourceHash[polymorphicKey];
-
-      if (!hashes) {
-        return;
-      }
-
-      // TODO: replace this with map when ActiveModelAdapter branches for Ember Data 2.0
-      var array = [];
-      for (let i = 0, length = hashes.length; i < length; i++) {
-        let hash = hashes[i];
-        let {id, type} = hash;
-        array.push({id, type});
-      }
-      resourceHash[relationshipKey] = array;
+    } else if (hash.length) {
+      let hashes = hash;
+      resourceHash[relationshipKey] = hashes.map(extractIDAndType);
     }
   }
+}
+
+function extractIDAndType(hash) {
+  let {id, type} = hash;
+  return {id, type};
 }
 
 export default ActiveModelSerializer;

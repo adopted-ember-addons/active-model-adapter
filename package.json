@@ -1,6 +1,6 @@
 {
   "name": "active-model-adapter",
-  "version": "1.13.6",
+  "version": "2.0.0",
   "repository": "https://github.com/ember-data/active-model-adapter",
   "description": "The default blueprint for ember-cli addons.",
   "directories": {
@@ -26,7 +26,7 @@
     "broccoli-merge-trees": "^0.2.1",
     "broccoli-replace": "^0.3.1",
     "broccoli-stew": "^0.3.2",
-    "ember-cli": "0.2.7",
+    "ember-cli": "^1.13.0",
     "ember-cli-app-version": "0.3.3",
     "ember-cli-content-security-policy": "0.4.0",
     "ember-cli-dependency-checker": "^1.0.0",
@@ -35,7 +35,7 @@
     "ember-cli-pretender": "0.4.0",
     "ember-cli-qunit": "0.3.13",
     "ember-cli-uglify": "^1.0.1",
-    "ember-data": "1.0.0-beta.18",
+    "ember-data": "^2.0.0",
     "ember-disable-prototype-extensions": "^1.0.0",
     "ember-disable-proxy-controllers": "^1.0.0",
     "ember-export-application-global": "^1.0.2",
