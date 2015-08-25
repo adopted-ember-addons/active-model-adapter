@@ -47,7 +47,13 @@ test('errors are camelCased and are expected under the `errors` property of the 
 
   var user;
   Ember.run(function() {
-    user = store.push('user', { id: 1 });
+    store.push({
+      data: {
+        type: 'user',
+        id: 1
+      }
+    });
+    user = store.peekRecord('user', 1);
   });
 
   Ember.run(function() {

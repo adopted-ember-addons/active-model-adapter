@@ -26,7 +26,7 @@ module("integration/active_model - ActiveModelSerializer", {
     YellowMinion = EvilMinion.extend();
     DoomsdayDevice = DS.Model.extend({
       name:         DS.attr('string'),
-      evilMinion:   DS.belongsTo('evil-minion', { polymorphic: true })
+      evilMinion:   DS.belongsTo('evil-minion', { polymorphic: true, async: false })
     });
     MediocreVillain = DS.Model.extend({
       name:         DS.attr('string'),
@@ -49,6 +49,9 @@ module("integration/active_model - ActiveModelSerializer", {
     env.registry.register('serializer:application', ActiveModelSerializer.extend({isNewSerializerAPI: true}));
     env.registry.register('serializer:-active-model', ActiveModelSerializer.extend({isNewSerializerAPI: true}));
     env.registry.register('adapter:-active-model', ActiveModelAdapter);
+    env.registry.register('adapter:application', ActiveModelAdapter.extend({
+      shouldBackgroundReloadRecord: () => false
+    }));
     env.amsSerializer = env.container.lookup("serializer:-active-model");
     env.amsAdapter    = env.container.lookup("adapter:-active-model");
   },
@@ -267,7 +270,7 @@ test("normalizeResponse - polymorphic with empty value for polymorphic relations
 
   run(() => env.store.push(array));
 
-  return run(() => env.store.findRecord('doomsdayDevice', 12)).then((device) => {
+  return run(() => env.store.findRecord('doomsday-device', '12')).then((device) => {
     assert.equal(device.get('evilMinion'), null);
   });
 });

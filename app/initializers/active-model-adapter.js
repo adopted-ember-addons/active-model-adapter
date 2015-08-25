@@ -6,6 +6,6 @@ export default {
   initialize: function() {
     var application = arguments[1] || arguments[0];
     application.register('adapter:-active-model', ActiveModelAdapter);
-    application.register('serializer:-active-model', ActiveModelSerializer.extend({ isNewSerializerAPI: true }));
+    application.register('serializer:-active-model', ActiveModelSerializer);
   }
 };

@@ -1,5 +1,9 @@
 # Ember Data ActiveModel Adapter Changelog
 
+## 2.0.0 August 25, 2015
+
+* Remove code that was deprecated in Ember Data 2.0.
+
 ## 1.13.6 August 9, 2015
 
 * Fix issues when the value of a polymorphic relationship was null. Fixed in
