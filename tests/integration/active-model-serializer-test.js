@@ -4,7 +4,7 @@ import {ActiveModelAdapter, ActiveModelSerializer} from 'active-model-adapter';
 import Ember from 'ember';
 
 var get = Ember.get;
-var HomePlanet, league, SuperVillain, EvilMinion, YellowMinion, DoomsdayDevice, MediocreVillain, env;
+var HomePlanet, league, SuperVillain, EvilMinion, YellowMinion, DoomsdayDevice, MediocreVillain, SlipperyVillain, env;
 var run = Ember.run;
 
 module("integration/active_model - ActiveModelSerializer", {
@@ -32,13 +32,19 @@ module("integration/active_model - ActiveModelSerializer", {
       name:         DS.attr('string'),
       evilMinions:  DS.hasMany('evil-minion', { polymorphic: true })
     });
+    SlipperyVillain = DS.Model.extend({
+      firstName:    DS.attr('string'),
+      lastName:     DS.attr('string'),
+      homePlanet:   DS.attr('string')
+    });
     env = setupStore({
       superVillain:   SuperVillain,
       homePlanet:     HomePlanet,
       evilMinion:     EvilMinion,
       yellowMinion:   YellowMinion,
       doomsdayDevice: DoomsdayDevice,
-      mediocreVillain: MediocreVillain
+      mediocreVillain: MediocreVillain,
+      slipperyVillain: SlipperyVillain
     });
     env.store.modelFor('super-villain');
     env.store.modelFor('home-planet');
@@ -46,14 +52,17 @@ module("integration/active_model - ActiveModelSerializer", {
     env.store.modelFor('yellow-minion');
     env.store.modelFor('doomsday-device');
     env.store.modelFor('mediocre-villain');
+    env.store.modelFor('slippery-villain');
     env.registry.register('serializer:application', ActiveModelSerializer.extend({isNewSerializerAPI: true}));
     env.registry.register('serializer:-active-model', ActiveModelSerializer.extend({isNewSerializerAPI: true}));
+    env.registry.register('serializer:slippery-villain', ActiveModelSerializer.extend({isNewSerializerAPI: true, attrs: { firstName: '_first_name_', lastName: '_last_name_' }}));
     env.registry.register('adapter:-active-model', ActiveModelAdapter);
     env.registry.register('adapter:application', ActiveModelAdapter.extend({
       shouldBackgroundReloadRecord: () => false
     }));
     env.amsSerializer = env.container.lookup("serializer:-active-model");
     env.amsAdapter    = env.container.lookup("adapter:-active-model");
+    env.amsSlipperyVillianSerializer = env.container.lookup("serializer:slippery-villain");
   },
 
   afterEach: function() {
@@ -644,4 +653,30 @@ test('supports the default format for polymorphic hasMany', function(assert) {
   });
 
   assert.equal(villain.get('evilMinions.firstObject.name'), 'Harry');
+});
+
+test('supports mapping keys by attrs hash', function(assert) {
+  var payload = {
+    slippery_villain: {
+      id: 1,
+      _first_name_: 'Vladislaus',
+      _last_name_: 'Dracula',
+      home_planet: 'Earth'
+    }
+  };
+
+  var json, villain;
+
+  run(() => {
+    json = env.amsSlipperyVillianSerializer.normalizeResponse(env.store, SlipperyVillain, payload, '1', 'findRecord');
+    env.store.push(json);
+    villain = env.store.findRecord('slippery-villain', '1');
+  });
+
+  console.log(villain.get('firstName'));
+  console.log(villain.get('lastName'));
+  console.log(villain.get('homePlanet'));
+
+  assert.equal(villain.get('firstName'), 'Vladislaus');
+  assert.equal(villain.get('lastName'), 'Dracula');
 });
