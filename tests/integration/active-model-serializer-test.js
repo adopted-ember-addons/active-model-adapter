@@ -673,10 +673,6 @@ test('supports mapping keys by attrs hash', function(assert) {
     villain = env.store.findRecord('slippery-villain', '1');
   });
 
-  console.log(villain.get('firstName'));
-  console.log(villain.get('lastName'));
-  console.log(villain.get('homePlanet'));
-
   assert.equal(villain.get('firstName'), 'Vladislaus');
   assert.equal(villain.get('lastName'), 'Dracula');
 });

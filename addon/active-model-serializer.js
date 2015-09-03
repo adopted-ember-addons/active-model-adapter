@@ -223,6 +223,7 @@ var ActiveModelSerializer = RESTSerializer.extend({
   */
   normalize: function(typeClass, hash, prop) {
     this.normalizeLinks(hash);
+    this.mungeAttrs(this.get('attrs'));
     return this._super(typeClass, hash, prop);
   },
 
@@ -244,6 +245,16 @@ var ActiveModelSerializer = RESTSerializer.extend({
           links[camelizedLink] = links[link];
           delete links[link];
         }
+      }
+    }
+  },
+
+  mungeAttrs: function(attrs) {
+    if (attrs) {
+      for (var attr in attrs) {
+        var newAttr = decamelize(attr);
+        attrs[newAttr] = attrs[attr];
+        delete attrs[attr];
       }
     }
   },
