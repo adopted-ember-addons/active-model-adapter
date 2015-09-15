@@ -282,19 +282,8 @@ function extractPolymorphicRelationships(key, relationshipMeta, resourceHash, re
   let polymorphicKey = decamelize(key);
   let hash = resourceHash[polymorphicKey];
   if (hash !== null && typeof hash === 'object') {
-    if (relationshipMeta.kind === 'belongsTo') {
-      resourceHash[relationshipKey] = extractIDAndType(hash);
-    // otherwise hasMany
-    } else if (hash.length) {
-      let hashes = hash;
-      resourceHash[relationshipKey] = hashes.map(extractIDAndType);
-    }
+    resourceHash[relationshipKey] = hash;
   }
-}
-
-function extractIDAndType(hash) {
-  let {id, type} = hash;
-  return {id, type};
 }
 
 export default ActiveModelSerializer;

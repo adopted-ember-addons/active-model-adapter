@@ -645,3 +645,36 @@ test('supports the default format for polymorphic hasMany', function(assert) {
 
   assert.equal(villain.get('evilMinions.firstObject.name'), 'Harry');
 });
+
+test('when using the DS.EmbeddedRecordsMixin, does not erase attributes for polymorphic embedded models', (assert) => {
+
+  env.registry.register('serializer:mediocre-villain', ActiveModelSerializer.extend(DS.EmbeddedRecordsMixin, {
+    isNewSerializerAPI: true,
+
+    attrs: {
+      evilMinions: {serialize: false, deserialize: 'records'}
+    }
+  }));
+
+  const payload = {
+    mediocre_villain: {
+      id: 1,
+      evil_minions: [{
+        id: 1,
+        type: 'evil_minion',
+        name: 'tom dale'
+      }]
+    }
+  };
+
+  let villain;
+
+  run(() => {
+    let json = env.store.serializerFor('mediocre-villain').normalizeResponse(env.store, MediocreVillain, payload, '1', 'findRecord');
+    env.store.push(json);
+    villain = env.store.findRecord('mediocre-villain', '1');
+  });
+
+  assert.equal(villain.get('evilMinions.firstObject.name'), 'tom dale');
+});
+
