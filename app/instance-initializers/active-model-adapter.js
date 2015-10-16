@@ -7,14 +7,14 @@ export default {
     var register;
     if (applicationOrRegistry.register) {
       // initializeStoreService was called by an initializer instead of
-      // an instanceInitializer. The first argument is a registry for 
+      // an instanceInitializer. The first argument is a registry for
       // Ember pre 1.12, or an application instance for Ember >2.1.
-      register = applicationOrRegistry.register;
+      register = applicationOrRegistry.register.bind(applicationOrRegistry);
     } else {
       // initializeStoreService was registered with an
       // instanceInitializer. The first argument is the application
       // instance.
-      register = applicationOrRegistry.registry.register;      
+      register = applicationOrRegistry.registry.register.bind(applicationOrRegistry);
     }
 
     register('adapter:-active-model', ActiveModelAdapter);
