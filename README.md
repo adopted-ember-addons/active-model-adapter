@@ -132,6 +132,109 @@ The JSON needed to avoid extra server calls, should look like this:
 }
 ```
 
+### Polymorphic Relationships
+
+If your model has polymorphic relationships, the ActiveModelAdapter
+supports two forms in your response.
+
+When using ActiveModelSerializers in Rails, you can opt into this
+payload using the `polymorphic: true` option when calling `has_many` or
+`belongs_to`.
+
+```ruby
+class BookSerializer
+  attributes :id, :name
+  belongs_to :person, polymorphic: true
+end
+```
+
+The first, and preferred format, is to use the name of the relationship
+as the key and an object with the type and foreign key as the value.
+
+
+For example, given the following model definitions:
+
+```javascript
+// app/models/book.js
+export default var Book = DS.Model.extend({
+  name: DS.attr(),
+  author: DS.belongsTo('person', {polymorphic: true})
+});
+
+// app/models/author.js
+export default var Person = DS.Model.extend({
+  name: DS.attr(),
+  books: DS.hasMany('book')
+});
+```
+
+The object would look like:
+
+```json
+{
+  "type": "person",
+  "id": 1
+}
+```
+
+and the full payload would look like this:
+
+```javascript
+{
+  "book": {
+    "id": "1",
+    "name": "Yes, Please",
+    "author": { // these are the lines
+      "id": 1, // that define the
+      "type": "person" // polymorphic relationship
+    }
+  },
+  "people": [{
+    "id": 1,
+    "name": "Amy Poehler"
+  }]
+}
+```
+
+The second format allows you to specify using two keys in the model's
+payload following the format of `relationship_name_id` and
+`relationship_name_type`. **This format does not work with hasMany
+relationships.** This format **may also be removed for Ember Data 3.0**;
+it is currently only supported for legacy reasons.
+
+Using the above model definitions, the single model response would look
+like this:
+
+```javascript
+{
+  "book": {
+    "id": "1",
+    "name": "Yes, Please",
+    "author_id": 1, // these two lines
+    "author_type": "person" // tell Ember Data what the polymorphic
+                            // relationship is.
+  }
+}
+```
+
+The full response would be look like this:
+
+```javascript
+{
+  "book": {
+    "id": "1",
+    "name": "Yes, Please",
+    "author_id": 1, // these two lines
+    "author_type": "person" // tell Ember Data what the polymorphic
+                            // relationship is.
+  },
+  "people": [{
+    "id": 1,
+    "name": "Amy Poehler"
+  }]
+}
+```
+
 ## Development Installation
 
 * `git clone` this repository
