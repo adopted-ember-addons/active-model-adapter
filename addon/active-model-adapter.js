@@ -142,9 +142,11 @@ const ActiveModelAdapter = RESTAdapter.extend({
     For more information on 422 HTTP Error code see 11.2 WebDAV RFC 4918
     https://tools.ietf.org/html/rfc4918#section-11.2
 
-    @method ajaxError
-    @param {Object} jqXHR
-    @return error
+    @method handleResponse
+    @param  {Number} status
+    @param  {Object} headers
+    @param  {Object} payload
+    @return {Object | DS.AdapterError} response
   */
   handleResponse: function(status, headers, payload) {
     if (this.isInvalid(status, headers, payload)) {
