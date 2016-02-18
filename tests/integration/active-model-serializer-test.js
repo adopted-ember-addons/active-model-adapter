@@ -678,3 +678,50 @@ test('when using the DS.EmbeddedRecordsMixin, does not erase attributes for poly
   assert.equal(villain.get('evilMinions.firstObject.name'), 'tom dale');
 });
 
+test('can have id-less belongsTo relationship', function (assert) {
+  const payload = {
+    super_villain: {
+      id: 1,
+      home_planet: 1
+    },
+    home_planets: [
+      {
+        id: 1,
+        super_villains: [1]
+      }
+    ]
+  };
+
+  const villain = run(() => {
+    const json = env.store.serializerFor('super-villain').normalizeResponse(env.store, SuperVillain, payload, '1', 'findRecord');
+    env.store.push(json);
+    return env.store.findRecord('super-villain', 1);
+  });
+
+  assert.equal(villain.get('homePlanet.id'), '1');
+});
+
+test('can have id-less belongsTo relationship', function (assert) {
+  const payload = {
+    home_planet: {
+      id: 1,
+      super_villains: [1]
+    },
+    super_villains: [
+      {
+        id: 1,
+        home_planet: 1
+      }
+    ]
+  };
+
+  const homePlanet = run(() => {
+    const json = env.store.serializerFor('home-planet').normalizeResponse(env.store, HomePlanet, payload, '1', 'findRecord');
+    env.store.push(json);
+    return env.store.findRecord('home-planet', 1);
+  });
+
+  return homePlanet.get('superVillains').then((superVillains) => {
+    assert.deepEqual(superVillains.toArray().map(v => v.get('id')), ['1']);
+  });
+});

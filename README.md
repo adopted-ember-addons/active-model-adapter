@@ -65,6 +65,9 @@ Unlike the DS.RESTAdapter, async relationship keys must be the singular form
 of the relationship name, followed by "_id" for DS.belongsTo relationships,
 or "_ids" for DS.hasMany relationships.
 
+Since ActiveModelAdapter 2.1.0 however, you don't need the "_id" or
+"_ids" suffix on keys for relationships.
+
 ### Conventional Names
 
 Attribute names in your JSON payload should be the underscored versions of
