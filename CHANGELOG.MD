@@ -1,6 +1,10 @@
 # Ember Data ActiveModel Adapter Changelog
 
 ## Master
+
+## 2.1.0
+
+- [#80](https://github.com/ember-data/active-model-adapter/pull/80) [bugfix] Allow relationships to not have the _id suffix
 - [#51](https://github.com/ember-data/active-model-adapter/pull/51) [bugfix] add tests around errors
 - [#52](https://github.com/ember-data/active-model-adapter/pull/52) fix issue where attributes are getting erased when using when using the DS.EmbeddedRecordsMixin with a polymorphic embedded model
 - [#57](https://github.com/ember-data/active-model-adapter/pull/57) Test against Ember Data 2.1
