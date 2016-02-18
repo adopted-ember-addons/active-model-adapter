@@ -9,6 +9,7 @@ const {
   singularize,
   classify,
   decamelize,
+  pluralize,
   camelize,
   underscore
 } = Ember.String;
@@ -248,9 +249,27 @@ var ActiveModelSerializer = RESTSerializer.extend({
     }
   },
 
+  /**
+   * @private
+  */
+  _keyForIDLessRelationship: function(key, relationshipType, type) {
+    if (relationshipType === 'hasMany') {
+      return underscore(pluralize(key));
+    } else {
+      return underscore(singularize(key));
+    }
+  },
+
   extractRelationships: function(modelClass, resourceHash) {
     modelClass.eachRelationship(function (key, relationshipMeta) {
       var relationshipKey = this.keyForRelationship(key, relationshipMeta.kind, "deserialize");
+
+      var idLessKey = this._keyForIDLessRelationship(key, relationshipMeta.kind, "deserialize");
+
+      // converts post to post_id, posts to post_ids
+      if (resourceHash[idLessKey] && typeof relationshipMeta[relationshipKey] === 'undefined') {
+        resourceHash[relationshipKey] = resourceHash[idLessKey];
+      }
 
       // prefer the format the AMS gem expects, e.g.:
       // relationship: {id: id, type: type}
