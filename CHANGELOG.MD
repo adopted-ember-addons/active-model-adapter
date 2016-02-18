@@ -2,7 +2,11 @@
 
 ## Master
 
-## 2.1.0
+## 2.1.1 February 17, 2016
+
+- Restore old initializer code from 2.0.3
+
+## 2.1.0 February 17, 2016
 
 - [#80](https://github.com/ember-data/active-model-adapter/pull/80) [bugfix] Allow relationships to not have the _id suffix
 - [#51](https://github.com/ember-data/active-model-adapter/pull/51) [bugfix] add tests around errors
