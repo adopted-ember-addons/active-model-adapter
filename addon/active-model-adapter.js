@@ -148,7 +148,7 @@ const ActiveModelAdapter = RESTAdapter.extend({
     @param  {Object} payload
     @return {Object | DS.AdapterError} response
   */
-  handleResponse: function(status, headers, payload) {
+  handleResponse: function(status, headers, payload, requestData) {
     if (this.isInvalid(status, headers, payload)) {
       let errors = errorsHashToArray(payload.errors);
 
