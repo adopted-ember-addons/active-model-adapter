@@ -725,3 +725,24 @@ test('can have id-less belongsTo relationship', function (assert) {
     assert.deepEqual(superVillains.toArray().map(v => v.get('id')), ['1']);
   });
 });
+
+test('Serializer should respect the attrs hash in links', function(assert) {
+  env.registry.register('serializer:super-villain', ActiveModelSerializer.extend(DS.EmbeddedRecordsMixin, {
+
+    attrs: {
+      evilMinions: {serialize: 'records', deserialize: 'ids'}
+    }
+  }));
+
+  const payload = {
+    super_villain: {
+      firstName: 'Tom',
+      lastName: 'Dale',
+      links: { evil_minions: "/api/evil_minions/1" }
+    }
+  };
+
+  var json = env.container.lookup("serializer:super-villain").normalizeSingleResponse(env.store, SuperVillain, payload);
+
+  assert.equal(json.data.relationships.evilMinions.links.related, "/api/evil_minions/1", "normalize links");
+});
