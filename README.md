@@ -29,23 +29,17 @@ Grab a copy of active-model-adapter.js from http://github.com/ember-data/active-
 
 You should make an `ApplicationAdapter` if you don't already have one:
 
-```js
-// app/adapters/application.js
-import ActiveModelAdapter from 'active-model-adapter';
-
-export default ActiveModelAdapter.extend();
+```bash
+ember generate active-model adapter application
 ```
 
-If you need to subclass the `ActiveModelSerializer`, you can import it
-into your serializer:
+If you need to subclass the `ActiveModelSerializer`, you can generate a serializer using:
 
-```js
-// app/serializers/post.js
-
-import { ActiveModelSerializer } from 'active-model-adapter';
-
-export default ActiveModelSerializer.extend();
+```bash
+ember generate active-model serializer <model-name>
 ```
+
+*Note: In the above you would replace `<model-name>` with the actual name of your model.*
 
 ## Description
 
