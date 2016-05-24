@@ -45,7 +45,12 @@ test('handleResponse - returns ajax response if not 422 response', function(asse
     responseText: "Something went wrong"
   };
 
+  var expectedRequestData = {
+    method: "GET",
+    url:    "/posts/1"
+  };
+
   var json = adapter.parseErrorResponse(jqXHR.responseText);
 
-  assert.ok(adapter.handleResponse(jqXHR.status, {}, json) instanceof DS.AdapterError, 'must be a DS.AdapterError');
+  assert.ok(adapter.handleResponse(jqXHR.status, {}, json, expectedRequestData) instanceof DS.AdapterError, 'must be a DS.AdapterError');
 });
