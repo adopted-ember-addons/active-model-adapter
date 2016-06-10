@@ -108,7 +108,7 @@ export default var Person = DS.Model.extend({
   occupation: DS.belongsTo('occupation')
 });
 
-// app/models/occupation
+// app/models/occupation.js
 App.Occupation = DS.Model.extend({
   name: DS.attr('string'),
   salary: DS.attr('number'),
