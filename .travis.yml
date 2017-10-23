@@ -2,9 +2,12 @@ language: node_js
 node_js:
 - '4'
 sudo: false
+
 cache:
+  yarn: true
   directories:
-  - node_modules
+    - $HOME/.cache # includes bower's cache
+
 env:
   matrix:
   - EMBER_TRY_SCENARIO=default
@@ -19,19 +22,22 @@ matrix:
   allow_failures:
   - env: EMBER_TRY_SCENARIO=ember-beta
   - env: EMBER_TRY_SCENARIO=ember-canary
+
 before_install:
-- export PATH=/usr/local/phantomjs-2.0.0/bin:$PATH
-- npm config set spin false
-- npm install -g npm@^2
+  - curl -o- -L https://yarnpkg.com/install.sh | bash
+  - export PATH=$HOME/.yarn/bin:$PATH
+  - yarn global add bower
+
 install:
-- npm install -g bower
-- npm install
-- bower install
+  - yarn install --no-lockfile --non-interactive
+  - bower install
+
 script:
-- ember try $EMBER_TRY_SCENARIO test
+- node_modules/.bin/ember try $EMBER_TRY_SCENARIO test
+
 after_success:
-- ember try:reset
-- ember build --environment=production
+- node_modules/.bin/ember try:reset
+- node_modules/.bin/ember build --environment=production
 - bin/release
 - rm -rf active-model-adapter-dist
 before_deploy:
