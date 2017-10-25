@@ -49,6 +49,12 @@ alter@~0.2.0:
   dependencies:
     stable "~0.1.3"
 
+amd-name-resolver@0.0.5:
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/amd-name-resolver/-/amd-name-resolver-0.0.5.tgz#76962dac876ed3311b05d29c6a58c14e1ef3304b"
+  dependencies:
+    ensure-posix-path "^1.0.1"
+
 amd-name-resolver@0.0.7:
   version "0.0.7"
   resolved "https://registry.yarnpkg.com/amd-name-resolver/-/amd-name-resolver-0.0.7.tgz#814301adfe8a2f109f6e84d5e935196efb669615"
@@ -955,6 +961,12 @@ body@^5.1.0:
     raw-body "~1.1.0"
     safe-json-parse "~1.0.1"
 
+boom@2.x.x:
+  version "2.10.1"
+  resolved "https://registry.yarnpkg.com/boom/-/boom-2.10.1.tgz#39c8918ceff5799f83f9492a848f625add0c766f"
+  dependencies:
+    hoek "2.x.x"
+
 bower-config@^1.3.0:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/bower-config/-/bower-config-1.4.1.tgz#85fd9df367c2b8dbbd0caa4c5f2bad40cd84c2cc"
@@ -1686,6 +1698,12 @@ cross-spawn@^5.0.1, cross-spawn@^5.1.0:
     shebang-command "^1.2.0"
     which "^1.2.9"
 
+cryptiles@2.x.x:
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/cryptiles/-/cryptiles-2.0.5.tgz#3bdfecdc608147c1c67202fa291e7dca59eaa3b8"
+  dependencies:
+    boom "2.x.x"
+
 crypto-random-string@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/crypto-random-string/-/crypto-random-string-1.0.0.tgz#a230f64f568310e1498009940790ec99545bca7e"
@@ -2102,10 +2120,11 @@ ember-cli@~2.16.2:
     walk-sync "^0.3.0"
     yam "0.0.22"
 
-ember-data@~2.3.1:
-  version "2.3.3"
-  resolved "https://registry.yarnpkg.com/ember-data/-/ember-data-2.3.3.tgz#2a8507df356addc1356386b35ca589eb4eaba809"
+ember-data@~2.6.0:
+  version "2.6.2"
+  resolved "https://registry.yarnpkg.com/ember-data/-/ember-data-2.6.2.tgz#2ec7204946b683af6a474ee3d16715b98855f8da"
   dependencies:
+    amd-name-resolver "0.0.5"
     babel-plugin-feature-flags "^0.2.0"
     babel-plugin-filter-imports "^0.2.0"
     broccoli-babel-transpiler "^5.5.0"
@@ -2121,6 +2140,7 @@ ember-data@~2.3.1:
     exists-sync "0.0.3"
     git-repo-info "^1.1.2"
     inflection "^1.8.0"
+    npm-git-info "^1.0.0"
     semver "^5.1.0"
     silent-error "^1.0.0"
 
@@ -2885,6 +2905,10 @@ heimdalljs@^0.2.0, heimdalljs@^0.2.1, heimdalljs@^0.2.3:
   resolved "https://registry.yarnpkg.com/heimdalljs/-/heimdalljs-0.2.5.tgz#6aa54308eee793b642cff9cf94781445f37730ac"
   dependencies:
     rsvp "~3.2.1"
+
+hoek@2.x.x:
+  version "2.16.3"
+  resolved "https://registry.yarnpkg.com/hoek/-/hoek-2.16.3.tgz#20bb7403d3cea398e91dc4710a8ff1b8274a25ed"
 
 home-or-tmp@^1.0.0:
   version "1.0.0"
@@ -3774,7 +3798,7 @@ mimic-fn@^1.0.0:
   dependencies:
     brace-expansion "^1.1.7"
 
-minimatch@^2.0.0, minimatch@^2.0.3:
+minimatch@^2.0.0, minimatch@^2.0.1, minimatch@^2.0.3:
   version "2.0.10"
   resolved "https://registry.yarnpkg.com/minimatch/-/minimatch-2.0.10.tgz#8d087c39c6b38c001b97fca7ce6d0e1e80afbac7"
   dependencies:
@@ -3905,6 +3929,10 @@ normalize-path@^2.0.0, normalize-path@^2.0.1:
   resolved "https://registry.yarnpkg.com/normalize-path/-/normalize-path-2.1.1.tgz#1ab28b556e198363a8c1a6f7e6fa20137fe6aed9"
   dependencies:
     remove-trailing-separator "^1.0.1"
+
+npm-git-info@^1.0.0:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/npm-git-info/-/npm-git-info-1.0.3.tgz#a933c42ec321e80d3646e0d6e844afe94630e1d5"
 
 npm-package-arg@^4.1.1:
   version "4.2.1"
@@ -4612,6 +4640,12 @@ simple-is@~0.2.0:
 slash@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/slash/-/slash-1.0.0.tgz#c41f2f6c39fc16d1cd17ad4b5d896114ae470d55"
+
+sntp@1.x.x:
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/sntp/-/sntp-1.0.9.tgz#6541184cc90aeea6c6e7b35e2659082443c66198"
+  dependencies:
+    hoek "2.x.x"
 
 socket.io-adapter@0.5.0:
   version "0.5.0"
