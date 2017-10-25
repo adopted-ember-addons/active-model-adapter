@@ -4,7 +4,6 @@
   "private": true,
   "dependencies": {
     "ember": "~2.2.0",
-    "ember-cli-shims": "0.1.0",
     "ember-load-initializers": "0.1.7",
     "jquery": "~1.11.1",
     "pretender": "^0.10.1"
