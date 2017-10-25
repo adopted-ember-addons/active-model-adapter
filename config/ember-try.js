@@ -11,10 +11,14 @@ module.exports = {
       bower: {
         dependencies: {
           ember: '~2.0.0',
+          'ember-cli-shims': '0.0.6',
+          'ember-data': '~2.0.0',
         },
       },
       npm: {
         devDependencies: {
+          'ember-cli-shims': null,
+          'ember-data': '~2.0.0',
           'ember-source': null,
         },
       },
@@ -24,6 +28,7 @@ module.exports = {
       bower: {
         dependencies: {
           ember: 'components/ember#lts-2-4',
+          'ember-cli-shims': '0.1.0',
         },
         resolutions: {
           ember: 'lts-2-4',
@@ -31,6 +36,8 @@ module.exports = {
       },
       npm: {
         devDependencies: {
+          'ember-cli-shims': null,
+          'ember-data': '~2.4.0',
           'ember-source': null,
         },
       },
@@ -47,6 +54,7 @@ module.exports = {
       },
       npm: {
         devDependencies: {
+          'ember-data': '~2.8.0',
           'ember-source': null,
         },
       },
@@ -55,6 +63,7 @@ module.exports = {
       name: 'ember-lts-2.12',
       npm: {
         devDependencies: {
+          'ember-data': '~2.12.0',
           'ember-source': '~2.12.0',
         },
       },
@@ -63,6 +72,7 @@ module.exports = {
       name: 'ember-lts-2.16',
       npm: {
         devDependencies: {
+          'ember-data': '~2.16.0',
           'ember-source': '~2.16.0-beta.1',
         },
       },
@@ -79,6 +89,7 @@ module.exports = {
       },
       npm: {
         devDependencies: {
+          'ember-data': 'emberjs/data#release',
           'ember-source': null,
         },
       },
@@ -95,6 +106,7 @@ module.exports = {
       },
       npm: {
         devDependencies: {
+          'ember-data': 'emberjs/data#beta',
           'ember-source': null,
         },
       },
@@ -111,6 +123,7 @@ module.exports = {
       },
       npm: {
         devDependencies: {
+          'ember-data': 'emberjs/data#master',
           'ember-source': null,
         },
       },
