@@ -1,15 +1,14 @@
 import DS from 'ember-data';
 import Ember from 'ember';
+import { singularize, pluralize } from 'ember-inflector';
 
 /**
   @module ember-data
  */
 
 const {
-  singularize,
   classify,
   decamelize,
-  pluralize,
   camelize,
   underscore
 } = Ember.String;
