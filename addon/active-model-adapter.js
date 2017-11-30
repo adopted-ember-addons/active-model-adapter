@@ -1,6 +1,7 @@
 import Ember from 'ember';
 import DS from 'ember-data';
 
+import { pluralize } from 'ember-inflector';
 
 const {
   InvalidError,
@@ -9,7 +10,6 @@ const {
 } = DS;
 
 const {
-  pluralize,
   decamelize,
   underscore
 } = Ember.String;
