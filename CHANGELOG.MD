@@ -2,6 +2,17 @@
 
 ## Master
 
+## 2.2.0 December 22, 2017
+- Fix ember-inflector deprecations
+- Add more Ember Data scenarios for ember-try
+- Update "loader.js" to v4.6.0
+- Convert "ember-load-initializers" to npm dependency
+- Convert "ember-cli-shims" to npm dependency
+- Remove explicit `ember-try` dependency
+- Update "ember-cli" to v2.16.2
+- CI: Update Node version to 4
+- Fix's a regression in ember-data >= 2.4.0 related to arguments changing in RESTAdapter's handleResponse function https://github.com/emberjs/data/pull/3930, pass along requestData as argument in active-model-adapter handleResponse override method as well as fix handleResponse - returns ajax response if not 422 response test (#83)
+
 ## 2.1.1 February 17, 2016
 
 - Restore old initializer code from 2.0.3
