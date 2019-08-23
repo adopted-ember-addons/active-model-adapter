@@ -1,134 +1,75 @@
-/*jshint node:true*/
-module.exports = {
-  useYarn: true,
-  scenarios: [
-    {
-      name: 'default',
-      bower: {
-        dependencies: {},
+'use strict';
+
+const getChannelURL = require('ember-source-channel-url');
+
+module.exports = async function() {
+  return {
+    useYarn: true,
+    scenarios: [
+      {
+        name: 'ember-lts-3.4',
+        npm: {
+          devDependencies: {
+            'ember-source': '~3.4.0',
+            'ember-data': '~3.4.0',
+          }
+        }
       },
-    },
-    {
-      name: 'ember-2.0',
-      bower: {
-        dependencies: {
-          ember: '~2.0.0',
-          'ember-cli-shims': '0.0.6',
-          'ember-data': '~2.0.0',
-        },
+      {
+        name: 'ember-lts-3.8',
+        npm: {
+          devDependencies: {
+            'ember-source': '~3.8.0',
+            'ember-data': '~3.8.0'
+          }
+        }
       },
-      npm: {
-        devDependencies: {
-          'ember-cli-shims': null,
-          'ember-data': '~2.0.0',
-          'ember-source': null,
-        },
-      },
-    },
-    {
-      name: 'ember-lts-2.4',
-      bower: {
-        dependencies: {
-          ember: 'components/ember#lts-2-4',
-          'ember-cli-shims': '0.1.0',
-        },
-        resolutions: {
-          ember: 'lts-2-4',
+      {
+        name: 'ember-release',
+        npm: {
+          devDependencies: {
+            'ember-data': 'emberjs/data#release',
+            'ember-source': await getChannelURL('release')
+          },
         },
       },
-      npm: {
-        devDependencies: {
-          'ember-cli-shims': null,
-          'ember-data': '~2.4.0',
-          'ember-source': null,
+      {
+        name: 'ember-beta',
+        npm: {
+          devDependencies: {
+            'ember-data': 'emberjs/data#beta',
+            'ember-source': await getChannelURL('beta')
+          },
         },
       },
-    },
-    {
-      name: 'ember-lts-2.8',
-      bower: {
-        dependencies: {
-          ember: 'components/ember#lts-2-8',
-        },
-        resolutions: {
-          ember: 'lts-2-8',
-        },
+      {
+        name: 'ember-canary',
+        npm: {
+          devDependencies: {
+            'ember-data': 'emberjs/data#master',
+            'ember-source': await getChannelURL('canary')
+          },
+        }
       },
-      npm: {
-        devDependencies: {
-          'ember-data': '~2.8.0',
-          'ember-source': null,
-        },
+      {
+        name: 'ember-default',
+        npm: {
+          devDependencies: {}
+        }
       },
-    },
-    {
-      name: 'ember-lts-2.12',
-      npm: {
-        devDependencies: {
-          'ember-data': '~2.12.0',
-          'ember-source': '~2.12.0',
+      {
+        name: 'ember-default-with-jquery',
+        env: {
+          EMBER_OPTIONAL_FEATURES: JSON.stringify({
+            'jquery-integration': true
+          })
         },
-      },
-    },
-    {
-      name: 'ember-lts-2.16',
-      npm: {
-        devDependencies: {
-          'ember-data': '~2.16.0',
-          'ember-source': '~2.16.0-beta.1',
-        },
-      },
-    },
-    {
-      name: 'ember-release',
-      bower: {
-        dependencies: {
-          ember: 'components/ember#release',
-        },
-        resolutions: {
-          ember: 'release',
-        },
-      },
-      npm: {
-        devDependencies: {
-          'ember-data': 'emberjs/data#release',
-          'ember-source': null,
-        },
-      },
-    },
-    {
-      name: 'ember-beta',
-      bower: {
-        dependencies: {
-          ember: 'components/ember#beta',
-        },
-        resolutions: {
-          ember: 'beta',
-        },
-      },
-      npm: {
-        devDependencies: {
-          'ember-data': 'emberjs/data#beta',
-          'ember-source': null,
-        },
-      },
-    },
-    {
-      name: 'ember-canary',
-      bower: {
-        dependencies: {
-          ember: 'components/ember#canary',
-        },
-        resolutions: {
-          ember: 'canary',
-        },
-      },
-      npm: {
-        devDependencies: {
-          'ember-data': 'emberjs/data#master',
-          'ember-source': null,
-        },
-      },
-    },
-  ]
+        npm: {
+          devDependencies: {
+            '@ember/jquery': '^0.5.1'
+          }
+        }
+      }
+    ]
+  };
 };

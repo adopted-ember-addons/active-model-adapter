@@ -1,40 +1,55 @@
-import Ember from 'ember';
-import DS from 'ember-data';
-import Pretender from 'pretender';
-import {ActiveModelAdapter} from 'active-model-adapter';
+import { module, test } from 'qunit';
+import { setupTest } from 'ember-qunit';
+
 import setupStore from '../helpers/setup-store';
-import {module, test} from 'qunit';
 
-const {Model, attr} = DS;
-const {run} = Ember;
+import Pretender from 'pretender';
 
-const Book = Model.extend({
-  name: attr(),
-  genre: attr()
-});
+import Model from 'ember-data/model';
+import attr from 'ember-data/attr';
 
-let pretender, store;
+module('Integration | Active Model Adapter Errors', function(hooks) {
+  setupTest(hooks);
 
-module('active-model-adapter-errors-test - Errors Integration test', {
-  beforeEach() {
-    pretender = new Pretender(function() {});
-    store = run(() => {
-      let env = setupStore({
-        adapter: ActiveModelAdapter,
-        book: Book
-      });
-      return env.store;
+  hooks.beforeEach(function() {
+    let Book = Model.extend({
+      name: attr(),
+      genre: attr()
     });
-  },
 
-  afterEach() {
-    run(store, 'destroy');
-  }
-});
+    setupStore({
+      owner: this.owner,
+      models: [
+        { modelClass: Book, modelName: 'book' }
+      ]
+    });
 
-test('errors can be iterated once intercepted by the adapter', (assert) => {
-  const post = run(() => {
-    store.push({
+    this.store = this.owner.lookup('service:store');
+
+    this.pretender = new Pretender(function() {
+      this.put('/books/1', function() {
+        let payload = {
+          errors: {
+            name: ['rejected'],
+            genre: ['rejected']
+          }
+        };
+
+        return [
+          422,
+          { 'Content-Type': 'application/json' },
+          JSON.stringify(payload)
+        ];
+      });
+    });
+  });
+
+  hooks.afterEach(function() {
+    this.pretender.shutdown();
+  });
+
+  test('errors can be iterated once intercepted by the adapter', async function(assert) {
+    this.store.push({
       data: {
         type: 'book',
         id: '1',
@@ -42,32 +57,30 @@ test('errors can be iterated once intercepted by the adapter', (assert) => {
         genre: 'Memoir'
       }
     });
-    return store.peekRecord('book', 1);
-  });
 
-  pretender.put('/books/1', (req) => {
-    const headers = {};
-    const httpStatus = 422;
-    const payload = {
-      errors: {
-        name: ['rejected'],
-        genre: ['rejected']
-      }
-    };
-    return [httpStatus, headers, payload];
-  });
+    let book = this.store.peekRecord('book', 1);
 
-  return run(() => {
-    post.setProperties({
+    book.setProperties({
       name: 'Yes, Please',
       memoir: 'Comedy'
     });
 
-    return post.save().then(() => {
+    try {
+      await book.save();
+
       assert.ok(false, 'post does not update correctly');
-    }).catch( err => {
-      assert.equal(post.get('errors.name')[0].message, 'rejected', 'model.errors.attribute_name works');
-      assert.deepEqual(post.get('errors.messages'), ['rejected', 'rejected'], 'errors.messages works');
-    });
+    } catch(err) {
+      assert.equal(
+        book.get('errors.name')[0].message,
+        'rejected',
+        'model.errors.attribute_name works'
+      );
+
+      assert.deepEqual(
+        book.get('errors.messages'),
+        ['rejected', 'rejected'],
+        'errors.messages works'
+      );
+    }
   });
 });

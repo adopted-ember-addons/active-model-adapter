@@ -1,66 +1,75 @@
-var env, store, adapter, User;
+import { module, test } from 'qunit';
+import { setupTest } from 'ember-qunit';
 
-import {module, test} from 'qunit';
-var originalAjax;
 import setupStore from '../helpers/setup-store';
-import Ember from 'ember';
-import ActiveModelAdapter from 'active-model-adapter';
 
-module("integration/active_model_adapter_serializer - AMS Adapter and Serializer", {
-  beforeEach: function() {
-    originalAjax = Ember.$.ajax;
+import Pretender from 'pretender';
 
-    User = DS.Model.extend({
-      firstName: DS.attr()
+import Model from 'ember-data/model';
+import attr from 'ember-data/attr';
+
+module('Integration | Active Model Serializer', function(hooks) {
+  setupTest(hooks);
+
+  hooks.beforeEach(function() {
+    let User = Model.extend({
+      firstName: attr()
     });
 
-    env = setupStore({
-      user: User,
-      adapter: ActiveModelAdapter
+    setupStore({
+      owner: this.owner,
+      models: [
+        { modelClass: User, modelName: 'user' }
+      ]
     });
 
-    store = env.store;
-    adapter = env.adapter;
+    this.store = this.owner.lookup('service:store');
 
-    env.registry.register('serializer:application', DS.ActiveModelSerializer);
-  },
+    this.pretender = new Pretender(function() {
+      this.put('/users/1', function() {
+        let errors = {
+          errors: {
+            first_name: ['firstName error']
+          }
+        };
 
-  afterEach: function() {
-    Ember.$.ajax = originalAjax;
-  }
-});
-
-test('errors are camelCased and are expected under the `errors` property of the payload', function(assert) {
-  var jqXHR = {
-    status: 422,
-    getAllResponseHeaders: function() { return ''; },
-    responseText: JSON.stringify({
-      errors: {
-        first_name: ["firstName error"]
-      }
-    })
-  };
-
-  Ember.$.ajax = function(hash) {
-    hash.error(jqXHR);
-  };
-
-  var user;
-  Ember.run(function() {
-    store.push({
-      data: {
-        type: 'user',
-        id: 1
-      }
+        return [
+          422,
+          { 'Content-Type': 'application/json' },
+          JSON.stringify(errors)
+        ];
+      });
     });
-    user = store.peekRecord('user', 1);
   });
 
-  Ember.run(function() {
-    user.save().then(null, function() {
-      var errors = user.get('errors');
-      assert.ok(errors.has('firstName'), "there are errors for the firstName attribute");
-      assert.deepEqual(errors.errorsFor('firstName').getEach('message'), ['firstName error']);
+  hooks.afterEach(function() {
+    this.pretender.shutdown();
+  });
+
+  test('errors are camelCased and are expected under the `errors` property of the payload', async function(assert) {
+    this.store.push({
+      data: {
+        type: 'user',
+        id: 1,
+      }
     });
+
+    let user = this.store.peekRecord('user', 1);
+
+    try {
+      await user.save();
+    } catch(err) {
+      let { errors } = user;
+
+      assert.ok(
+        errors.has('firstName'),
+        'there are errors for the firstName attribute'
+      );
+
+      assert.deepEqual(
+        errors.errorsFor('firstName').getEach('message'),
+        ['firstName error']
+      );
+    }
   });
 });

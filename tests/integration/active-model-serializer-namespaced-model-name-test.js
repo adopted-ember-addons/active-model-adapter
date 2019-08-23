@@ -1,155 +1,185 @@
+import { module, test } from 'qunit';
+import { setupTest } from 'ember-qunit';
+
 import setupStore from '../helpers/setup-store';
-import {module, test} from 'qunit';
-import {ActiveModelAdapter, ActiveModelSerializer} from 'active-model-adapter';
-import Ember from 'ember';
 
-var SuperVillain, EvilMinion, YellowMinion, DoomsdayDevice, MediocreVillain, env;
-const {run} = Ember;
+import Model from 'ember-data/model';
+import attr from 'ember-data/attr';
+import { belongsTo, hasMany } from 'ember-data/relationships';
 
+let SuperVillain, EvilMinion, YellowMinion, DoomsdayDevice, MediocreVillain;
 
-module("integration/active_model - AMS-namespaced-model-names", {
-  beforeEach: function() {
-    SuperVillain = DS.Model.extend({
-      firstName:     DS.attr('string'),
-      lastName:      DS.attr('string'),
-      evilMinions:   DS.hasMany('evil-minion')
+module('Integration | Name Spaced Model Names', function(hooks) {
+  setupTest(hooks);
+
+  hooks.beforeEach(function() {
+    SuperVillain = Model.extend({
+      firstName: attr('string'),
+      lastName: attr('string'),
+      evilMinions: hasMany('evil-minion')
     });
 
-    EvilMinion = DS.Model.extend({
-      superVillain: DS.belongsTo('super-villain'),
-      name:         DS.attr('string')
+    EvilMinion = Model.extend({
+      superVillain: belongsTo('super-villain'),
+      name: attr('string')
     });
+
     YellowMinion = EvilMinion.extend();
-    DoomsdayDevice = DS.Model.extend({
-      name:         DS.attr('string'),
-      evilMinion:   DS.belongsTo('evil-minion', { polymorphic: true })
+
+    DoomsdayDevice = Model.extend({
+      name: attr('string'),
+      evilMinion: belongsTo('evil-minion', { polymorphic: true })
     });
-    MediocreVillain = DS.Model.extend({
-      name:         DS.attr('string'),
-      evilMinions:  DS.hasMany('evil-minion', { polymorphic: true })
+
+    MediocreVillain = Model.extend({
+      name: attr('string'),
+      evilMinions: hasMany('evil-minion', { polymorphic: true })
     });
-    env = setupStore({
-      superVillain:   SuperVillain,
-      evilMinion:     EvilMinion,
-      'evilMinions/yellowMinion':   YellowMinion,
-      doomsdayDevice: DoomsdayDevice,
-      mediocreVillain: MediocreVillain,
-      yellowMinion: YellowMinion
+
+    setupStore({
+      owner: this.owner,
+      models: [
+        { modelClass: SuperVillain, modelName: 'super-villain' },
+        { modelClass: EvilMinion, modelName: 'evil-minion' },
+        { modelClass: DoomsdayDevice, modelName: 'doomsday-device' },
+        { modelClass: MediocreVillain, modelName: 'mediocre-villain' },
+        { modelClass: YellowMinion, modelName: 'evil-minions/yellow-minion' },
+        { modelClass: YellowMinion, modelName: 'yellow-minion' }
+      ]
     });
-    env.store.modelFor('super-villain');
-    env.store.modelFor('evil-minion');
-    env.store.modelFor('evil-minions/yellow-minion');
-    env.store.modelFor('doomsday-device');
-    env.store.modelFor('mediocre-villain');
-    env.registry.register('serializer:application', ActiveModelSerializer.extend({isNewSerializerAPI: true}));
-    env.registry.register('serializer:-active-model', ActiveModelSerializer.extend({isNewSerializerAPI: true}));
-    env.registry.register('adapter:-active-model', ActiveModelAdapter);
-    env.amsSerializer = env.container.lookup("serializer:-active-model");
-    env.amsAdapter    = env.container.lookup("adapter:-active-model");
-  },
 
-  afterEach: function() {
-    run(env.store, 'destroy');
-  }
-});
+    this.store = this.owner.lookup('service:store');
 
-test("serialize polymorphic", function(assert) {
-  var tom, ray;
-  run(function() {
-    tom = env.store.createRecord('evil-minions/yellow-minion', { name: "Alex", id: "124" });
-    ray = env.store.createRecord('doomsday-device', { evilMinion: tom, name: "DeathRay" });
+    this.serializer = this.store.serializerFor('application');
   });
 
-  var json = env.amsSerializer.serialize(ray._createSnapshot());
+  test('serialize polymorphic', function(assert) {
+    let tom = this.store.createRecord('evil-minions/yellow-minion', { name: 'Alex', id: '124' });
 
-  assert.deepEqual(json, {
-    name: "DeathRay",
-    evil_minion_type: "EvilMinions::YellowMinion",
-    evil_minion_id: "124"
-  });
-});
+    let ray = this.store.createRecord('doomsday-device', { evilMinion: tom, name: 'DeathRay' });
 
-test("serialize polymorphic when type key is not camelized", function(assert) {
-  YellowMinion.modelName = 'evil-minions/yellow-minion';
-  var tom, ray;
-  run(function() {
-    tom = env.store.createRecord('yellow-minion', { name: "Alex", id: "124" });
-    ray = env.store.createRecord('doomsday-device', { evilMinion: tom, name: "DeathRay" });
-  });
+    let json = this.serializer.serialize(ray._createSnapshot());
 
-  var json = env.amsSerializer.serialize(ray._createSnapshot());
-
-  assert.deepEqual(json["evil_minion_type"], "EvilMinions::YellowMinion");
-});
-
-test("extractPolymorphic hasMany", function(assert) {
-  var json_hash = {
-    mediocre_villain: { id: 1, name: "Dr Horrible", evil_minion_ids: [{ type: "EvilMinions::YellowMinion", id: 12 }] },
-    "evil-minions/yellow-minion":    [{ id: 12, name: "Alex", doomsday_device_ids: [1] }]
-  };
-  var json;
-
-  run(function() {
-    json = env.amsSerializer.normalizeResponse(env.store, MediocreVillain, json_hash, '1', 'findRecord');
+    assert.deepEqual(
+      json,
+      {
+        name: 'DeathRay',
+        evil_minion_type: 'EvilMinions::YellowMinion',
+        evil_minion_id: '124'
+      }
+    );
   });
 
-  assert.deepEqual(json, {
-    "data": {
-      "id": "1",
-      "type": "mediocre-villain",
-      "attributes": {
-        "name": "Dr Horrible"
-      },
-      "relationships": {
-        "evilMinions": {
-          "data": [
-            { "id": "12", "type": "evil-minions/yellow-minion" }
+  test('serialize polymorphic when type key is not camelized', function(assert) {
+    YellowMinion.modelName = 'evil-minions/yellow-minion';
+
+    let tom = this.store.createRecord('yellow-minion', { name: 'Alex', id: '124' });
+    let ray = this.store.createRecord('doomsday-device', { evilMinion: tom, name: 'DeathRay' });
+
+    let json = this.serializer.serialize(ray._createSnapshot());
+
+    assert.deepEqual(json['evil_minion_type'], 'EvilMinions::YellowMinion');
+  });
+
+  module('extractPolymorphic', function() {
+    test('hasMany', function(assert) {
+      let jsonHash = {
+        mediocre_villain: {
+          id: 1,
+          name: 'Dr Horrible',
+          evil_minion_ids: [
+            { type: 'EvilMinions::YellowMinion', id: 12 }
           ]
+        },
+        'evil-minions/yellow-minion': [
+          { id: 12, name: 'Alex', doomsday_device_ids: [1] }
+        ]
+      };
+
+      let json = this.serializer.normalizeResponse(
+        this.store,
+        MediocreVillain,
+        jsonHash,
+        '1',
+        'findRecord'
+      );
+
+      assert.deepEqual(
+        json,
+        {
+          'data': {
+            'id': '1',
+            'type': 'mediocre-villain',
+            'attributes': {
+              'name': 'Dr Horrible'
+            },
+            'relationships': {
+              'evilMinions': {
+                'data': [
+                  { 'id': '12', 'type': 'evil-minions/yellow-minion' }
+                ]
+              }
+            }
+          },
+          'included': [{
+            'id': '12',
+            'type': 'evil-minions/yellow-minion',
+            'attributes': {
+              'name': 'Alex'
+            },
+            'relationships': {}
+          }]
         }
-      }
-    },
-    "included": [{
-      "id": "12",
-      "type": "evil-minions/yellow-minion",
-      "attributes": {
-        "name": "Alex"
-      },
-      "relationships": {}
-    }]
-  });
-});
+      );
+    });
 
-test("extractPolymorphic belongsTo", function(assert) {
-  var json_hash = {
-    doomsday_device: { id: 1, name: "DeathRay", evil_minion_id: { type: "EvilMinions::YellowMinion", id: 12 } },
-    "evil-minions/yellow-minion":    [{ id: 12, name: "Alex", doomsday_device_ids: [1] }]
-  };
-  var json;
+    test('belongsTo', function(assert) {
+      let jsonHash = {
+        doomsday_device: {
+          id: 1,
+          name: 'DeathRay',
+          evil_minion_id: {
+            type: 'EvilMinions::YellowMinion', id: 12
+          }
+        },
+        'evil-minions/yellow-minion': [
+          { id: 12, name: 'Alex', doomsday_device_ids: [1] }
+        ]
+      };
 
-  run(function() {
-    json = env.amsSerializer.normalizeResponse(env.store, DoomsdayDevice, json_hash, '1', 'findRecord');
-  });
+      let json = this.serializer.normalizeResponse(
+        this.store,
+        DoomsdayDevice,
+        jsonHash,
+        '1',
+        'findRecord'
+      );
 
-  assert.deepEqual(json, {
-    "data": {
-      "id": "1",
-      "type": "doomsday-device",
-      "attributes": {
-        "name": "DeathRay"
-      },
-      "relationships": {
-        "evilMinion": {
-          "data": { "id": "12", "type": "evil-minions/yellow-minion" }
+      assert.deepEqual(
+        json,
+        {
+          'data': {
+            'id': '1',
+            'type': 'doomsday-device',
+            'attributes': {
+              'name': 'DeathRay'
+            },
+            'relationships': {
+              'evilMinion': {
+                'data': { 'id': '12', 'type': 'evil-minions/yellow-minion' }
+              }
+            }
+          },
+          'included': [{
+            'id': '12',
+            'type': 'evil-minions/yellow-minion',
+            'attributes': {
+              'name': 'Alex'
+            },
+            'relationships': {}
+          }]
         }
-      }
-    },
-    "included": [{
-      "id": "12",
-      "type": "evil-minions/yellow-minion",
-      "attributes": {
-        "name": "Alex"
-      },
-      "relationships": {}
-    }]
+      );
+    });
   });
 });

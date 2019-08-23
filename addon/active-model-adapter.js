@@ -1,4 +1,4 @@
-import Ember from 'ember';
+import { underscore, decamelize } from '@ember/string';
 import DS from 'ember-data';
 import { pluralize } from 'ember-inflector';
 
@@ -7,11 +7,6 @@ const {
   errorsHashToArray,
   RESTAdapter
 } = DS;
-
-const {
-  decamelize,
-  underscore
-} = Ember.String;
 
 /**
   @module ember-data
@@ -123,9 +118,9 @@ const ActiveModelAdapter = RESTAdapter.extend({
     @param {String} modelName
     @return String
   */
-  pathForType: function(modelName) {
-    var decamelized = decamelize(modelName);
-    var underscored = underscore(decamelized);
+  pathForType(modelName) {
+    let decamelized = decamelize(modelName);
+    let underscored = underscore(decamelized);
     return pluralize(underscored);
   },
 
@@ -147,7 +142,7 @@ const ActiveModelAdapter = RESTAdapter.extend({
     @param  {Object} payload
     @return {Object | DS.AdapterError} response
   */
-  handleResponse: function(status, headers, payload, requestData) {
+  handleResponse(status, headers, payload/*, requestData */) {
     if (this.isInvalid(status, headers, payload)) {
       let errors = errorsHashToArray(payload.errors);
 

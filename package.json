@@ -1,54 +1,60 @@
 {
   "name": "active-model-adapter",
   "version": "2.2.0",
-  "repository": "https://github.com/ember-data/active-model-adapter",
   "description": "Adapters and Serializers for Rails's ActiveModel::Serializers",
+  "keywords": [
+    "ember-addon"
+  ],
+  "repository": "https://github.com/ember-data/active-model-adapter",
+  "license": "MIT",
+  "author": "",
   "directories": {
     "doc": "doc",
     "test": "tests"
   },
   "scripts": {
-    "start": "ember server",
     "build": "ember build",
-    "test": "ember try:testall"
+    "lint:hbs": "ember-template-lint .",
+    "lint:js": "eslint .",
+    "start": "ember serve",
+    "test": "ember test",
+    "test:all": "ember try:each"
+  },
+  "dependencies": {
+    "ember-cli-babel": "^7.7.3",
+    "ember-inflector": "^3.0.0"
+  },
+  "devDependencies": {
+    "@ember/optional-features": "^0.7.0",
+    "broccoli-asset-rev": "^3.0.0",
+    "ember-auto-import": "^1.5.2",
+    "ember-cli": "~3.12.0",
+    "ember-cli-dependency-checker": "^3.1.0",
+    "ember-cli-eslint": "^5.1.0",
+    "ember-cli-htmlbars": "^3.0.1",
+    "ember-cli-htmlbars-inline-precompile": "^2.1.0",
+    "ember-cli-inject-live-reload": "^1.8.2",
+    "ember-cli-sri": "^2.1.1",
+    "ember-cli-template-lint": "^1.0.0-beta.1",
+    "ember-cli-uglify": "^2.1.0",
+    "ember-data": "~3.12.0",
+    "ember-disable-prototype-extensions": "^1.1.3",
+    "ember-export-application-global": "^2.0.0",
+    "ember-load-initializers": "^2.0.0",
+    "ember-maybe-import-regenerator": "^0.1.6",
+    "ember-qunit": "^4.4.1",
+    "ember-resolver": "^5.0.1",
+    "ember-source": "~3.12.0",
+    "ember-source-channel-url": "^1.1.0",
+    "ember-try": "^1.0.0",
+    "eslint-plugin-ember": "^6.2.0",
+    "eslint-plugin-node": "^9.0.1",
+    "loader.js": "^4.7.0",
+    "pretender": "^3.0.2",
+    "qunit-dom": "^0.8.4"
   },
   "engines": {
-    "node": "^4.5 || 6.* || >= 7.*"
-  },
-  "author": "",
-  "license": "MIT",
-  "devDependencies": {
-    "broccoli-babel-transpiler": "^5.5.0",
-    "broccoli-concat": "0.0.13",
-    "broccoli-es3-safe-recast": "^2.0.0",
-    "broccoli-funnel": "^1.0.1",
-    "broccoli-merge-trees": "^1.1.0",
-    "broccoli-replace": "^0.11.0",
-    "broccoli-stew": "^1.0.4",
-    "ember-cli": "~2.16.2",
-    "ember-cli-dependency-checker": "^1.2.0",
-    "ember-cli-htmlbars": "^1.0.1",
-    "ember-cli-htmlbars-inline-precompile": "^1.0.2",
-    "ember-cli-inject-live-reload": "^1.4.0",
-    "ember-cli-pretender": "0.5.0",
-    "ember-cli-qunit": "^4.0.1",
-    "ember-cli-shims": "^1.1.0",
-    "ember-data": "~2.6.0",
-    "ember-disable-prototype-extensions": "^1.0.1",
-    "ember-disable-proxy-controllers": "^1.0.1",
-    "ember-export-application-global": "^1.0.5",
-    "ember-load-initializers": "^1.0.0",
-    "ember-resolver": "^2.0.3",
-    "github": "^0.2.4",
-    "loader.js": "4.6.0",
-    "rsvp": "^3.1.0"
-  },
-  "keywords": [
-    "ember-addon"
-  ],
-  "dependencies": {
-    "ember-cli-babel": "^6.8.2",
-    "ember-inflector": "^2.0.0"
+    "node": "8.* || >= 10.*"
   },
   "ember-addon": {
     "configPath": "tests/dummy/config"
