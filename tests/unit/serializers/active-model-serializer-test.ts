@@ -49,13 +49,16 @@ class MediocreVillain extends DS.Model {
   @hasMany('evil-minion', { polymorphic: true }) evilMinions?: EvilMinion[];
 }
 
-let env: any = {};
-
 let pretender: Pretender;
+
+type Context = TestContext & {
+  amsSerializer: ActiveModelSerializer;
+}
+
 module('Unit | Serializer | active model serializer', function(hooks) {
   setupTest(hooks);
 
-  hooks.beforeEach(function(this: TestContext) {
+  hooks.beforeEach(function(this: Context) {
     this.owner.register('adapter:application', ApplicationAdapter);
     this.owner.register('serializer:application', TestSerializer);
 
@@ -66,8 +69,11 @@ module('Unit | Serializer | active model serializer', function(hooks) {
     this.owner.register('model:evil-minions/yellow-minion', YellowMinion);
     this.owner.register('model:doomsday-device', DoomsdayDevice);
     this.owner.register('model:mediocre-villain', MediocreVillain);
-    env.store = this.owner.lookup('service:store');
-    env.amsSerializer = this.owner.lookup('serializer:-active-model');
+
+    this.store = this.owner.lookup('service:store');
+
+    this.amsSerializer = this.owner.lookup('serializer:-active-model');
+
     pretender = new Pretender();
   });
 
@@ -75,7 +81,7 @@ module('Unit | Serializer | active model serializer', function(hooks) {
     pretender.shutdown();
   });
 
-  test('errors are camelCased and are expected under the `errors` property of the payload', async function(assert) {
+  test('errors are camelCased and are expected under the `errors` property of the payload', async function(this: Context, assert) {
     const store: Store = this.owner.lookup('service:store');
     store.push({
       data: {
@@ -105,20 +111,20 @@ module('Unit | Serializer | active model serializer', function(hooks) {
     }
   });
 
-  test('serialize', function(assert) {
+  test('serialize', function(this: Context, assert) {
     var tom;
-    const league = env.store.createRecord('home-planet', {
+    const league = this.store.createRecord('home-planet', {
       name: 'Villain League',
       id: '123'
     });
 
-    tom = env.store.createRecord('super-villain', {
+    tom = this.store.createRecord('super-villain', {
       firstName: 'Tom',
       lastName: 'Dale',
       homePlanet: league
     });
 
-    var json = env.amsSerializer.serialize(tom._createSnapshot());
+    var json = this.amsSerializer.serialize(tom._createSnapshot(), {});
 
     assert.deepEqual(json, {
       first_name: 'Tom',
@@ -127,14 +133,14 @@ module('Unit | Serializer | active model serializer', function(hooks) {
     });
   });
 
-  test('serializeIntoHash', function(assert) {
-    const league = env.store.createRecord('home-planet', {
+  test('serializeIntoHash', function(this: Context, assert) {
+    const league = this.store.createRecord('home-planet', {
       name: 'Umber',
       id: '123'
     });
     var json = {};
 
-    env.amsSerializer.serializeIntoHash(
+    this.amsSerializer.serializeIntoHash(
       json,
       HomePlanet,
       league._createSnapshot()
@@ -147,14 +153,14 @@ module('Unit | Serializer | active model serializer', function(hooks) {
     });
   });
 
-  test('serializeIntoHash with decamelized types', function(assert) {
-    const league = env.store.createRecord('home-planet', {
+  test('serializeIntoHash with decamelized types', function(this: Context, assert) {
+    const league = this.store.createRecord('home-planet', {
       name: 'Umber',
       id: '123'
     });
     var json = {};
 
-    env.amsSerializer.serializeIntoHash(
+    this.amsSerializer.serializeIntoHash(
       json,
       HomePlanet,
       league._createSnapshot()
@@ -164,6 +170,124 @@ module('Unit | Serializer | active model serializer', function(hooks) {
       home_planet: {
         name: 'Umber'
       }
+    });
+  });
+
+  test('normalize links', function(this: Context, assert) {
+    var home_planet = {
+      id: '1',
+      name: 'Umber',
+      links: { super_villains: '/api/super_villians/1' }
+    };
+
+    var json = this.amsSerializer.normalize(
+      HomePlanet,
+      home_planet,
+      'homePlanet'
+    );
+
+    assert.equal(
+      json.data.relationships.superVillains.links.related,
+      '/api/super_villians/1',
+      'normalize links'
+    );
+  });
+
+  test('normalize', function(this: Context, assert) {
+    class SuperVillainExtended extends SuperVillain {
+      @belongsTo('yellow-minion') yellowMinion?: YellowMinion;
+    }
+    this.owner.register('model:super-villain', SuperVillainExtended);
+
+    var superVillain_hash = {
+      id: '1',
+      first_name: 'Tom',
+      last_name: 'Dale',
+      home_planet_id: '123',
+      evil_minion_ids: [1, 2]
+    };
+
+    var json = this.amsSerializer.normalize(
+      SuperVillain,
+      superVillain_hash,
+      'superVillain'
+    );
+
+    assert.deepEqual(json, {
+      data: {
+        id: '1',
+        type: 'super-villain',
+        attributes: {
+          firstName: 'Tom',
+          lastName: 'Dale'
+        },
+        relationships: {
+          evilMinions: {
+            data: [
+              { id: '1', type: 'evil-minion' },
+              { id: '2', type: 'evil-minion' }
+            ]
+          },
+          homePlanet: {
+            data: { id: '123', type: 'home-planet' }
+          }
+        }
+      }
+    });
+  });
+
+  test('normalizeResponse', function(this: Context, assert) {
+    this.owner.register('adapter:superVillain', ActiveModelAdapter);
+
+    var json_hash = {
+      home_planet: { id: '1', name: 'Umber', super_villain_ids: [1] },
+      super_villains: [
+        {
+          id: '1',
+          first_name: 'Tom',
+          last_name: 'Dale',
+          home_planet_id: '1'
+        }
+      ]
+    };
+
+    var json;
+    json = this.amsSerializer.normalizeResponse(
+      this.store,
+      HomePlanet,
+      json_hash,
+      '1',
+      'findRecord'
+    );
+
+    assert.deepEqual(json, {
+      data: {
+        id: '1',
+        type: 'home-planet',
+        attributes: {
+          name: 'Umber'
+        },
+        relationships: {
+          superVillains: {
+            data: [{ id: '1', type: 'super-villain' }]
+          }
+        }
+      },
+      included: [
+        {
+          id: '1',
+          type: 'super-villain',
+          attributes: {
+            firstName: 'Tom',
+            lastName: 'Dale'
+          },
+          relationships: {
+            homePlanet: {
+              data: { id: '1', type: 'home-planet' }
+            }
+          }
+        }
+      ]
     });
   });
 });
