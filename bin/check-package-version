@@ -1,9 +1,0 @@
-#!/usr/bin/env node
-
-var package = require('../package');
-
-if (package.version.indexOf('+') >= 0) {
-  console.warn('detected a + in package.json, which indicates a prelease version!!!!');
-  console.warn('NOT publishing!');
-  process.exit(1);
-}
