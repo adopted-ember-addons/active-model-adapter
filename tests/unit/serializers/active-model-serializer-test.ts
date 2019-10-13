@@ -10,6 +10,7 @@ import attr from 'ember-data/attr';
 import Pretender from 'pretender';
 import Store from 'ember-data/store';
 import { get } from '@ember/object';
+import { run } from '@ember/runloop';
 
 class ApplicationAdapter extends ActiveModelAdapter {}
 class User extends DS.Model {
@@ -53,7 +54,7 @@ let pretender: Pretender;
 
 type Context = TestContext & {
   amsSerializer: ActiveModelSerializer;
-}
+};
 
 module('Unit | Serializer | active model serializer', function(hooks) {
   setupTest(hooks);
@@ -273,6 +274,58 @@ module('Unit | Serializer | active model serializer', function(hooks) {
           }
         }
       },
+      included: [
+        {
+          id: '1',
+          type: 'super-villain',
+          attributes: {
+            firstName: 'Tom',
+            lastName: 'Dale'
+          },
+          relationships: {
+            homePlanet: {
+              data: { id: '1', type: 'home-planet' }
+            }
+          }
+        }
+      ]
+    });
+  });
+
+  test('normalizeResponse', function(this: Context, assert) {
+    this.owner.register('adapter:superVillain', ActiveModelAdapter);
+    var array;
+
+    var json_hash = {
+      home_planets: [{ id: '1', name: 'Umber', super_villain_ids: [1] }],
+      super_villains: [
+        { id: '1', first_name: 'Tom', last_name: 'Dale', home_planet_id: '1' }
+      ]
+    };
+
+    array = this.amsSerializer.normalizeResponse(
+      this.store,
+      HomePlanet,
+      json_hash,
+      null,
+      'findAll'
+    );
+
+    assert.deepEqual(array, {
+      data: [
+        {
+          id: '1',
+          type: 'home-planet',
+          attributes: {
+            name: 'Umber'
+          },
+          relationships: {
+            superVillains: {
+              data: [{ id: '1', type: 'super-villain' }]
+            }
+          }
+        }
+      ],
       included: [
         {
           id: '1',
