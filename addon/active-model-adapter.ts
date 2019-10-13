@@ -1,13 +1,14 @@
 import Ember from 'ember';
 import DS from 'ember-data';
 import { pluralize } from 'ember-inflector';
+import ModelRegistry from 'ember-data/types/registries/model';
 
 const { InvalidError, errorsHashToArray, RESTAdapter } = DS;
 
 const { decamelize, underscore } = Ember.String;
 
 interface ActiveModelPayload {
-  errors: any
+  errors: any;
 }
 
 /**
@@ -116,8 +117,8 @@ export default class ActiveModelAdapter extends RESTAdapter {
       //=> "famous_people"
     ```
 */
-  pathForType(modelName: string) {
-    var decamelized = decamelize(modelName);
+  pathForType<K extends keyof ModelRegistry>(modelName: K) {
+    var decamelized = decamelize(modelName as string);
     var underscored = underscore(decamelized);
     return pluralize(underscored);
   }
@@ -134,13 +135,18 @@ export default class ActiveModelAdapter extends RESTAdapter {
     For more information on 422 HTTP Error code see 11.2 WebDAV RFC 4918
     https://tools.ietf.org/html/rfc4918#section-11.2
   */
-  handleResponse(status: number, headers: {}, payload: ActiveModelPayload, _requestData: Object | DS.AdapterError) {
+  handleResponse(
+    status: number,
+    headers: {},
+    payload: ActiveModelPayload,
+    requestData: Object | DS.AdapterError
+  ): any {
     if (this.isInvalid(status, headers, payload)) {
       let errors = errorsHashToArray(payload.errors);
 
       return new InvalidError(errors);
     } else {
-      return this._super(...arguments);
+      return super.handleResponse(status, headers, payload, requestData);
     }
   }
 }
