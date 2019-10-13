@@ -187,7 +187,7 @@ export default class ActiveModelSerializer extends RESTSerializer {
   */
   normalize(typeClass: DS.Model, hash: any, prop: string) {
     this.normalizeLinks(hash);
-    return this._super(typeClass, hash, prop);
+    return super.normalize(typeClass, hash, prop);
   }
 
   /**
@@ -268,7 +268,7 @@ export default class ActiveModelSerializer extends RESTSerializer {
         }
       }
     }, this);
-    return this._super.apply(this, arguments);
+    return super.extractRelationships(modelClass, resourceHash);
   }
 
   modelNameFromPayloadKey(key: string) {
