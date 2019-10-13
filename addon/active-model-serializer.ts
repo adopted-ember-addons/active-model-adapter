@@ -134,7 +134,7 @@ export default class ActiveModelSerializer extends RESTSerializer {
   /*
     Does not serialize hasMany relationships by default.
   */
-  serializeHasManyn() {}
+  serializeHasMany() {}
 
   /**
    Underscores the JSON root keys when serializing.
