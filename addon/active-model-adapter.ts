@@ -2,8 +2,9 @@ import Ember from 'ember';
 import DS from 'ember-data';
 import { pluralize } from 'ember-inflector';
 import ModelRegistry from 'ember-data/types/registries/model';
+import RESTAdapter from 'ember-data/adapters/rest';
 
-const { InvalidError, errorsHashToArray, RESTAdapter } = DS;
+const { InvalidError, errorsHashToArray } = DS;
 
 const { decamelize, underscore } = Ember.String;
 

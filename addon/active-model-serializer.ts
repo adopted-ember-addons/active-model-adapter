@@ -4,12 +4,13 @@ import { singularize, pluralize } from 'ember-inflector';
 import { classify, decamelize, camelize, underscore } from '@ember/string';
 import { inject as service } from '@ember/service';
 import Store from 'ember-data/store';
+import RESTSerializer from 'ember-data/serializers/rest';
 
 /**
   @module ember-data
  */
 
-const { RESTSerializer, normalizeModelName } = DS;
+const { normalizeModelName } = DS;
 type RelationshipKind = 'belongsTo' | 'hasMany';
 
 /**
@@ -234,6 +235,7 @@ export default class ActiveModelSerializer extends RESTSerializer {
       // converts post to post_id, posts to post_ids
       if (
         resourceHash[idLessKey] &&
+        // @ts-ignore
         typeof relationshipMeta[relationshipKey] === 'undefined'
       ) {
         resourceHash[relationshipKey] = resourceHash[idLessKey];
@@ -241,6 +243,7 @@ export default class ActiveModelSerializer extends RESTSerializer {
 
       // prefer the format the AMS gem expects, e.g.:
       // relationship: {id: id, type: type}
+      // @ts-ignore Awaiting fix here https://github.com/DefinitelyTyped/DefinitelyTyped/pull/39114
       if (relationshipMeta.options.polymorphic) {
         extractPolymorphicRelationships(
           key,
@@ -257,6 +260,7 @@ export default class ActiveModelSerializer extends RESTSerializer {
         var polymorphicTypeKey = this.keyForRelationship(key) + '_type';
         if (
           resourceHash[polymorphicTypeKey] &&
+      // @ts-ignore Awaiting fix here https://github.com/DefinitelyTyped/DefinitelyTyped/pull/39114
           relationshipMeta.options.polymorphic
         ) {
           let id = resourceHash[relationshipKey];
