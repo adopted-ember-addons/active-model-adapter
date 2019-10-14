@@ -581,61 +581,63 @@ module('Unit | Serializer | active model serializer', function(hooks) {
     });
   });
 
-  // FIXME - fails on `this.store` is undefined
-  // test('belongsTo (weird format) does not screw if there is a relationshipType attribute', function(this: Context, assert) {
-  //   this.owner.register('adapter:yellow-minion', ActiveModelAdapter);
+  test('belongsTo (weird format) does not screw if there is a relationshipType attribute', function(this: Context, assert) {
+    class MoreDoom extends DoomsdayDevice {
+      @attr() evilMinionType!: any;
+    }
 
-  //   DoomsdayDevice.reopen({
-  //     evilMinionType: DS.attr()
-  //   });
+    this.owner.register('model:doomsday-device', MoreDoom);
+    this.owner.register('adapter:yellow-minion', ActiveModelAdapter);
 
-  //   const json_hash = {
-  //     doomsday_device: {
-  //       id: 1,
-  //       name: 'DeathRay',
-  //       evil_minion_id: {
-  //         id: 12,
-  //         type: 'yellow_minion'
-  //       },
-  //       evil_minion_type: 'what a minion'
-  //     },
-  //     yellow_minions: [{ id: 12, name: 'Alex' }]
-  //   };
+    const MoreDoomModel = this.store.modelFor('doomsday-device');
 
-  //   const json = this.amsSerializer.normalizeResponse(
-  //     this.store,
-  //     DoomsdayDevice,
-  //     json_hash,
-  //     '1',
-  //     'findRecord'
-  //   );
+    const json_hash = {
+      doomsday_device: {
+        id: 1,
+        name: 'DeathRay',
+        evil_minion_id: {
+          id: 12,
+          type: 'yellow_minion'
+        },
+        evil_minion_type: 'what a minion'
+      },
+      yellow_minions: [{ id: 12, name: 'Alex' }]
+    };
 
-  //   assert.deepEqual(json, {
-  //     data: {
-  //       id: '1',
-  //       type: 'doomsday-device',
-  //       attributes: {
-  //         name: 'DeathRay',
-  //         evilMinionType: 'what a minion'
-  //       },
-  //       relationships: {
-  //         evilMinion: {
-  //           data: { id: '12', type: 'yellow-minion' }
-  //         }
-  //       }
-  //     },
-  //     included: [
-  //       {
-  //         id: '12',
-  //         type: 'yellow-minion',
-  //         attributes: {
-  //           name: 'Alex'
-  //         },
-  //         relationships: {}
-  //       }
-  //     ]
-  //   });
-  // });
+    const json = this.amsSerializer.normalizeResponse(
+      this.store,
+      MoreDoomModel,
+      json_hash,
+      '1',
+      'findRecord'
+    );
+
+    assert.deepEqual(json, {
+      data: {
+        id: '1',
+        type: 'doomsday-device',
+        attributes: {
+          name: 'DeathRay',
+          evilMinionType: 'what a minion'
+        },
+        relationships: {
+          evilMinion: {
+            data: { id: '12', type: 'yellow-minion' }
+          }
+        }
+      },
+      included: [
+        {
+          id: '12',
+          type: 'yellow-minion',
+          attributes: {
+            name: 'Alex'
+          },
+          relationships: {}
+        }
+      ]
+    });
+  });
 
   test('extractPolymorphic when the related data is not specified', function(this: Context, assert) {
     const DoomsdayDevice = this.store.modelFor('doomsday-device');
