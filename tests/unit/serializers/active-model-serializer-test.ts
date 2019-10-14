@@ -132,7 +132,7 @@ module('Unit | Serializer | active model serializer', function(hooks) {
       homePlanet: league
     });
 
-    var json = this.amsSerializer.serialize(tom._createSnapshot(), {});
+    const json = this.amsSerializer.serialize(tom._createSnapshot(), {});
 
     assert.deepEqual(json, {
       first_name: 'Tom',
@@ -146,7 +146,7 @@ module('Unit | Serializer | active model serializer', function(hooks) {
       name: 'Umber',
       id: '123'
     });
-    var json = {};
+    const json = {};
 
     this.amsSerializer.serializeIntoHash(
       json,
@@ -166,7 +166,7 @@ module('Unit | Serializer | active model serializer', function(hooks) {
       name: 'Umber',
       id: '123'
     });
-    var json = {};
+    const json = {};
 
     this.amsSerializer.serializeIntoHash(
       json,
@@ -182,13 +182,13 @@ module('Unit | Serializer | active model serializer', function(hooks) {
   });
 
   test('normalize links', function(this: Context, assert) {
-    var home_planet = {
+    const home_planet = {
       id: '1',
       name: 'Umber',
       links: { super_villains: '/api/super_villians/1' }
     };
 
-    var json: any = this.amsSerializer.normalize(
+    const json: any = this.amsSerializer.normalize(
       HomePlanet,
       home_planet,
       'homePlanet'
@@ -207,7 +207,7 @@ module('Unit | Serializer | active model serializer', function(hooks) {
     }
     this.owner.register('model:super-villain', SuperVillainExtended);
 
-    var superVillain_hash = {
+    const superVillain_hash = {
       id: '1',
       first_name: 'Tom',
       last_name: 'Dale',
@@ -215,7 +215,7 @@ module('Unit | Serializer | active model serializer', function(hooks) {
       evil_minion_ids: [1, 2]
     };
 
-    var json = this.amsSerializer.normalize(
+    const json = this.amsSerializer.normalize(
       SuperVillain,
       superVillain_hash,
       'superVillain'
@@ -247,7 +247,7 @@ module('Unit | Serializer | active model serializer', function(hooks) {
   test('normalizeResponse', function(this: Context, assert) {
     this.owner.register('adapter:superVillain', ActiveModelAdapter);
 
-    var json_hash = {
+    const json_hash = {
       home_planet: { id: '1', name: 'Umber', super_villain_ids: [1] },
       super_villains: [
         {
@@ -259,8 +259,7 @@ module('Unit | Serializer | active model serializer', function(hooks) {
       ]
     };
 
-    var json;
-    json = this.amsSerializer.normalizeResponse(
+    const json = this.amsSerializer.normalizeResponse(
       this.store,
       HomePlanet,
       json_hash,
@@ -301,16 +300,15 @@ module('Unit | Serializer | active model serializer', function(hooks) {
 
   test('normalizeResponse', function(this: Context, assert) {
     this.owner.register('adapter:superVillain', ActiveModelAdapter);
-    var array;
 
-    var json_hash = {
+    const json_hash = {
       home_planets: [{ id: '1', name: 'Umber', super_villain_ids: [1] }],
       super_villains: [
         { id: '1', first_name: 'Tom', last_name: 'Dale', home_planet_id: '1' }
       ]
     };
 
-    array = this.amsSerializer.normalizeResponse(
+    const array = this.amsSerializer.normalizeResponse(
       this.store,
       HomePlanet,
       json_hash,
@@ -472,7 +470,7 @@ module('Unit | Serializer | active model serializer', function(hooks) {
   test('extractPolymorphic belongsTo', function(this: Context, assert) {
     this.owner.register('adapter:yellow-minion', ActiveModelAdapter);
 
-    var json_hash = {
+    const json_hash = {
       doomsday_device: {
         id: 1,
         name: 'DeathRay',
@@ -518,7 +516,7 @@ module('Unit | Serializer | active model serializer', function(hooks) {
   test('extractPolymorphic belongsTo (weird format)', function(this: Context, assert) {
     this.owner.register('adapter:yellow-minion', ActiveModelAdapter);
 
-    var json_hash = {
+    const json_hash = {
       doomsday_device: {
         id: 1,
         name: 'DeathRay',
@@ -570,7 +568,7 @@ module('Unit | Serializer | active model serializer', function(hooks) {
   //     evilMinionType: DS.attr()
   //   });
 
-  //   var json_hash = {
+  //   const json_hash = {
   //     doomsday_device: {
   //       id: 1,
   //       name: 'DeathRay',
@@ -681,7 +679,7 @@ module('Unit | Serializer | active model serializer', function(hooks) {
   });
 
   test('extractPolymorphic does not break hasMany relationships', function(this: Context, assert) {
-    var payload = {
+    const payload = {
       mediocre_villain: { id: 1, name: 'Dr. Evil', evil_minion_ids: [] }
     };
 
@@ -711,7 +709,7 @@ module('Unit | Serializer | active model serializer', function(hooks) {
   });
 
   test('extractErrors camelizes keys', function(this: Context, assert) {
-    var error = {
+    const error = {
       errors: [
         {
           source: {
@@ -735,7 +733,7 @@ module('Unit | Serializer | active model serializer', function(hooks) {
   });
 
   test('supports the default format for polymorphic belongsTo', function(this: Context, assert) {
-    var payload = {
+    const payload = {
       doomsday_devices: [
         {
           id: 1,
@@ -768,7 +766,7 @@ module('Unit | Serializer | active model serializer', function(hooks) {
 
   // FIXME - fails on `this.store` is undefined
   test('supports the default format for polymorphic hasMany', function(this: Context, assert) {
-    var payload = {
+    const payload = {
       mediocre_villain: {
         id: 1,
         evil_minions: [
