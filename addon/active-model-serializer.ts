@@ -2,6 +2,8 @@ import DS from 'ember-data';
 import Ember from 'ember';
 import { singularize, pluralize } from 'ember-inflector';
 import { classify, decamelize, camelize, underscore } from '@ember/string';
+import { inject as service } from '@ember/service';
+import Store from 'ember-data/store';
 
 /**
   @module ember-data
@@ -94,6 +96,7 @@ type RelationshipKind = 'belongsTo' | 'hasMany';
   ```
 */
 export default class ActiveModelSerializer extends RESTSerializer {
+  @service store!: Store;
   // SERIALIZE
 
   /**
@@ -122,10 +125,6 @@ export default class ActiveModelSerializer extends RESTSerializer {
    `keyForLink` can be used to define a custom key when deserializing link
    properties. The `ActiveModelSerializer` camelizes link keys by default.
 
-   @method keyForLink
-   @param {String} key
-   @param {String} kind `belongsTo` or `hasMany`
-   @return {String} normalized key
   */
   keyForLink(key: string, _relationshipKind: RelationshipKind) {
     return camelize(key);
