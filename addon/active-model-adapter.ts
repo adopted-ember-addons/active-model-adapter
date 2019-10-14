@@ -45,7 +45,7 @@ interface ActiveModelPayload {
   For example, if you have a `Person` model:
 
   ```js
-  App.FamousPerson = DS.Model.extend({
+  export default DS.Model.extend({
     firstName: DS.attr('string'),
     lastName: DS.attr('string'),
     occupation: DS.attr('string')
@@ -68,13 +68,13 @@ interface ActiveModelPayload {
   Let's imagine that `Occupation` is just another model:
 
   ```js
-  App.Person = DS.Model.extend({
+  export default DS.Model.extend({
     firstName: DS.attr('string'),
     lastName: DS.attr('string'),
     occupation: DS.belongsTo('occupation')
   });
 
-  App.Occupation = DS.Model.extend({
+  export default DS.Model.extend({
     name: DS.attr('string'),
     salary: DS.attr('number'),
     people: DS.hasMany('person')
