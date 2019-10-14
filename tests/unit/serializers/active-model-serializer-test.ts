@@ -10,6 +10,7 @@ import attr from 'ember-data/attr';
 import Pretender from 'pretender';
 import Store from 'ember-data/store';
 import { get } from '@ember/object';
+import Model from 'ember-data/model';
 
 class ApplicationAdapter extends ActiveModelAdapter {}
 class User extends DS.Model {
@@ -20,19 +21,19 @@ class TestSerializer extends ActiveModelSerializer {
   isNewSerializerAPI = true;
 }
 
-class SuperVillain extends DS.Model {
+class SuperVillain extends Model {
   @attr('string') firstName!: string;
   @attr('string') lastName!: string;
   @belongsTo('home-planet') homePlanet?: HomePlanet;
   @hasMany('evil-minion') evilMinions?: EvilMinion[];
 }
 
-class HomePlanet extends DS.Model {
+class HomePlanet extends Model {
   @attr('string') name!: string;
   @hasMany('super-villain', { async: true }) superVillains?: SuperVillain[];
 }
 
-class EvilMinion extends DS.Model {
+class EvilMinion extends Model {
   @belongsTo('super-villain') superVillain?: SuperVillain;
   @attr('string') name!: string;
 
@@ -46,13 +47,13 @@ class YellowMinion extends EvilMinion {
   }
 }
 
-class DoomsdayDevice extends DS.Model {
+class DoomsdayDevice extends Model {
   @attr('string') name!: string;
   @belongsTo('evil-minion', { polymorphic: true, async: false })
   evilMinion?: EvilMinion;
 }
 
-class MediocreVillain extends DS.Model {
+class MediocreVillain extends Model {
   @attr('string') name!: string;
   @hasMany('evil-minion', { polymorphic: true }) evilMinions?: EvilMinion[];
 }
@@ -120,13 +121,12 @@ module('Unit | Serializer | active model serializer', function(hooks) {
   });
 
   test('serialize', function(this: Context, assert) {
-    var tom;
     const league = this.store.createRecord('home-planet', {
       name: 'Villain League',
       id: '123'
     });
 
-    tom = this.store.createRecord('super-villain', {
+    const tom = this.store.createRecord('super-villain', {
       firstName: 'Tom',
       lastName: 'Dale',
       homePlanet: league
@@ -188,7 +188,7 @@ module('Unit | Serializer | active model serializer', function(hooks) {
       links: { super_villains: '/api/super_villians/1' }
     };
 
-    var json = this.amsSerializer.normalize(
+    var json: any = this.amsSerializer.normalize(
       HomePlanet,
       home_planet,
       'homePlanet'
