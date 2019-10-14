@@ -28,6 +28,10 @@ class SuperVillain extends Model {
   @hasMany('evil-minion') evilMinions?: EvilMinion[];
 }
 
+class SuperVillainExtended extends SuperVillain {
+  @belongsTo('yellow-minion') yellowMinion?: YellowMinion;
+}
+
 class HomePlanet extends Model {
   @attr('string') name!: string;
   @hasMany('super-villain', { async: true }) superVillains?: SuperVillain[];
@@ -63,6 +67,15 @@ let pretender: Pretender;
 type Context = TestContext & {
   amsSerializer: ActiveModelSerializer;
 };
+
+declare module 'ember-data/types/registries/serializer' {
+  export default interface SerializerRegistry {
+    application: TestSerializer;
+    'super-villain': TestSerializer;
+    'mediocre-villain': TestSerializer;
+    'home-planet': TestSerializer;
+  }
+}
 
 module('Unit | Serializer | active model serializer', function(hooks) {
   setupTest(hooks);
@@ -142,6 +155,7 @@ module('Unit | Serializer | active model serializer', function(hooks) {
   });
 
   test('serializeIntoHash', function(this: Context, assert) {
+    const HomePlanet = this.store.modelFor('home-planet');
     const league = this.store.createRecord('home-planet', {
       name: 'Umber',
       id: '123'
@@ -162,6 +176,7 @@ module('Unit | Serializer | active model serializer', function(hooks) {
   });
 
   test('serializeIntoHash with decamelized types', function(this: Context, assert) {
+    const HomePlanet = this.store.modelFor('home-planet');
     const league = this.store.createRecord('home-planet', {
       name: 'Umber',
       id: '123'
@@ -182,6 +197,7 @@ module('Unit | Serializer | active model serializer', function(hooks) {
   });
 
   test('normalize links', function(this: Context, assert) {
+    const HomePlanet = this.store.modelFor('home-planet');
     const home_planet = {
       id: '1',
       name: 'Umber',
@@ -202,10 +218,9 @@ module('Unit | Serializer | active model serializer', function(hooks) {
   });
 
   test('normalize', function(this: Context, assert) {
-    class SuperVillainExtended extends SuperVillain {
-      @belongsTo('yellow-minion') yellowMinion?: YellowMinion;
-    }
     this.owner.register('model:super-villain', SuperVillainExtended);
+
+    const SuperVillain = this.store.modelFor('super-villain');
 
     const superVillain_hash = {
       id: '1',
@@ -245,6 +260,7 @@ module('Unit | Serializer | active model serializer', function(hooks) {
   });
 
   test('normalizeResponse', function(this: Context, assert) {
+    const HomePlanet = this.store.modelFor('home-planet');
     this.owner.register('adapter:superVillain', ActiveModelAdapter);
 
     const json_hash = {
@@ -299,6 +315,7 @@ module('Unit | Serializer | active model serializer', function(hooks) {
   });
 
   test('normalizeResponse', function(this: Context, assert) {
+    const HomePlanet = this.store.modelFor('home-planet');
     this.owner.register('adapter:superVillain', ActiveModelAdapter);
 
     const json_hash = {
@@ -312,7 +329,7 @@ module('Unit | Serializer | active model serializer', function(hooks) {
       this.store,
       HomePlanet,
       json_hash,
-      null,
+      '',
       'findAll'
     );
 
@@ -350,6 +367,7 @@ module('Unit | Serializer | active model serializer', function(hooks) {
   });
 
   test('normalizeResponse - polymorphic with empty value for polymorphic relationship', function(this: Context, assert) {
+    const DoomsdayDevice = this.store.modelFor('doomsday-device');
     const payload = {
       doomsday_devices: [
         {
@@ -363,7 +381,7 @@ module('Unit | Serializer | active model serializer', function(hooks) {
       this.store,
       DoomsdayDevice,
       payload,
-      null,
+      '',
       'findAll'
     );
 
@@ -417,6 +435,7 @@ module('Unit | Serializer | active model serializer', function(hooks) {
   });
 
   test('extractPolymorphic hasMany', function(this: Context, assert) {
+    const MediocreVillain = this.store.modelFor('mediocre-villain');
     MediocreVillain.toString = function() {
       return 'MediocreVillain';
     };
@@ -468,6 +487,7 @@ module('Unit | Serializer | active model serializer', function(hooks) {
   });
 
   test('extractPolymorphic belongsTo', function(this: Context, assert) {
+    const DoomsdayDevice = this.store.modelFor('doomsday-device');
     this.owner.register('adapter:yellow-minion', ActiveModelAdapter);
 
     const json_hash = {
@@ -514,6 +534,7 @@ module('Unit | Serializer | active model serializer', function(hooks) {
   });
 
   test('extractPolymorphic belongsTo (weird format)', function(this: Context, assert) {
+    const DoomsdayDevice = this.store.modelFor('doomsday-device');
     this.owner.register('adapter:yellow-minion', ActiveModelAdapter);
 
     const json_hash = {
@@ -617,6 +638,7 @@ module('Unit | Serializer | active model serializer', function(hooks) {
   // });
 
   test('extractPolymorphic when the related data is not specified', function(this: Context, assert) {
+    const DoomsdayDevice = this.store.modelFor('doomsday-device');
     const payload = {
       doomsday_device: { id: 1, name: 'DeathRay' },
       evil_minions: [{ id: 12, name: 'Alex' }]
@@ -653,6 +675,7 @@ module('Unit | Serializer | active model serializer', function(hooks) {
   });
 
   test('extractPolymorphic hasMany when the related data is not specified', function(this: Context, assert) {
+    const MediocreVillain = this.store.modelFor('mediocre-villain');
     const payload = {
       mediocre_villain: { id: 1, name: 'Dr Horrible' }
     };
@@ -679,6 +702,7 @@ module('Unit | Serializer | active model serializer', function(hooks) {
   });
 
   test('extractPolymorphic does not break hasMany relationships', function(this: Context, assert) {
+    const MediocreVillain = this.store.modelFor('mediocre-villain');
     const payload = {
       mediocre_villain: { id: 1, name: 'Dr. Evil', evil_minion_ids: [] }
     };
@@ -709,6 +733,7 @@ module('Unit | Serializer | active model serializer', function(hooks) {
   });
 
   test('extractErrors camelizes keys', function(this: Context, assert) {
+    const SuperVillain = this.store.modelFor('super-villain');
     const error = {
       errors: [
         {
@@ -733,6 +758,7 @@ module('Unit | Serializer | active model serializer', function(hooks) {
   });
 
   test('supports the default format for polymorphic belongsTo', function(this: Context, assert) {
+    const DoomsdayDevice = this.store.modelFor('doomsday-device');
     const payload = {
       doomsday_devices: [
         {
@@ -766,6 +792,7 @@ module('Unit | Serializer | active model serializer', function(hooks) {
 
   // FIXME - fails on `this.store` is undefined
   test('supports the default format for polymorphic hasMany', function(this: Context, assert) {
+    const MediocreVillain = this.store.modelFor('mediocre-villain');
     const payload = {
       mediocre_villain: {
         id: 1,
@@ -798,6 +825,7 @@ module('Unit | Serializer | active model serializer', function(hooks) {
   });
 
   test('when using the DS.EmbeddedRecordsMixin, does not erase attributes for polymorphic embedded models', function(this: Context, assert) {
+    const MediocreVillain = this.store.modelFor('mediocre-villain');
     this.owner.register(
       'serializer:mediocre-villain',
       ActiveModelSerializer.extend(DS.EmbeddedRecordsMixin, {
@@ -839,6 +867,7 @@ module('Unit | Serializer | active model serializer', function(hooks) {
 
   // FIXME - id is undefined
   test('can have id-less belongsTo relationship', function(this: Context, assert) {
+    const SuperVillain = this.store.modelFor('super-villain');
     const payload = {
       super_villain: {
         id: 1,
@@ -862,6 +891,7 @@ module('Unit | Serializer | active model serializer', function(hooks) {
   });
 
   test('can have id-less belongsTo relationship part 2', async function(assert) {
+    const HomePlanet = this.store.modelFor('home-planet');
     const payload = {
       home_planet: {
         id: 1,
