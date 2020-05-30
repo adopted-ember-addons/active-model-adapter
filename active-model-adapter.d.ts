@@ -1,6 +1,6 @@
-import DS from "ember-data";
-import ModelRegistry from "ember-data/types/registries/model";
-import RESTAdapter from "ember-data/adapters/rest";
+import DS from 'ember-data';
+import ModelRegistry from 'ember-data/types/registries/model';
+import RESTAdapter from 'ember-data/adapters/rest';
 interface ActiveModelPayload {
   errors: unknown;
 }

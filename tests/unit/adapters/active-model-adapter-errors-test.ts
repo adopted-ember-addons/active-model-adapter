@@ -28,7 +28,7 @@ module('Unit | Adapter | active model adapter errors test', function(hooks) {
 
   hooks.afterEach(function() {
     pretender.shutdown();
-  })
+  });
 
   test('errors can be iterated once intercepted by the adapter', async function(this: TestContext, assert) {
     assert.expect(2);

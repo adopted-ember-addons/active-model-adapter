@@ -1,9 +1,9 @@
-import Ember from "ember";
-import DS from "ember-data";
-import { pluralize } from "ember-inflector";
-import ModelRegistry from "ember-data/types/registries/model";
-import RESTAdapter from "ember-data/adapters/rest";
-import { AnyObject } from "active-model-adapter";
+import Ember from 'ember';
+import DS from 'ember-data';
+import { pluralize } from 'ember-inflector';
+import ModelRegistry from 'ember-data/types/registries/model';
+import RESTAdapter from 'ember-data/adapters/rest';
+import { AnyObject } from 'active-model-adapter';
 
 const { InvalidError, errorsHashToArray } = DS;
 
@@ -109,7 +109,7 @@ interface ActiveModelPayload {
 **/
 
 export default class ActiveModelAdapter extends RESTAdapter {
-  defaultSerializer = "-active-model";
+  defaultSerializer = '-active-model';
   /**
     The ActiveModelAdapter overrides the `pathForType` method to build
     underscored URLs by decamelizing and pluralizing the object type name.

@@ -1,7 +1,7 @@
-import DS from "ember-data";
-import Store from "ember-data/store";
-import RESTSerializer from "ember-data/serializers/rest";
-declare type RelationshipKind = "belongsTo" | "hasMany";
+import DS from 'ember-data';
+import Store from 'ember-data/store';
+import RESTSerializer from 'ember-data/serializers/rest';
+declare type RelationshipKind = 'belongsTo' | 'hasMany';
 /**
   The ActiveModelSerializer is a subclass of the RESTSerializer designed to integrate
   with a JSON API that uses an underscored naming convention instead of camelCasing.

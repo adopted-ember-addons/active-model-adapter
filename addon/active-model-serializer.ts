@@ -1,18 +1,18 @@
-import DS from "ember-data";
-import { singularize, pluralize } from "ember-inflector";
-import { classify, decamelize, camelize, underscore } from "@ember/string";
-import { inject as service } from "@ember/service";
-import Store from "ember-data/store";
-import RESTSerializer from "ember-data/serializers/rest";
-import { isNone } from "@ember/utils";
-import { AnyObject } from "active-model-adapter";
+import DS from 'ember-data';
+import { singularize, pluralize } from 'ember-inflector';
+import { classify, decamelize, camelize, underscore } from '@ember/string';
+import { inject as service } from '@ember/service';
+import Store from 'ember-data/store';
+import RESTSerializer from 'ember-data/serializers/rest';
+import { isNone } from '@ember/utils';
+import { AnyObject } from 'active-model-adapter';
 
 /**
   @module ember-data
  */
 
 const { normalizeModelName } = DS;
-type RelationshipKind = "belongsTo" | "hasMany";
+type RelationshipKind = 'belongsTo' | 'hasMany';
 
 /**
   The ActiveModelSerializer is a subclass of the RESTSerializer designed to integrate
@@ -114,10 +114,10 @@ export default class ActiveModelSerializer extends RESTSerializer {
   */
   keyForRelationship(relationshipModelName: string, kind?: string): string {
     const key = decamelize(relationshipModelName);
-    if (kind === "belongsTo") {
-      return key + "_id";
-    } else if (kind === "hasMany") {
-      return singularize(key) + "_ids";
+    if (kind === 'belongsTo') {
+      return key + '_id';
+    } else if (kind === 'hasMany') {
+      return singularize(key) + '_ids';
     } else {
       return key;
     }
@@ -156,14 +156,14 @@ export default class ActiveModelSerializer extends RESTSerializer {
   ): void {
     const key = relationship.key;
     const belongsTo = snapshot.belongsTo(key);
-    const jsonKey = underscore(key + "_type");
+    const jsonKey = underscore(key + '_type');
 
     if (isNone(belongsTo)) {
       json[jsonKey] = null;
     } else {
       json[jsonKey] = classify(belongsTo.modelName as string).replace(
-        "/",
-        "::"
+        '/',
+        '::'
       );
     }
   }
@@ -223,7 +223,7 @@ export default class ActiveModelSerializer extends RESTSerializer {
    * @private
    */
   _keyForIDLessRelationship(key: string, relationshipType: RelationshipKind) {
-    if (relationshipType === "hasMany") {
+    if (relationshipType === 'hasMany') {
       return underscore(pluralize(key));
     } else {
       return underscore(singularize(key));
@@ -246,7 +246,7 @@ export default class ActiveModelSerializer extends RESTSerializer {
       if (
         resourceHash[idLessKey] &&
         // @ts-ignore
-        typeof relationshipMeta[relationshipKey] === "undefined"
+        typeof relationshipMeta[relationshipKey] === 'undefined'
       ) {
         resourceHash[relationshipKey] = resourceHash[idLessKey];
       }
@@ -265,9 +265,9 @@ export default class ActiveModelSerializer extends RESTSerializer {
       // If the preferred format is not found, use {relationship_name_id, relationship_name_type}
       if (
         Object.hasOwnProperty(relationshipKey) &&
-        typeof resourceHash[relationshipKey] !== "object"
+        typeof resourceHash[relationshipKey] !== 'object'
       ) {
-        const polymorphicTypeKey = this.keyForRelationship(key) + "_type";
+        const polymorphicTypeKey = this.keyForRelationship(key) + '_type';
         if (
           resourceHash[polymorphicTypeKey] &&
           // @ts-ignore Awaiting fix here https://github.com/DefinitelyTyped/DefinitelyTyped/pull/39114
@@ -285,7 +285,7 @@ export default class ActiveModelSerializer extends RESTSerializer {
   }
 
   modelNameFromPayloadKey(key: string) {
-    const convertedFromRubyModule = singularize(key.replace("::", "/"));
+    const convertedFromRubyModule = singularize(key.replace('::', '/'));
     return normalizeModelName(convertedFromRubyModule);
   }
 }
@@ -298,7 +298,7 @@ function extractPolymorphicRelationships(
 ) {
   const polymorphicKey = decamelize(key);
   const hash = resourceHash[polymorphicKey];
-  if (hash !== null && typeof hash === "object") {
+  if (hash !== null && typeof hash === 'object') {
     resourceHash[relationshipKey] = hash;
   }
 }
