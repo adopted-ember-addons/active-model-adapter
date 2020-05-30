@@ -20,6 +20,7 @@ module('Unit | Adapter | active model adapter errors test', function(hooks) {
   setupTest(hooks);
 
   hooks.beforeEach(function(this: TestContext) {
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     pretender = new Pretender(function() {});
     this.owner.register('adapter:application', ApplicationAdapter);
     this.owner.register('model:book', Book);
@@ -45,7 +46,7 @@ module('Unit | Adapter | active model adapter errors test', function(hooks) {
 
     const post = store.peekRecord('book', 1);
 
-    pretender.put('/books/1', function(_req) {
+    pretender.put('/books/1', function() {
       const headers = {};
       const httpStatus = 422;
       const payload = {
