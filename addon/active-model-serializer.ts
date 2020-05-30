@@ -137,7 +137,7 @@ export default class ActiveModelSerializer extends RESTSerializer {
   /*
     Does not serialize hasMany relationships by default.
   */
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  // eslint-disable-next-line
   serializeHasMany() {}
 
   /**
@@ -205,7 +205,8 @@ export default class ActiveModelSerializer extends RESTSerializer {
     Convert `snake_cased` links  to `camelCase`
   */
 
-  normalizeLinks(data: any) {
+  // eslint-disable-next-line
+  normalizeLinks(data: any): void {
     if (data.links) {
       const links = data.links;
 
@@ -223,7 +224,10 @@ export default class ActiveModelSerializer extends RESTSerializer {
   /**
    * @private
    */
-  _keyForIDLessRelationship(key: string, relationshipType: RelationshipKind) {
+  _keyForIDLessRelationship(
+    key: string,
+    relationshipType: RelationshipKind
+  ): string {
     if (relationshipType === 'hasMany') {
       return underscore(pluralize(key));
     } else {
@@ -235,8 +239,8 @@ export default class ActiveModelSerializer extends RESTSerializer {
     modelClass: DS.Model,
     resourceHash: AnyObject
   ): AnyObject {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     modelClass.eachRelationship<Model>(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (key: string, relationshipMeta: Record<string, any>) => {
         const relationshipKey = this.keyForRelationship(
           key,
@@ -289,7 +293,7 @@ export default class ActiveModelSerializer extends RESTSerializer {
     return super.extractRelationships(modelClass, resourceHash);
   }
 
-  modelNameFromPayloadKey(key: string) {
+  modelNameFromPayloadKey(key: string): string {
     const convertedFromRubyModule = singularize(key.replace('::', '/'));
     return normalizeModelName(convertedFromRubyModule);
   }
@@ -297,7 +301,9 @@ export default class ActiveModelSerializer extends RESTSerializer {
 
 function extractPolymorphicRelationships(
   key: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   _relationshipMeta: any,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   resourceHash: any,
   relationshipKey: string
 ) {
@@ -309,6 +315,7 @@ function extractPolymorphicRelationships(
 }
 
 interface Payload {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any;
 }
 interface Relationship {
