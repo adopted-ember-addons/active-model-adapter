@@ -6,6 +6,7 @@ import Store from 'ember-data/store';
 import RESTSerializer from 'ember-data/serializers/rest';
 import { isNone } from '@ember/utils';
 import { AnyObject } from 'active-model-adapter';
+import Model from 'ember-data/model';
 
 /**
   @module ember-data
@@ -230,8 +231,12 @@ export default class ActiveModelSerializer extends RESTSerializer {
     }
   }
 
-  extractRelationships(modelClass: DS.Model, resourceHash: any) {
-    modelClass.eachRelationship<any>((key, relationshipMeta) => {
+  extractRelationships(
+    modelClass: DS.Model,
+    resourceHash: AnyObject
+  ): AnyObject {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    modelClass.eachRelationship<Model>((key: string, relationshipMeta: Record<string, any>) => {
       const relationshipKey = this.keyForRelationship(
         key,
         relationshipMeta.kind
@@ -245,7 +250,6 @@ export default class ActiveModelSerializer extends RESTSerializer {
       // converts post to post_id, posts to post_ids
       if (
         resourceHash[idLessKey] &&
-        // @ts-ignore
         typeof relationshipMeta[relationshipKey] === 'undefined'
       ) {
         resourceHash[relationshipKey] = resourceHash[idLessKey];
@@ -253,7 +257,6 @@ export default class ActiveModelSerializer extends RESTSerializer {
 
       // prefer the format the AMS gem expects, e.g.:
       // relationship: {id: id, type: type}
-      // @ts-ignore Awaiting fix here https://github.com/DefinitelyTyped/DefinitelyTyped/pull/39114
       if (relationshipMeta.options.polymorphic) {
         extractPolymorphicRelationships(
           key,
@@ -264,13 +267,12 @@ export default class ActiveModelSerializer extends RESTSerializer {
       }
       // If the preferred format is not found, use {relationship_name_id, relationship_name_type}
       if (
-        Object.hasOwnProperty(relationshipKey) &&
+        resourceHash.hasOwnProperty(relationshipKey) &&
         typeof resourceHash[relationshipKey] !== 'object'
       ) {
         const polymorphicTypeKey = this.keyForRelationship(key) + '_type';
         if (
           resourceHash[polymorphicTypeKey] &&
-          // @ts-ignore Awaiting fix here https://github.com/DefinitelyTyped/DefinitelyTyped/pull/39114
           relationshipMeta.options.polymorphic
         ) {
           const id = resourceHash[relationshipKey];
