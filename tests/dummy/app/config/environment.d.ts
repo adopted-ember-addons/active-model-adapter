@@ -8,6 +8,7 @@ export default config;
  * since different ember addons can materialize new entries.
  */
 declare const config: {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   environment: any;
   modulePrefix: string;
   podModulePrefix: string;

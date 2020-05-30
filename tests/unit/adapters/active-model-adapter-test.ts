@@ -29,15 +29,16 @@ module('Unit | Initializer | active-model-adapter', function(hooks) {
   });
 
   test('handleResponse - returns invalid error if 422 response', function(this: AdapterContext, assert) {
-    var jqXHR = {
+    const jqXHR = {
       status: 422,
       responseText: JSON.stringify({ errors: { name: "can't be blank" } })
     };
 
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore parseErrorResponse is not documented via DefinitelyTyped yet
-    var json = this.adapter.parseErrorResponse(jqXHR.responseText);
+    const json = this.adapter.parseErrorResponse(jqXHR.responseText);
 
-    var error = this.adapter.handleResponse(jqXHR.status, {}, json, {})
+    const error = this.adapter.handleResponse(jqXHR.status, {}, json, {})
       .errors[0];
 
     assert.equal(error.detail, "can't be blank");
@@ -45,18 +46,19 @@ module('Unit | Initializer | active-model-adapter', function(hooks) {
   });
 
   test('handleResponse - returns ajax response if not 422 response', function(this: AdapterContext, assert) {
-    var jqXHR = {
+    const jqXHR = {
       status: 500,
       responseText: 'Something went wrong'
     };
 
-    var expectedRequestData = {
+    const expectedRequestData = {
       method: 'GET',
       url: '/posts/1'
     };
 
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore parseErrorResponse is not documented via DefinitelyTyped yet
-    var json = this.adapter.parseErrorResponse(jqXHR.responseText);
+    const json = this.adapter.parseErrorResponse(jqXHR.responseText);
 
     const responseType = this.adapter.handleResponse(
       jqXHR.status,
