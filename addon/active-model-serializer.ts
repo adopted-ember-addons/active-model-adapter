@@ -236,53 +236,56 @@ export default class ActiveModelSerializer extends RESTSerializer {
     resourceHash: AnyObject
   ): AnyObject {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    modelClass.eachRelationship<Model>((key: string, relationshipMeta: Record<string, any>) => {
-      const relationshipKey = this.keyForRelationship(
-        key,
-        relationshipMeta.kind
-      );
-
-      const idLessKey = this._keyForIDLessRelationship(
-        key,
-        relationshipMeta.kind
-      );
-
-      // converts post to post_id, posts to post_ids
-      if (
-        resourceHash[idLessKey] &&
-        typeof relationshipMeta[relationshipKey] === 'undefined'
-      ) {
-        resourceHash[relationshipKey] = resourceHash[idLessKey];
-      }
-
-      // prefer the format the AMS gem expects, e.g.:
-      // relationship: {id: id, type: type}
-      if (relationshipMeta.options.polymorphic) {
-        extractPolymorphicRelationships(
+    modelClass.eachRelationship<Model>(
+      (key: string, relationshipMeta: Record<string, any>) => {
+        const relationshipKey = this.keyForRelationship(
           key,
-          relationshipMeta,
-          resourceHash,
-          relationshipKey
+          relationshipMeta.kind
         );
-      }
-      // If the preferred format is not found, use {relationship_name_id, relationship_name_type}
-      if (
-        resourceHash.hasOwnProperty(relationshipKey) &&
-        typeof resourceHash[relationshipKey] !== 'object'
-      ) {
-        const polymorphicTypeKey = this.keyForRelationship(key) + '_type';
+
+        const idLessKey = this._keyForIDLessRelationship(
+          key,
+          relationshipMeta.kind
+        );
+
+        // converts post to post_id, posts to post_ids
         if (
-          resourceHash[polymorphicTypeKey] &&
-          relationshipMeta.options.polymorphic
+          resourceHash[idLessKey] &&
+          typeof relationshipMeta[relationshipKey] === 'undefined'
         ) {
-          const id = resourceHash[relationshipKey];
-          const type = resourceHash[polymorphicTypeKey];
-          delete resourceHash[polymorphicTypeKey];
-          delete resourceHash[relationshipKey];
-          resourceHash[relationshipKey] = { id: id, type: type };
+          resourceHash[relationshipKey] = resourceHash[idLessKey];
         }
-      }
-    }, this);
+
+        // prefer the format the AMS gem expects, e.g.:
+        // relationship: {id: id, type: type}
+        if (relationshipMeta.options.polymorphic) {
+          extractPolymorphicRelationships(
+            key,
+            relationshipMeta,
+            resourceHash,
+            relationshipKey
+          );
+        }
+        // If the preferred format is not found, use {relationship_name_id, relationship_name_type}
+        if (
+          Object.prototype.hasOwnProperty.call(resourceHash, relationshipKey) &&
+          typeof resourceHash[relationshipKey] !== 'object'
+        ) {
+          const polymorphicTypeKey = this.keyForRelationship(key) + '_type';
+          if (
+            resourceHash[polymorphicTypeKey] &&
+            relationshipMeta.options.polymorphic
+          ) {
+            const id = resourceHash[relationshipKey];
+            const type = resourceHash[polymorphicTypeKey];
+            delete resourceHash[polymorphicTypeKey];
+            delete resourceHash[relationshipKey];
+            resourceHash[relationshipKey] = { id: id, type: type };
+          }
+        }
+      },
+      this
+    );
     return super.extractRelationships(modelClass, resourceHash);
   }
 
