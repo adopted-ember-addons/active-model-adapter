@@ -10,7 +10,7 @@ const { InvalidError, errorsHashToArray } = DS;
 const { decamelize, underscore } = Ember.String;
 
 interface ActiveModelPayload {
-  errors: Record<string, unknown>;
+  errors: AnyObject;
 }
 
 /**
