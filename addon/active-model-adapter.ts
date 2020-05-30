@@ -1,15 +1,16 @@
-import Ember from 'ember';
-import DS from 'ember-data';
-import { pluralize } from 'ember-inflector';
-import ModelRegistry from 'ember-data/types/registries/model';
-import RESTAdapter from 'ember-data/adapters/rest';
+import Ember from "ember";
+import DS from "ember-data";
+import { pluralize } from "ember-inflector";
+import ModelRegistry from "ember-data/types/registries/model";
+import RESTAdapter from "ember-data/adapters/rest";
+import { AnyObject } from "active-model-adapter";
 
 const { InvalidError, errorsHashToArray } = DS;
 
 const { decamelize, underscore } = Ember.String;
 
 interface ActiveModelPayload {
-  errors: any;
+  errors: Record<string, unknown>;
 }
 
 /**
@@ -108,7 +109,7 @@ interface ActiveModelPayload {
 **/
 
 export default class ActiveModelAdapter extends RESTAdapter {
-  defaultSerializer = '-active-model';
+  defaultSerializer = "-active-model";
   /**
     The ActiveModelAdapter overrides the `pathForType` method to build
     underscored URLs by decamelizing and pluralizing the object type name.
@@ -118,9 +119,9 @@ export default class ActiveModelAdapter extends RESTAdapter {
       //=> "famous_people"
     ```
 */
-  pathForType<K extends keyof ModelRegistry>(modelName: K) {
-    var decamelized = decamelize(modelName as string);
-    var underscored = underscore(decamelized);
+  pathForType<K extends keyof ModelRegistry>(modelName: K): string {
+    const decamelized = decamelize(modelName as string);
+    const underscored = underscore(decamelized);
     return pluralize(underscored);
   }
 
@@ -138,12 +139,12 @@ export default class ActiveModelAdapter extends RESTAdapter {
   */
   handleResponse(
     status: number,
-    headers: {},
+    headers: AnyObject,
     payload: ActiveModelPayload,
-    requestData: Object | DS.AdapterError
-  ): any {
+    requestData: AnyObject | DS.AdapterError
+  ): AnyObject | DS.InvalidError {
     if (this.isInvalid(status, headers, payload)) {
-      let errors = errorsHashToArray(payload.errors);
+      const errors = errorsHashToArray(payload.errors);
 
       return new InvalidError(errors);
     } else {
