@@ -1,17 +1,18 @@
-import DS from 'ember-data';
-import Ember from 'ember';
-import { singularize, pluralize } from 'ember-inflector';
-import { classify, decamelize, camelize, underscore } from '@ember/string';
-import { inject as service } from '@ember/service';
-import Store from 'ember-data/store';
-import RESTSerializer from 'ember-data/serializers/rest';
+import DS from "ember-data";
+import { singularize, pluralize } from "ember-inflector";
+import { classify, decamelize, camelize, underscore } from "@ember/string";
+import { inject as service } from "@ember/service";
+import Store from "ember-data/store";
+import RESTSerializer from "ember-data/serializers/rest";
+import { isNone } from "@ember/utils";
+import { AnyObject } from "active-model-adapter";
 
 /**
   @module ember-data
  */
 
 const { normalizeModelName } = DS;
-type RelationshipKind = 'belongsTo' | 'hasMany';
+type RelationshipKind = "belongsTo" | "hasMany";
 
 /**
   The ActiveModelSerializer is a subclass of the RESTSerializer designed to integrate
@@ -103,7 +104,7 @@ export default class ActiveModelSerializer extends RESTSerializer {
   /**
     Converts camelCased attributes to underscored when serializing.
   */
-  keyForAttribute(attr: string) {
+  keyForAttribute(attr: string): string {
     return decamelize(attr);
   }
 
@@ -111,12 +112,12 @@ export default class ActiveModelSerializer extends RESTSerializer {
     Underscores relationship names and appends "_id" or "_ids" when serializing
     relationship keys.
   */
-  keyForRelationship(relationshipModelName: string, kind?: string) {
-    var key = decamelize(relationshipModelName);
-    if (kind === 'belongsTo') {
-      return key + '_id';
-    } else if (kind === 'hasMany') {
-      return singularize(key) + '_ids';
+  keyForRelationship(relationshipModelName: string, kind?: string): string {
+    const key = decamelize(relationshipModelName);
+    if (kind === "belongsTo") {
+      return key + "_id";
+    } else if (kind === "hasMany") {
+      return singularize(key) + "_ids";
     } else {
       return key;
     }
@@ -127,34 +128,43 @@ export default class ActiveModelSerializer extends RESTSerializer {
    properties. The `ActiveModelSerializer` camelizes link keys by default.
 
   */
-  keyForLink(key: string, _relationshipKind: RelationshipKind) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  keyForLink(key: string, _relationshipKind: RelationshipKind): string {
     return camelize(key);
   }
 
   /*
     Does not serialize hasMany relationships by default.
   */
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   serializeHasMany() {}
 
   /**
    Underscores the JSON root keys when serializing.
   */
-  payloadKeyFromModelName(modelName: string | number) {
+  payloadKeyFromModelName(modelName: string | number): string {
     return underscore(decamelize(modelName as string));
   }
 
   /**
     Serializes a polymorphic type as a fully capitalized model name.
   */
-  serializePolymorphicType(snapshot: DS.Snapshot, json: Payload, relationship: Relationship) {
-    var key = relationship.key;
-    var belongsTo = snapshot.belongsTo(key);
-    var jsonKey = underscore(key + '_type');
+  serializePolymorphicType(
+    snapshot: DS.Snapshot,
+    json: Payload,
+    relationship: Relationship
+  ): void {
+    const key = relationship.key;
+    const belongsTo = snapshot.belongsTo(key);
+    const jsonKey = underscore(key + "_type");
 
-    if (Ember.isNone(belongsTo)) {
+    if (isNone(belongsTo)) {
       json[jsonKey] = null;
     } else {
-      json[jsonKey] = classify(belongsTo.modelName).replace('/', '::');
+      json[jsonKey] = classify(belongsTo.modelName as string).replace(
+        "/",
+        "::"
+      );
     }
   }
 
@@ -185,7 +195,7 @@ export default class ActiveModelSerializer extends RESTSerializer {
     }
     ```
   */
-  normalize(typeClass: DS.Model, hash: any, prop: string) {
+  normalize(typeClass: DS.Model, hash: AnyObject, prop: string): AnyObject {
     this.normalizeLinks(hash);
     return super.normalize(typeClass, hash, prop);
   }
@@ -196,10 +206,10 @@ export default class ActiveModelSerializer extends RESTSerializer {
 
   normalizeLinks(data: any) {
     if (data.links) {
-      var links = data.links;
+      const links = data.links;
 
-      for (var link in links) {
-        var camelizedLink = camelize(link);
+      for (const link in links) {
+        const camelizedLink = camelize(link);
 
         if (camelizedLink !== link) {
           links[camelizedLink] = links[link];
@@ -213,7 +223,7 @@ export default class ActiveModelSerializer extends RESTSerializer {
    * @private
    */
   _keyForIDLessRelationship(key: string, relationshipType: RelationshipKind) {
-    if (relationshipType === 'hasMany') {
+    if (relationshipType === "hasMany") {
       return underscore(pluralize(key));
     } else {
       return underscore(singularize(key));
@@ -222,12 +232,12 @@ export default class ActiveModelSerializer extends RESTSerializer {
 
   extractRelationships(modelClass: DS.Model, resourceHash: any) {
     modelClass.eachRelationship<any>((key, relationshipMeta) => {
-      var relationshipKey = this.keyForRelationship(
+      const relationshipKey = this.keyForRelationship(
         key,
         relationshipMeta.kind
       );
 
-      var idLessKey = this._keyForIDLessRelationship(
+      const idLessKey = this._keyForIDLessRelationship(
         key,
         relationshipMeta.kind
       );
@@ -236,7 +246,7 @@ export default class ActiveModelSerializer extends RESTSerializer {
       if (
         resourceHash[idLessKey] &&
         // @ts-ignore
-        typeof relationshipMeta[relationshipKey] === 'undefined'
+        typeof relationshipMeta[relationshipKey] === "undefined"
       ) {
         resourceHash[relationshipKey] = resourceHash[idLessKey];
       }
@@ -254,17 +264,17 @@ export default class ActiveModelSerializer extends RESTSerializer {
       }
       // If the preferred format is not found, use {relationship_name_id, relationship_name_type}
       if (
-        resourceHash.hasOwnProperty(relationshipKey) &&
-        typeof resourceHash[relationshipKey] !== 'object'
+        Object.hasOwnProperty(relationshipKey) &&
+        typeof resourceHash[relationshipKey] !== "object"
       ) {
-        var polymorphicTypeKey = this.keyForRelationship(key) + '_type';
+        const polymorphicTypeKey = this.keyForRelationship(key) + "_type";
         if (
           resourceHash[polymorphicTypeKey] &&
-      // @ts-ignore Awaiting fix here https://github.com/DefinitelyTyped/DefinitelyTyped/pull/39114
+          // @ts-ignore Awaiting fix here https://github.com/DefinitelyTyped/DefinitelyTyped/pull/39114
           relationshipMeta.options.polymorphic
         ) {
-          let id = resourceHash[relationshipKey];
-          let type = resourceHash[polymorphicTypeKey];
+          const id = resourceHash[relationshipKey];
+          const type = resourceHash[polymorphicTypeKey];
           delete resourceHash[polymorphicTypeKey];
           delete resourceHash[relationshipKey];
           resourceHash[relationshipKey] = { id: id, type: type };
@@ -275,7 +285,7 @@ export default class ActiveModelSerializer extends RESTSerializer {
   }
 
   modelNameFromPayloadKey(key: string) {
-    var convertedFromRubyModule = singularize(key.replace('::', '/'));
+    const convertedFromRubyModule = singularize(key.replace("::", "/"));
     return normalizeModelName(convertedFromRubyModule);
   }
 }
@@ -286,16 +296,16 @@ function extractPolymorphicRelationships(
   resourceHash: any,
   relationshipKey: string
 ) {
-  let polymorphicKey = decamelize(key);
-  let hash = resourceHash[polymorphicKey];
-  if (hash !== null && typeof hash === 'object') {
+  const polymorphicKey = decamelize(key);
+  const hash = resourceHash[polymorphicKey];
+  if (hash !== null && typeof hash === "object") {
     resourceHash[relationshipKey] = hash;
   }
 }
 
- interface Payload {
+interface Payload {
   [key: string]: any;
- }
- interface Relationship {
-   key: string;
- }
+}
+interface Relationship {
+  key: string;
+}
