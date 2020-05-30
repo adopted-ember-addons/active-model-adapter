@@ -24,7 +24,8 @@ module.exports = {
     browser: true
   },
   rules: {
-    'ember/no-jquery': 'error'
+    'ember/no-jquery': 'error',
+    'ember/use-ember-data-rfc-395-imports': 'off'
   },
   overrides: [
     // node files
