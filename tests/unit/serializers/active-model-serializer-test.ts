@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import ActiveModelAdapter, {
@@ -69,6 +70,7 @@ type Context = TestContext & {
 };
 
 declare module 'ember-data/types/registries/serializer' {
+  // eslint-disable-next-line ember/no-test-import-export
   export default interface SerializerRegistry {
     application: TestSerializer;
     'super-villain': TestSerializer;
@@ -113,7 +115,7 @@ module('Unit | Serializer | active model serializer', function(hooks) {
     });
     const user = store.peekRecord('user', 1);
 
-    pretender.put('/users/1', function(_req) {
+    pretender.put('/users/1', function() {
       const response = {
         errors: {
           first_name: ['firstName error']

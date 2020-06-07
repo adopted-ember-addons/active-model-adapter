@@ -86,36 +86,40 @@ declare type RelationshipKind = 'belongsTo' | 'hasMany';
   ```
 */
 export default class ActiveModelSerializer extends RESTSerializer {
-    store: Store;
-    /**
+  store: Store;
+  /**
       Converts camelCased attributes to underscored when serializing.
     */
-    keyForAttribute(attr: string): string;
-    /**
+  keyForAttribute(attr: string): string;
+  /**
       Underscores relationship names and appends "_id" or "_ids" when serializing
       relationship keys.
     */
-    keyForRelationship(relationshipModelName: string, kind?: string): string;
-    /**
+  keyForRelationship(relationshipModelName: string, kind?: string): string;
+  /**
      `keyForLink` can be used to define a custom key when deserializing link
      properties. The `ActiveModelSerializer` camelizes link keys by default.
-  
+
     */
-    keyForLink(key: string, _relationshipKind: RelationshipKind): string;
-    serializeHasMany(): void;
-    /**
+  keyForLink(key: string, _relationshipKind: RelationshipKind): string;
+  serializeHasMany(): void;
+  /**
      Underscores the JSON root keys when serializing.
     */
-    payloadKeyFromModelName(modelName: string | number): string;
-    /**
+  payloadKeyFromModelName(modelName: string | number): string;
+  /**
       Serializes a polymorphic type as a fully capitalized model name.
     */
-    serializePolymorphicType(snapshot: DS.Snapshot, json: Payload, relationship: Relationship): void;
-    /**
+  serializePolymorphicType(
+    snapshot: DS.Snapshot,
+    json: Payload,
+    relationship: Relationship
+  ): void;
+  /**
       Add extra step to `DS.RESTSerializer.normalize` so links are normalized.
-  
+
       If your payload looks like:
-  
+
       ```js
       {
         "post": {
@@ -125,9 +129,9 @@ export default class ActiveModelSerializer extends RESTSerializer {
         }
       }
       ```
-  
+
       The normalized version would look like this
-  
+
       ```js
       {
         "post": {
@@ -138,22 +142,32 @@ export default class ActiveModelSerializer extends RESTSerializer {
       }
       ```
     */
-    normalize(typeClass: DS.Model, hash: any, prop: string): {};
-    /**
+  normalize(
+    typeClass: DS.Model,
+    hash: Record<string, unknown>,
+    prop: string
+  ): Record<string, unknown>;
+  /**
       Convert `snake_cased` links  to `camelCase`
     */
-    normalizeLinks(data: any): void;
-    /**
-     * @private
-     */
-    _keyForIDLessRelationship(key: string, relationshipType: RelationshipKind): string;
-    extractRelationships(modelClass: DS.Model, resourceHash: any): {};
-    modelNameFromPayloadKey(key: string): string;
+  normalizeLinks(data: Record<string, unknown>): void;
+  /**
+   * @private
+   */
+  _keyForIDLessRelationship(
+    key: string,
+    relationshipType: RelationshipKind
+  ): string;
+  extractRelationships(
+    modelClass: DS.Model,
+    resourceHash: Record<string, unknown>
+  ): Record<string, unknown>;
+  modelNameFromPayloadKey(key: string): string;
 }
 interface Payload {
-    [key: string]: any;
+  [key: string]: unknown;
 }
 interface Relationship {
-    key: string;
+  key: string;
 }
 export {};

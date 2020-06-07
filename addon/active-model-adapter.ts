@@ -3,13 +3,14 @@ import DS from 'ember-data';
 import { pluralize } from 'ember-inflector';
 import ModelRegistry from 'ember-data/types/registries/model';
 import RESTAdapter from 'ember-data/adapters/rest';
+import { AnyObject } from 'active-model-adapter';
 
 const { InvalidError, errorsHashToArray } = DS;
 
 const { decamelize, underscore } = Ember.String;
 
 interface ActiveModelPayload {
-  errors: any;
+  errors: AnyObject;
 }
 
 /**
@@ -118,9 +119,9 @@ export default class ActiveModelAdapter extends RESTAdapter {
       //=> "famous_people"
     ```
 */
-  pathForType<K extends keyof ModelRegistry>(modelName: K) {
-    var decamelized = decamelize(modelName as string);
-    var underscored = underscore(decamelized);
+  pathForType<K extends keyof ModelRegistry>(modelName: K): string {
+    const decamelized = decamelize(modelName as string);
+    const underscored = underscore(decamelized);
     return pluralize(underscored);
   }
 
@@ -138,12 +139,13 @@ export default class ActiveModelAdapter extends RESTAdapter {
   */
   handleResponse(
     status: number,
-    headers: {},
+    headers: AnyObject,
     payload: ActiveModelPayload,
-    requestData: Object | DS.AdapterError
+    requestData: AnyObject | DS.AdapterError
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ): any {
     if (this.isInvalid(status, headers, payload)) {
-      let errors = errorsHashToArray(payload.errors);
+      const errors = errorsHashToArray(payload.errors);
 
       return new InvalidError(errors);
     } else {
