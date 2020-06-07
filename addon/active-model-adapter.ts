@@ -142,7 +142,8 @@ export default class ActiveModelAdapter extends RESTAdapter {
     headers: AnyObject,
     payload: ActiveModelPayload,
     requestData: AnyObject | DS.AdapterError
-  ): AnyObject | DS.InvalidError {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  ): any {
     if (this.isInvalid(status, headers, payload)) {
       const errors = errorsHashToArray(payload.errors);
 
