@@ -52,12 +52,6 @@ after_success:
 before_deploy:
 - '[[ -d "./dist" ]] || ember build --environment=production'
 deploy:
-- provider: rubygems
-  gemspec: active-model-adapter-source.gemspec
-  on:
-    tags: true
-  api_key:
-    secure: X7734CGXXQMAtjScj5Vs+T4G+Axa5FzROKGQM2sP255TUiCnGe3SzPJHmzrkrE/XNSs62tmeHAKCt/dEqJVOpM46Ain9aI+/ETuadMF/ihnS4VnYqzN1+MvhbAvxB++xfb/f+Zw/n7kotH7fIsGdUsaLBiClli/J8/kojh7ueoEVFrUEZIhZ6zl8jCNSGxP7MlQ+IDBXOlNpyRpxnkiPTXUxcoFJjk9lu3+AcX16nU06p4+uscmnboGKZr0cSooRmWBiSRS7GIYBl38bkI8JE20ZCrLe8JdbSgWoA4jpRSgEL6ZuDv7QcOk02pPjii1iEK41gMQgmcun3BEfd3TuJpQPaEv23XCjpCp1xFpG5hKVEXimSjsYFab7Qr8DOLoW3goeoxzZrbbsY1cVEwcMXE2j8433i6dizateQNAwMMTpWQLoRtj83YMxmLcZbouGjTLJavli5Flyin0+lfXXIz/UQb0Hp9xeb70DWRYY6xttApAgay86SBtF3HbTqUMD2I8iEZyqCIEIqzdD10LrL0ZpYu86pFHqj1mrlLXbR78sKcFrwfc02DiQmsDRcVmpwHa2RcpWFIXpa2U2fcmkXuEK7dGdV5MoNujFergbv4KqMW+16ny5FKsCt/G/40obCPNTW7m+7Bww9N3tyD2OJgvWn2/54IT6ONzVwDJH/QQ=
 - provider: npm
   email: stanley+ember-data@stan.li
   on:

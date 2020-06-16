@@ -9,7 +9,7 @@ fi
 
 if [[ $? -ne 0 ]]; then
   echo "this branch is not a release branch, it does not start with 'v'"
-  echo "not publishing to bower, npm, or rubygems"
+  echo "not publishing to bower or npm"
   exit 0
 fi
 
