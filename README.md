@@ -6,6 +6,13 @@
 
 `ember install active-model-adapter`
 
+### Rails
+
+Prior to v3, this ember addon used to be published on rubygems.
+
+Indeed, the gem comes bundled with [Ember
+Rails](https://github.com/emberjs/ember-rails).
+
 ### Bower
 
 `bower install --save active-model-adapter`
