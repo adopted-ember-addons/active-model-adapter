@@ -6,17 +6,6 @@
 
 `ember install active-model-adapter`
 
-### Rails
-
-This gem comes bundled with [Ember
-Rails](https://github.com/emberjs/ember-rails). If you want to specify a
-specific version in your `Gemfile`, you can reference the
-`active-model-adapter-source` gem and it will get loaded by Ember Rails:
-
-```ruby
-gem 'active-model-adapter-source', '~>2.0' # or whatever version you need
-```
-
 ### Bower
 
 `bower install --save active-model-adapter`
