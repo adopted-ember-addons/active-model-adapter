@@ -18,9 +18,6 @@ env:
     - EMBER_TRY_SCENARIO=ember-release
     - EMBER_TRY_SCENARIO=ember-beta
     - EMBER_TRY_SCENARIO=ember-canary
-  global:
-    - GITHUB_USER=tomster-strudel
-    - secure: A5DKT8O+wmwEY3ReKkBMFgy+r2EaUgxMd9FMR+MOGLWMzVdEm6QX0tQopWgqpoPLpymr6aUNMYrb3mRoYygBpUaobgrRRh2f+IGQ+i65+gqC+Y8ma8sArbAKVZ+QuV42ICPGTtk2ep9nQ81k1NO714iOaok4jBuTPFrIOEFx4NSWOuxAHSyjpb41YcoZ4420taXOT6PEtU528lAeLTZeI/gfn/TyDFS5Hf+CoFHxZgLZ+gtdJugu4+11KLnOPgCsAmL2AKagk3LQzfHgaASME4GqXDwz5iBloMWeP2RJJQxwUtB/XgPz//VLh1nOdfodhRy0pjeRzrgvoMYiyqKvG1UMCqjqz/WEYtdeR335NC3kPv9tCcMCeN6vvCaKoang9i+LGEFLzj+zN50ldLMfkF/YEu/PkmezYLWpQwZdlwGQpZjLabT0etS46rdSIDU3M/4N4Waj3o9G8ZXgx7fTOd9ypRPbvOBslUlzup+jMLfGoKLcdT7Cmd3qTJ7XAWFRTTGA/fM7Bd8SYY1FQBAEsHH+2HqF0RsdSAnNpXQtVdzs5TjS9jzLM2rG4S2p0Dly7fe0KgYBD/X21ZDq8c44RRKCFFNI4GYGDA4yS6C6Sy3DVGv2yTQpB2zjvHG37HEjPtlvLYvuEWrYPnYUDEqJ/HRMN3qlODfyr1/+5+4+k8E=
 
 matrix:
   fast_finish: true
@@ -43,19 +40,3 @@ install:
 
 script:
 - node_modules/.bin/ember try $EMBER_TRY_SCENARIO test
-
-after_success:
-- node_modules/.bin/ember try:reset
-- node_modules/.bin/ember build --environment=production
-- bin/release
-- rm -rf active-model-adapter-dist
-before_deploy:
-- '[[ -d "./dist" ]] || ember build --environment=production'
-deploy:
-- provider: npm
-  email: stanley+ember-data@stan.li
-  on:
-    tags: true
-  api_key:
-    secure: IZB8kRn9wYBbMbl2E6VtZn7CUnnHSrp1/JFlcUWTIRdsPNdyKw4oox2gGYrgqe1WKeIytwr1Xa3U8RLf15j9HznXNWgZNk4CaK3DWJogKGyL/B3+y0sPKX4IqIXTjBt897IFY6jpa427R1PlM2n+30oqMjw/1s83WnDCJ0qZQf2rZRvkFDN5GTU2KIPia51m6WFzR4bnQPLppm2pCCRuS4TIwj98adXk4BjJyX08/2Tg+NDKHwMv8DN6UMLuQfbibnoBsAdVxenOj3U5B6vj6CVJ1xihJNCw0q6Efh3hCetqLTWSLQnm3Ld3UkcXzni5TOcEwICbzAjtPP4MskXSW3OVWHroM/fU4Fs99sPaca/S+S1hob6ufS95gWuliOd0xRiLCOXA99zctobzJqVbuNo7vj2taXGhv1TqweubD8ByTkCX74zAsKYnJjLVs5tN2s/4tyhAYsi/8Yga6zYxDw4vMB/s0E9IshSaXb2qNRXG1IJPYmo4WRHgvEdZPoX6/ZoKU/1g5/x8RzJ11x0Su8NvjLKorqZDyIe2HePwbx0ZKT8dHurmBg4TmgYol0O3FGcmpuND2DlJ1Vl2MaK4e6+JDUavpKwpp3EIdC1ThSYt8VbmA85lN6hlaTLywSOejfOd7gdgh0GZ9gJto5VWcSBGM7l4qV8ppJHnPNsyUvo=
-  clean_up: false
