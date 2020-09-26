@@ -1,3 +1,5 @@
+import { EmbeddedRecordsMixin } from '@ember-data/serializer/rest';
+import Model, { attr, belongsTo, hasMany } from '@ember-data/model';
 import setupStore from '../helpers/setup-store';
 import {module, test} from 'qunit';
 import {ActiveModelAdapter, ActiveModelSerializer} from 'active-model-adapter';
@@ -9,28 +11,28 @@ var run = Ember.run;
 
 module("integration/active_model - ActiveModelSerializer", function(hooks) {
   hooks.beforeEach(function() {
-    SuperVillain = DS.Model.extend({
-      firstName:     DS.attr('string'),
-      lastName:      DS.attr('string'),
-      homePlanet:    DS.belongsTo('home-planet'),
-      evilMinions:   DS.hasMany('evil-minion')
+    SuperVillain = Model.extend({
+      firstName:     attr('string'),
+      lastName:      attr('string'),
+      homePlanet:    belongsTo('home-planet'),
+      evilMinions:   hasMany('evil-minion')
     });
-    HomePlanet = DS.Model.extend({
-      name:          DS.attr('string'),
-      superVillains: DS.hasMany('super-villain', { async: true })
+    HomePlanet = Model.extend({
+      name:          attr('string'),
+      superVillains: hasMany('super-villain', { async: true })
     });
-    EvilMinion = DS.Model.extend({
-      superVillain: DS.belongsTo('super-villain'),
-      name:         DS.attr('string')
+    EvilMinion = Model.extend({
+      superVillain: belongsTo('super-villain'),
+      name:         attr('string')
     });
     YellowMinion = EvilMinion.extend();
-    DoomsdayDevice = DS.Model.extend({
-      name:         DS.attr('string'),
-      evilMinion:   DS.belongsTo('evil-minion', { polymorphic: true, async: false })
+    DoomsdayDevice = Model.extend({
+      name:         attr('string'),
+      evilMinion:   belongsTo('evil-minion', { polymorphic: true, async: false })
     });
-    MediocreVillain = DS.Model.extend({
-      name:         DS.attr('string'),
-      evilMinions:  DS.hasMany('evil-minion', { polymorphic: true })
+    MediocreVillain = Model.extend({
+      name:         attr('string'),
+      evilMinions:  hasMany('evil-minion', { polymorphic: true })
     });
     env = setupStore({
       superVillain:   SuperVillain,
@@ -110,7 +112,7 @@ module("integration/active_model - ActiveModelSerializer", function(hooks) {
 
   test("normalize", function(assert) {
     SuperVillain.reopen({
-      yellowMinion: DS.belongsTo('yellowMinion')
+      yellowMinion: belongsTo('yellowMinion')
     });
 
     var superVillain_hash = {
@@ -442,7 +444,7 @@ module("integration/active_model - ActiveModelSerializer", function(hooks) {
     EvilMinion.toString   = function() { return "EvilMinion"; };
     YellowMinion.toString = function() { return "YellowMinion"; };
     DoomsdayDevice.reopen({
-      evilMinionType: DS.attr()
+      evilMinionType: attr()
     });
 
     var json_hash = {
@@ -647,7 +649,7 @@ module("integration/active_model - ActiveModelSerializer", function(hooks) {
 
   test('when using the DS.EmbeddedRecordsMixin, does not erase attributes for polymorphic embedded models', (assert) => {
 
-    env.registry.register('serializer:mediocre-villain', ActiveModelSerializer.extend(DS.EmbeddedRecordsMixin, {
+    env.registry.register('serializer:mediocre-villain', ActiveModelSerializer.extend(EmbeddedRecordsMixin, {
       isNewSerializerAPI: true,
 
       attrs: {

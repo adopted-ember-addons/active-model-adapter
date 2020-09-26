@@ -1,3 +1,5 @@
+import AdapterError from '@ember-data/adapter/error';
+import Model from '@ember-data/model';
 import setupStore from '../helpers/setup-store';
 import {module, test} from 'qunit';
 import ActiveModelAdapter from 'active-model-adapter';
@@ -7,7 +9,7 @@ var passedUrl, passedVerb, passedHash;
 
 module("integration/active_model_adapter - AMS Adapter", function(hooks) {
   hooks.beforeEach(function() {
-    SuperUser = DS.Model.extend();
+    SuperUser = Model.extend();
 
     env = setupStore({
       superUser: SuperUser,
@@ -52,6 +54,6 @@ module("integration/active_model_adapter - AMS Adapter", function(hooks) {
 
     var json = adapter.parseErrorResponse(jqXHR.responseText);
 
-    assert.ok(adapter.handleResponse(jqXHR.status, {}, json, expectedRequestData) instanceof DS.AdapterError, 'must be a DS.AdapterError');
+    assert.ok(adapter.handleResponse(jqXHR.status, {}, json, expectedRequestData) instanceof AdapterError, 'must be a DS.AdapterError');
   });
 });

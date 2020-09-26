@@ -1,11 +1,10 @@
+import Model, { hasMany, attr } from '@ember-data/model';
 import Ember from 'ember';
-import DS from 'ember-data';
 import ActiveModelAdapter, {ActiveModelSerializer} from 'active-model-adapter';
 import {module, test} from 'qunit';
 import Pretender from 'pretender';
 import setupStore from '../helpers/setup-store';
 
-const {attr, hasMany} = DS;
 const {run} = Ember;
 
 Pretender.prototype.prepareBody = (body) => JSON.stringify(body);
@@ -14,11 +13,11 @@ let pretender, Book, Author, env, store;
 
 module(`ActiveModelAdapter, full stack integration tests for old serializer api`, function(hooks) {
   hooks.beforeEach(function() {
-    Book = DS.Model.extend({
+    Book = Model.extend({
       title: attr(),
       authors: hasMany('user', { polymorphic: true })
     });
-    Author = DS.Model.extend({});
+    Author = Model.extend({});
     pretender = new Pretender(function(){ });
     env = setupStore({
       book: Book,

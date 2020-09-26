@@ -1,3 +1,4 @@
+import Model, { attr, hasMany, belongsTo } from '@ember-data/model';
 import setupStore from '../helpers/setup-store';
 import {module, test} from 'qunit';
 import {ActiveModelAdapter, ActiveModelSerializer} from 'active-model-adapter';
@@ -9,24 +10,24 @@ const {run} = Ember;
 
 module("integration/active_model - AMS-namespaced-model-names", function(hooks) {
   hooks.beforeEach(function() {
-    SuperVillain = DS.Model.extend({
-      firstName:     DS.attr('string'),
-      lastName:      DS.attr('string'),
-      evilMinions:   DS.hasMany('evil-minion')
+    SuperVillain = Model.extend({
+      firstName:     attr('string'),
+      lastName:      attr('string'),
+      evilMinions:   hasMany('evil-minion')
     });
 
-    EvilMinion = DS.Model.extend({
-      superVillain: DS.belongsTo('super-villain'),
-      name:         DS.attr('string')
+    EvilMinion = Model.extend({
+      superVillain: belongsTo('super-villain'),
+      name:         attr('string')
     });
     YellowMinion = EvilMinion.extend();
-    DoomsdayDevice = DS.Model.extend({
-      name:         DS.attr('string'),
-      evilMinion:   DS.belongsTo('evil-minion', { polymorphic: true })
+    DoomsdayDevice = Model.extend({
+      name:         attr('string'),
+      evilMinion:   belongsTo('evil-minion', { polymorphic: true })
     });
-    MediocreVillain = DS.Model.extend({
-      name:         DS.attr('string'),
-      evilMinions:  DS.hasMany('evil-minion', { polymorphic: true })
+    MediocreVillain = Model.extend({
+      name:         attr('string'),
+      evilMinions:  hasMany('evil-minion', { polymorphic: true })
     });
     env = setupStore({
       superVillain:   SuperVillain,

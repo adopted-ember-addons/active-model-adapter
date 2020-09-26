@@ -1,3 +1,4 @@
+import Model, { attr, hasMany, belongsTo } from '@ember-data/model';
 import setupStore from '../helpers/setup-store';
 import ActiveModelAdapter from 'active-model-adapter';
 import ActiveModelSerializer from 'active-model-adapter/active-model-serializer';
@@ -10,24 +11,24 @@ var run = Ember.run;
 
 module("integration/active_model - AMS-namespaced-model-names (new API)", function(hooks) {
   hooks.beforeEach(function() {
-    SuperVillain = DS.Model.extend({
-      firstName:     DS.attr('string'),
-      lastName:      DS.attr('string'),
-      evilMinions:   DS.hasMany("evilMinion")
+    SuperVillain = Model.extend({
+      firstName:     attr('string'),
+      lastName:      attr('string'),
+      evilMinions:   hasMany("evilMinion")
     });
 
-    EvilMinion = DS.Model.extend({
-      superVillain: DS.belongsTo('superVillain'),
-      name:         DS.attr('string')
+    EvilMinion = Model.extend({
+      superVillain: belongsTo('superVillain'),
+      name:         attr('string')
     });
     YellowMinion = EvilMinion.extend();
-    DoomsdayDevice = DS.Model.extend({
-      name:         DS.attr('string'),
-      evilMinion:   DS.belongsTo('evilMinion', { polymorphic: true })
+    DoomsdayDevice = Model.extend({
+      name:         attr('string'),
+      evilMinion:   belongsTo('evilMinion', { polymorphic: true })
     });
-    MediocreVillain = DS.Model.extend({
-      name:         DS.attr('string'),
-      evilMinions:  DS.hasMany('evilMinion', { polymorphic: true })
+    MediocreVillain = Model.extend({
+      name:         attr('string'),
+      evilMinions:  hasMany('evilMinion', { polymorphic: true })
     });
     TestSerializer = ActiveModelSerializer.extend({
       isNewSerializerAPI: true

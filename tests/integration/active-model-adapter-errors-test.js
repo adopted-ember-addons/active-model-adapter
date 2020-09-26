@@ -1,11 +1,10 @@
+import Model, { attr } from '@ember-data/model';
 import Ember from 'ember';
-import DS from 'ember-data';
 import Pretender from 'pretender';
 import {ActiveModelAdapter} from 'active-model-adapter';
 import setupStore from '../helpers/setup-store';
 import {module, test} from 'qunit';
 
-const {Model, attr} = DS;
 const {run} = Ember;
 
 const Book = Model.extend({

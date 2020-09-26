@@ -1,3 +1,9 @@
+import Transform from '@ember-data/serializer/transform';
+import RESTAdapter from '@ember-data/adapter/rest';
+import RESTSerializer from '@ember-data/serializer/rest';
+import JSONSerializer from '@ember-data/serializer/json';
+import Adapter from '@ember-data/adapter';
+import Store from '@ember-data/store';
 import Ember from 'ember';
 import DS from 'ember-data';
 import ActiveModelAdapter from 'active-model-adapter';
@@ -36,28 +42,28 @@ export default function setupStore(options) {
     registry.register('model:' + Ember.String.dasherize(prop), options[prop]);
   }
 
-  registry.register('store:main', DS.Store.extend({
+  registry.register('store:main', Store.extend({
     adapter: adapter
   }));
 
   registry.optionsForType('serializer', { singleton: false });
   registry.optionsForType('adapter', { singleton: false });
-  registry.register('adapter:-default', DS.Adapter);
+  registry.register('adapter:-default', Adapter);
 
-  registry.register('serializer:-default', DS.JSONSerializer);
-  registry.register('serializer:-rest', DS.RESTSerializer);
-  registry.register('serializer:-rest-new', DS.RESTSerializer.extend({ isNewSerializerAPI: true }));
+  registry.register('serializer:-default', JSONSerializer);
+  registry.register('serializer:-rest', RESTSerializer);
+  registry.register('serializer:-rest-new', RESTSerializer.extend({ isNewSerializerAPI: true }));
 
   registry.register('adapter:-active-model', ActiveModelAdapter);
   registry.register('serializer:-active-model', ActiveModelSerializer.extend({isNewSerializerAPI: true}));
 
-  registry.register('adapter:-rest', DS.RESTAdapter);
+  registry.register('adapter:-rest', RESTAdapter);
 
   registry.injection('serializer', 'store', 'store:main');
   registry.register('transform:string', DS.StringTransform);
   registry.register('transform:number', DS.NumberTransform);
   registry.register('transform:date', DS.DateTransform);
-  registry.register('transform:main', DS.Transform);
+  registry.register('transform:main', Transform);
 
   env.serializer = container.lookup('serializer:-default');
   env.restSerializer = container.lookup('serializer:-rest');

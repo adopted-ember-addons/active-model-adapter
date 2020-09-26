@@ -1,3 +1,4 @@
+import Model, { attr } from '@ember-data/model';
 var env, store, adapter, User;
 
 import {module, test} from 'qunit';
@@ -10,8 +11,8 @@ module("integration/active_model_adapter_serializer - AMS Adapter and Serializer
   hooks.beforeEach(function() {
     originalAjax = Ember.$.ajax;
 
-    User = DS.Model.extend({
-      firstName: DS.attr()
+    User = Model.extend({
+      firstName: attr()
     });
 
     env = setupStore({

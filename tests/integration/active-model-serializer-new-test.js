@@ -1,3 +1,4 @@
+import Model, { attr, belongsTo, hasMany } from '@ember-data/model';
 import Ember from 'ember';
 import ActiveModelAdapter from 'active-model-adapter';
 import ActiveModelSerializer from 'active-model-adapter/active-model-serializer';
@@ -10,28 +11,28 @@ var run = Ember.run;
 
 module("integration/active_model - ActiveModelSerializer (new API)", function(hooks) {
   hooks.beforeEach(function() {
-    SuperVillain = DS.Model.extend({
-      firstName:     DS.attr('string'),
-      lastName:      DS.attr('string'),
-      homePlanet:    DS.belongsTo("homePlanet"),
-      evilMinions:   DS.hasMany("evilMinion")
+    SuperVillain = Model.extend({
+      firstName:     attr('string'),
+      lastName:      attr('string'),
+      homePlanet:    belongsTo("homePlanet"),
+      evilMinions:   hasMany("evilMinion")
     });
-    HomePlanet = DS.Model.extend({
-      name:          DS.attr('string'),
-      superVillains: DS.hasMany('superVillain', { async: true })
+    HomePlanet = Model.extend({
+      name:          attr('string'),
+      superVillains: hasMany('superVillain', { async: true })
     });
-    EvilMinion = DS.Model.extend({
-      superVillain: DS.belongsTo('superVillain'),
-      name:         DS.attr('string')
+    EvilMinion = Model.extend({
+      superVillain: belongsTo('superVillain'),
+      name:         attr('string')
     });
     YellowMinion = EvilMinion.extend();
-    DoomsdayDevice = DS.Model.extend({
-      name:         DS.attr('string'),
-      evilMinion:   DS.belongsTo('evilMinion', { polymorphic: true })
+    DoomsdayDevice = Model.extend({
+      name:         attr('string'),
+      evilMinion:   belongsTo('evilMinion', { polymorphic: true })
     });
-    MediocreVillain = DS.Model.extend({
-      name:         DS.attr('string'),
-      evilMinions:  DS.hasMany('evilMinion', { polymorphic: true })
+    MediocreVillain = Model.extend({
+      name:         attr('string'),
+      evilMinions:  hasMany('evilMinion', { polymorphic: true })
     });
     TestSerializer = ActiveModelSerializer.extend({
       isNewSerializerAPI: true
@@ -65,7 +66,7 @@ module("integration/active_model - ActiveModelSerializer (new API)", function(ho
 
     test("normalize", function(assert) {
       SuperVillain.reopen({
-        yellowMinion: DS.belongsTo('yellowMinion')
+        yellowMinion: belongsTo('yellowMinion')
       });
 
       var superVillain_hash = {
