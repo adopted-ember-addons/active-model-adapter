@@ -18,6 +18,8 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
+    "@ember/jquery": "^1.1.0",
+    "@ember/optional-features": "^2.0.0",
     "broccoli-babel-transpiler": "^5.5.0",
     "broccoli-concat": "0.0.13",
     "broccoli-es3-safe-recast": "^2.0.0",
@@ -39,6 +41,7 @@
     "ember-export-application-global": "^1.0.5",
     "ember-load-initializers": "^1.0.0",
     "ember-resolver": "^2.0.3",
+    "ember-source": "^3.21.1",
     "ember-try": "^1.4.0",
     "github": "^0.2.4",
     "loader.js": "4.6.0",
