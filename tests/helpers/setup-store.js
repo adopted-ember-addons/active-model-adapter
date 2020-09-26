@@ -9,66 +9,48 @@ import DS from 'ember-data';
 import ActiveModelAdapter from 'active-model-adapter';
 import ActiveModelSerializer from 'active-model-adapter/active-model-serializer';
 
-export default function setupStore(options) {
-  var container, registry;
-  var env = {};
+export default function setupStore(owner, options) {
   options = options || {};
 
-  if (Ember.Registry) {
-    registry = env.registry = new Ember.Registry();
-    container = env.container = registry.container();
-  } else {
-    container = env.container = new Ember.Container();
-    registry = env.registry = container;
-  }
-
-  env.replaceContainerNormalize = function replaceContainerNormalize(fn) {
-    if (env.registry) {
-      env.registry.normalize = fn;
-    } else {
-      env.container.normalize = fn;
-    }
-  };
+  var env = {};
 
   var adapter = env.adapter = (options.adapter || '-default');
   delete options.adapter;
 
   if (typeof adapter !== 'string') {
-    env.registry.register('adapter:-ember-data-test-custom', adapter);
+    owner.register('adapter:-ember-data-test-custom', adapter);
     adapter = '-ember-data-test-custom';
   }
 
   for (var prop in options) {
-    registry.register('model:' + Ember.String.dasherize(prop), options[prop]);
+    owner.register('model:' + Ember.String.dasherize(prop), options[prop]);
   }
 
-  registry.register('store:main', Store.extend({
+  owner.register('store:main', Store.extend({
     adapter: adapter
   }));
 
-  registry.optionsForType('serializer', { singleton: false });
-  registry.optionsForType('adapter', { singleton: false });
-  registry.register('adapter:-default', Adapter);
+  owner.register('adapter:-default', Adapter, { singleton: false });
 
-  registry.register('serializer:-default', JSONSerializer);
-  registry.register('serializer:-rest', RESTSerializer);
-  registry.register('serializer:-rest-new', RESTSerializer.extend({ isNewSerializerAPI: true }));
+  owner.register('serializer:-default', JSONSerializer, { singleton: false });
+  owner.register('serializer:-rest', RESTSerializer, { singleton: false });
+  owner.register('serializer:-rest-new', RESTSerializer.extend({ isNewSerializerAPI: true }));
 
-  registry.register('adapter:-active-model', ActiveModelAdapter);
-  registry.register('serializer:-active-model', ActiveModelSerializer.extend({isNewSerializerAPI: true}));
+  owner.register('adapter:-active-model', ActiveModelAdapter, { singleton: false });
+  owner.register('serializer:-active-model', ActiveModelSerializer.extend({isNewSerializerAPI: true}));
 
-  registry.register('adapter:-rest', RESTAdapter);
+  owner.register('adapter:-rest', RESTAdapter, { singleton: false });
 
-  registry.injection('serializer', 'store', 'store:main');
-  registry.register('transform:string', DS.StringTransform);
-  registry.register('transform:number', DS.NumberTransform);
-  registry.register('transform:date', DS.DateTransform);
-  registry.register('transform:main', Transform);
+  owner.inject('serializer', 'store', 'store:main');
+  owner.register('transform:string', DS.StringTransform);
+  owner.register('transform:number', DS.NumberTransform);
+  owner.register('transform:date', DS.DateTransform);
+  owner.register('transform:main', Transform);
 
-  env.serializer = container.lookup('serializer:-default');
-  env.restSerializer = container.lookup('serializer:-rest');
-  env.restNewSerializer = container.lookup('serializer:-rest-new');
-  env.store = container.lookup('store:main');
+  env.serializer = owner.lookup('serializer:-default');
+  env.restSerializer = owner.lookup('serializer:-rest');
+  env.restNewSerializer = owner.lookup('serializer:-rest-new');
+  env.store = owner.lookup('store:main');
   env.adapter = env.store.get('defaultAdapter');
 
   return env;

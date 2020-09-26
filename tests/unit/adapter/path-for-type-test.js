@@ -1,12 +1,15 @@
 import setupStore from '../../helpers/setup-store';
 import {module, test} from 'qunit';
 import {ActiveModelAdapter} from 'active-model-adapter';
+import { setupTest } from 'ember-qunit';
 
 var env, adapter;
 
 module("unit/adapter/path_for_type - DS.ActiveModelAdapter#pathForType", function(hooks) {
+  setupTest(hooks);
+
   hooks.beforeEach(function() {
-    env = setupStore({
+    env = setupStore(this.owner, {
       adapter: ActiveModelAdapter
     });
 

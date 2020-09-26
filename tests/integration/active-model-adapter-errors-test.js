@@ -4,6 +4,7 @@ import Pretender from 'pretender';
 import {ActiveModelAdapter} from 'active-model-adapter';
 import setupStore from '../helpers/setup-store';
 import {module, test} from 'qunit';
+import { setupTest } from 'ember-qunit';
 
 const {run} = Ember;
 
@@ -15,10 +16,12 @@ const Book = Model.extend({
 let pretender, store;
 
 module('active-model-adapter-errors-test - Errors Integration test', function(hooks) {
+  setupTest(hooks);
+
   hooks.beforeEach(function() {
     pretender = new Pretender(function() {});
     store = run(() => {
-      let env = setupStore({
+      let env = setupStore(this.owner, {
         adapter: ActiveModelAdapter,
         book: Book
       });

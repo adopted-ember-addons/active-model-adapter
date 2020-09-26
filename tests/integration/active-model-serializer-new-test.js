@@ -3,6 +3,7 @@ import Ember from 'ember';
 import ActiveModelAdapter from 'active-model-adapter';
 import ActiveModelSerializer from 'active-model-adapter/active-model-serializer';
 import setupStore from '../helpers/setup-store';
+import { setupTest } from 'ember-qunit';
 
 import {module, test} from 'qunit';
 
@@ -10,6 +11,8 @@ var HomePlanet, SuperVillain, EvilMinion, YellowMinion, DoomsdayDevice, Mediocre
 var run = Ember.run;
 
 module("integration/active_model - ActiveModelSerializer (new API)", function(hooks) {
+  setupTest(hooks);
+
   hooks.beforeEach(function() {
     SuperVillain = Model.extend({
       firstName:     attr('string'),
@@ -37,7 +40,7 @@ module("integration/active_model - ActiveModelSerializer (new API)", function(ho
     TestSerializer = ActiveModelSerializer.extend({
       isNewSerializerAPI: true
     });
-    env = setupStore({
+    env = setupStore(this.owner, {
       superVillain:   SuperVillain,
       homePlanet:     HomePlanet,
       evilMinion:     EvilMinion,
@@ -51,11 +54,11 @@ module("integration/active_model - ActiveModelSerializer (new API)", function(ho
     env.store.modelFor('yellowMinion');
     env.store.modelFor('doomsdayDevice');
     env.store.modelFor('mediocreVillain');
-    env.registry.register('serializer:application', TestSerializer);
-    env.registry.register('serializer:-active-model', TestSerializer);
-    env.registry.register('adapter:-active-model', ActiveModelAdapter);
-    env.amsSerializer = env.container.lookup("serializer:-active-model");
-    env.amsAdapter    = env.container.lookup("adapter:-active-model");
+    this.owner.register('serializer:application', TestSerializer);
+    this.owner.register('serializer:-active-model', TestSerializer);
+    this.owner.register('adapter:-active-model', ActiveModelAdapter);
+    env.amsSerializer = this.owner.lookup("serializer:-active-model");
+    env.amsAdapter    = this.owner.lookup("adapter:-active-model");
   });
 
   hooks.afterEach(function() {
@@ -115,7 +118,7 @@ module("integration/active_model - ActiveModelSerializer (new API)", function(ho
     });
 
     test("normalizeSingleResponse", function(assert) {
-      env.registry.register('adapter:superVillain', ActiveModelAdapter);
+      this.owner.register('adapter:superVillain', ActiveModelAdapter);
 
       var json_hash = {
         home_planet:   { id: "1", name: "Umber", super_villain_ids: [1] },
@@ -164,7 +167,7 @@ module("integration/active_model - ActiveModelSerializer (new API)", function(ho
     });
 
     test("normalizeArrayResponse", function(assert) {
-      env.registry.register('adapter:superVillain', ActiveModelAdapter);
+      this.owner.register('adapter:superVillain', ActiveModelAdapter);
       var array;
 
       var json_hash = {
@@ -208,7 +211,7 @@ module("integration/active_model - ActiveModelSerializer (new API)", function(ho
     });
 
     test("extractPolymorphic hasMany", function(assert) {
-      env.registry.register('adapter:yellowMinion', ActiveModelAdapter);
+      this.owner.register('adapter:yellowMinion', ActiveModelAdapter);
       MediocreVillain.toString   = function() { return "MediocreVillain"; };
       YellowMinion.toString = function() { return "YellowMinion"; };
 
@@ -249,7 +252,7 @@ module("integration/active_model - ActiveModelSerializer (new API)", function(ho
     });
 
     test("extractPolymorphic belongsTo", function(assert) {
-      env.registry.register('adapter:yellowMinion', ActiveModelAdapter);
+      this.owner.register('adapter:yellowMinion', ActiveModelAdapter);
       EvilMinion.toString   = function() { return "EvilMinion"; };
       YellowMinion.toString = function() { return "YellowMinion"; };
 

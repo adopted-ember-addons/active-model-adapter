@@ -3,15 +3,18 @@ import Model from '@ember-data/model';
 import setupStore from '../helpers/setup-store';
 import {module, test} from 'qunit';
 import ActiveModelAdapter from 'active-model-adapter';
+import { setupTest } from 'ember-qunit';
 
 var env, store, adapter, SuperUser;
 var passedUrl, passedVerb, passedHash;
 
 module("integration/active_model_adapter - AMS Adapter", function(hooks) {
+  setupTest(hooks);
+
   hooks.beforeEach(function() {
     SuperUser = Model.extend();
 
-    env = setupStore({
+    env = setupStore(this.owner, {
       superUser: SuperUser,
       adapter: ActiveModelAdapter
     });

@@ -5,11 +5,14 @@ import ActiveModelSerializer from 'active-model-adapter/active-model-serializer'
 import Ember from 'ember';
 
 import {module, test} from 'qunit';
+import { setupTest } from 'ember-qunit';
 
 var SuperVillain, EvilMinion, YellowMinion, DoomsdayDevice, MediocreVillain, TestSerializer, env;
 var run = Ember.run;
 
 module("integration/active_model - AMS-namespaced-model-names (new API)", function(hooks) {
+  setupTest(hooks);
+
   hooks.beforeEach(function() {
     SuperVillain = Model.extend({
       firstName:     attr('string'),
@@ -33,7 +36,7 @@ module("integration/active_model - AMS-namespaced-model-names (new API)", functi
     TestSerializer = ActiveModelSerializer.extend({
       isNewSerializerAPI: true
     });
-    env = setupStore({
+    env = setupStore(this.owner, {
       superVillain:   SuperVillain,
       evilMinion:     EvilMinion,
       'evilMinions/yellowMinion':   YellowMinion,
@@ -45,11 +48,11 @@ module("integration/active_model - AMS-namespaced-model-names (new API)", functi
     env.store.modelFor('evilMinions/yellowMinion');
     env.store.modelFor('doomsdayDevice');
     env.store.modelFor('mediocreVillain');
-    env.registry.register('serializer:application', TestSerializer);
-    env.registry.register('serializer:-active-model', TestSerializer);
-    env.registry.register('adapter:-active-model', TestSerializer);
-    env.amsSerializer = env.container.lookup("serializer:-active-model");
-    env.amsAdapter    = env.container.lookup("adapter:-active-model");
+    this.owner.register('serializer:application', TestSerializer);
+    this.owner.register('serializer:-active-model', TestSerializer);
+    this.owner.register('adapter:-active-model', TestSerializer);
+    env.amsSerializer = this.owner.lookup("serializer:-active-model");
+    env.amsAdapter    = this.owner.lookup("adapter:-active-model");
   });
 
   hooks.afterEach(function() {

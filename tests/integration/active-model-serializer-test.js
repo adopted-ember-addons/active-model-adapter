@@ -4,12 +4,15 @@ import setupStore from '../helpers/setup-store';
 import {module, test} from 'qunit';
 import {ActiveModelAdapter, ActiveModelSerializer} from 'active-model-adapter';
 import Ember from 'ember';
+import { setupTest } from 'ember-qunit';
 
 var get = Ember.get;
 var HomePlanet, league, SuperVillain, EvilMinion, YellowMinion, DoomsdayDevice, MediocreVillain, env;
 var run = Ember.run;
 
 module("integration/active_model - ActiveModelSerializer", function(hooks) {
+  setupTest(hooks);
+
   hooks.beforeEach(function() {
     SuperVillain = Model.extend({
       firstName:     attr('string'),
@@ -34,7 +37,7 @@ module("integration/active_model - ActiveModelSerializer", function(hooks) {
       name:         attr('string'),
       evilMinions:  hasMany('evil-minion', { polymorphic: true })
     });
-    env = setupStore({
+    env = setupStore(this.owner, {
       superVillain:   SuperVillain,
       homePlanet:     HomePlanet,
       evilMinion:     EvilMinion,
@@ -48,14 +51,14 @@ module("integration/active_model - ActiveModelSerializer", function(hooks) {
     env.store.modelFor('yellow-minion');
     env.store.modelFor('doomsday-device');
     env.store.modelFor('mediocre-villain');
-    env.registry.register('serializer:application', ActiveModelSerializer.extend({isNewSerializerAPI: true}));
-    env.registry.register('serializer:-active-model', ActiveModelSerializer.extend({isNewSerializerAPI: true}));
-    env.registry.register('adapter:-active-model', ActiveModelAdapter);
-    env.registry.register('adapter:application', ActiveModelAdapter.extend({
+    this.owner.register('serializer:application', ActiveModelSerializer.extend({isNewSerializerAPI: true}));
+    this.owner.register('serializer:-active-model', ActiveModelSerializer.extend({isNewSerializerAPI: true}));
+    this.owner.register('adapter:-active-model', ActiveModelAdapter);
+    this.owner.register('adapter:application', ActiveModelAdapter.extend({
       shouldBackgroundReloadRecord: () => false
     }));
-    env.amsSerializer = env.container.lookup("serializer:-active-model");
-    env.amsAdapter    = env.container.lookup("adapter:-active-model");
+    env.amsSerializer = this.owner.lookup("serializer:-active-model");
+    env.amsAdapter    = this.owner.lookup("adapter:-active-model");
   });
 
   hooks.afterEach(function() {
@@ -94,7 +97,8 @@ module("integration/active_model - ActiveModelSerializer", function(hooks) {
   });
 
   test("serializeIntoHash with decamelized types", function(assert) {
-    HomePlanet.modelName = 'home-planet';
+    assert.equal(HomePlanet.modelName, 'home-planet');
+
     run(function() {
       league = env.store.createRecord('home-planet', { name: "Umber", id: "123" });
     });
@@ -161,7 +165,7 @@ module("integration/active_model - ActiveModelSerializer", function(hooks) {
   });
 
   test("normalizeResponse", function(assert) {
-    env.registry.register('adapter:superVillain', ActiveModelAdapter);
+    this.owner.register('adapter:superVillain', ActiveModelAdapter);
 
     var json_hash = {
       home_planet:   { id: "1", name: "Umber", super_villain_ids: [1] },
@@ -210,7 +214,7 @@ module("integration/active_model - ActiveModelSerializer", function(hooks) {
   });
 
   test("normalizeResponse", function(assert) {
-    env.registry.register('adapter:superVillain', ActiveModelAdapter);
+    this.owner.register('adapter:superVillain', ActiveModelAdapter);
     var array;
 
     var json_hash = {
@@ -293,7 +297,8 @@ module("integration/active_model - ActiveModelSerializer", function(hooks) {
   });
 
   test("serialize polymorphic when type key is not camelized", function(assert) {
-    YellowMinion.modelName = 'yellow-minion';
+    assert.equal(YellowMinion.modelName, 'yellow-minion');
+
     var tom, ray;
     run(function() {
       tom = env.store.createRecord('yellow-minion', { name: "Alex", id: "124" });
@@ -316,7 +321,7 @@ module("integration/active_model - ActiveModelSerializer", function(hooks) {
   });
 
   test("extractPolymorphic hasMany", function(assert) {
-    env.registry.register('adapter:yellowMinion', ActiveModelAdapter);
+    this.owner.register('adapter:yellowMinion', ActiveModelAdapter);
     MediocreVillain.toString   = function() { return "MediocreVillain"; };
     YellowMinion.toString = function() { return "YellowMinion"; };
 
@@ -357,7 +362,7 @@ module("integration/active_model - ActiveModelSerializer", function(hooks) {
   });
 
   test("extractPolymorphic belongsTo", function(assert) {
-    env.registry.register('adapter:yellowMinion', ActiveModelAdapter);
+    this.owner.register('adapter:yellowMinion', ActiveModelAdapter);
     EvilMinion.toString   = function() { return "EvilMinion"; };
     YellowMinion.toString = function() { return "YellowMinion"; };
 
@@ -396,7 +401,7 @@ module("integration/active_model - ActiveModelSerializer", function(hooks) {
   });
 
   test("extractPolymorphic belongsTo (weird format)", function(assert) {
-    env.registry.register('adapter:yellowMinion', ActiveModelAdapter);
+    this.owner.register('adapter:yellowMinion', ActiveModelAdapter);
     EvilMinion.toString   = function() { return "EvilMinion"; };
     YellowMinion.toString = function() { return "YellowMinion"; };
 
@@ -440,7 +445,7 @@ module("integration/active_model - ActiveModelSerializer", function(hooks) {
   });
 
   test("belongsTo (weird format) does not screw if there is a relationshipType attribute", function(assert) {
-    env.registry.register('adapter:yellowMinion', ActiveModelAdapter);
+    this.owner.register('adapter:yellowMinion', ActiveModelAdapter);
     EvilMinion.toString   = function() { return "EvilMinion"; };
     YellowMinion.toString = function() { return "YellowMinion"; };
     DoomsdayDevice.reopen({
@@ -647,9 +652,8 @@ module("integration/active_model - ActiveModelSerializer", function(hooks) {
     assert.equal(villain.get('evilMinions.firstObject.name'), 'Harry');
   });
 
-  test('when using the DS.EmbeddedRecordsMixin, does not erase attributes for polymorphic embedded models', (assert) => {
-
-    env.registry.register('serializer:mediocre-villain', ActiveModelSerializer.extend(EmbeddedRecordsMixin, {
+  test('when using the DS.EmbeddedRecordsMixin, does not erase attributes for polymorphic embedded models', function(assert) {
+    this.owner.register('serializer:mediocre-villain', ActiveModelSerializer.extend(EmbeddedRecordsMixin, {
       isNewSerializerAPI: true,
 
       attrs: {

@@ -4,6 +4,7 @@ import ActiveModelAdapter, {ActiveModelSerializer} from 'active-model-adapter';
 import {module, test} from 'qunit';
 import Pretender from 'pretender';
 import setupStore from '../helpers/setup-store';
+import { setupTest } from 'ember-qunit';
 
 const {run} = Ember;
 
@@ -12,6 +13,8 @@ Pretender.prototype.prepareBody = (body) => JSON.stringify(body);
 let pretender, Book, Author, env, store;
 
 module(`ActiveModelAdapter, full stack integration tests for old serializer api`, function(hooks) {
+  setupTest(hooks);
+
   hooks.beforeEach(function() {
     Book = Model.extend({
       title: attr(),
@@ -19,13 +22,13 @@ module(`ActiveModelAdapter, full stack integration tests for old serializer api`
     });
     Author = Model.extend({});
     pretender = new Pretender(function(){ });
-    env = setupStore({
+    env = setupStore(this.owner, {
       book: Book,
       author: Author,
       adapter: ActiveModelAdapter
     });
 
-    env.registry.register('serializer:-active-model', ActiveModelSerializer.extend({isNewSerializerAPI: false}));
+    this.owner.register('serializer:-active-model', ActiveModelSerializer.extend({isNewSerializerAPI: false}));
     store = env.store;
   });
 
