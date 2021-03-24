@@ -5,11 +5,12 @@ import { TestContext } from 'ember-test-helpers';
 
 let pretender: Pretender;
 
-import DS from 'ember-data';
+import Model from 'ember-data/model';
 import attr from 'ember-data/attr';
 import ActiveModelAdapter from 'active-model-adapter';
+import { AdapterError } from 'ember-data/adapters/errors';
 
-class Book extends DS.Model {
+class Book extends Model {
   @attr('string') name!: string;
   @attr('string') genre!: string;
 }
@@ -31,7 +32,7 @@ module('Unit | Adapter | active model adapter errors test', function(hooks) {
   });
 
   test('errors can be iterated once intercepted by the adapter', async function(this: TestContext, assert) {
-    assert.expect(2);
+    assert.expect(3);
 
     const store = this.owner.lookup('service:store');
 
@@ -66,6 +67,8 @@ module('Unit | Adapter | active model adapter errors test', function(hooks) {
     try {
       await post.save();
     } catch (e) {
+      assert.ok(e instanceof AdapterError);
+
       assert.equal(
         post.get('errors.name')[0].message,
         'rejected',
