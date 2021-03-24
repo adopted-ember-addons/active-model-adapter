@@ -54,6 +54,7 @@ module.exports = {
         node: true
       },
       plugins: ['node'],
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
       rules: Object.assign({}, require('eslint-plugin-node').configs.recommended.rules, {
         // add your custom rules and overrides for node files here
       })
