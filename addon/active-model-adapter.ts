@@ -4,9 +4,7 @@ import ModelRegistry from 'ember-data/types/registries/model';
 import RESTAdapter from 'ember-data/adapters/rest';
 import { AnyObject } from 'active-model-adapter';
 import { decamelize, underscore } from '@ember/string';
-
-const { InvalidError, errorsHashToArray } = DS;
-
+import { InvalidError, errorsHashToArray } from 'ember-data/adapters/errors';
 
 interface ActiveModelPayload {
   errors: AnyObject;
