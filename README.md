@@ -1,4 +1,4 @@
-# Ember Data ActiveModel Adapter [![Build Status](https://travis-ci.org/ember-data/active-model-adapter.svg?branch=master)](https://travis-ci.org/ember-data/active-model-adapter)
+# Ember Data ActiveModel Adapter [![Build Status](https://travis-ci.org/adopted-ember-addons/active-model-adapter.svg?branch=master)](https://travis-ci.org/adopted-ember-addons/active-model-adapter)
 
 ## Installation
 
@@ -19,7 +19,7 @@ Rails](https://github.com/emberjs/ember-rails).
 
 ### Script Tags
 
-Grab a copy of active-model-adapter.js from http://github.com/ember-data/active-model-adapter-dist
+Grab a copy of active-model-adapter.js from http://github.com/adopted-ember-addons/active-model-adapter-dist
 
 ## Usage
 
