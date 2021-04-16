@@ -1,4 +1,4 @@
-# Ember Data ActiveModel Adapter [![Build Status](https://travis-ci.org/adopted-ember-addons/active-model-adapter.svg?branch=master)](https://travis-ci.org/adopted-ember-addons/active-model-adapter)
+# Ember Data ActiveModel Adapter [![Build Status](https://github.com/adopted-ember-addons/active-model-adapter/actions/workflows/ci.yml/badge.svg)](https://github.com/<OWNER>/<REPOSITORY>/actions/workflows/ci.yml/badge.svg)
 
 ## Installation
 
