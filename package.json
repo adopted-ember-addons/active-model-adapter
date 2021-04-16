@@ -96,7 +96,7 @@
     "typescript": "^4.2.4"
   },
   "engines": {
-    "node": "10.* || >= 12"
+    "node": "12.* || >= 14"
   },
   "ember": {
     "edition": "octane"
