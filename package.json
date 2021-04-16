@@ -1,11 +1,11 @@
 {
   "name": "active-model-adapter",
   "version": "2.2.0",
-  "description": "The default blueprint for ember-cli addons.",
+  "description": "Adapters and Serializers for Rails's ActiveModel::Serializers",
   "keywords": [
     "ember-addon"
   ],
-  "repository": "",
+  "repository": "https://github.com/adopted-ember-addons/active-model-adapter",
   "license": "MIT",
   "author": "",
   "directories": {
