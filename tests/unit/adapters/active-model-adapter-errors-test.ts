@@ -7,7 +7,7 @@ let pretender: Pretender;
 
 import Model from 'ember-data/model';
 import attr from 'ember-data/attr';
-import ActiveModelAdapter from 'active-model-adapter';
+import ActiveModelAdapter, {ActiveModelSerializer} from 'active-model-adapter';
 import { AdapterError } from 'ember-data/adapters/errors';
 
 class Book extends Model {
@@ -16,6 +16,7 @@ class Book extends Model {
 }
 
 class ApplicationAdapter extends ActiveModelAdapter {}
+class ApplicationSerializer extends ActiveModelSerializer {}
 
 module('Unit | Adapter | active model adapter errors test', function(hooks) {
   setupTest(hooks);
@@ -24,6 +25,7 @@ module('Unit | Adapter | active model adapter errors test', function(hooks) {
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     pretender = new Pretender(function() {});
     this.owner.register('adapter:application', ApplicationAdapter);
+    this.owner.register('serializer:application', ApplicationSerializer);
     this.owner.register('model:book', Book);
   });
 
