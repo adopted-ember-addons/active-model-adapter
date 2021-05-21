@@ -1,10 +1,9 @@
-import DS from 'ember-data';
+import RESTAdapter from '@ember-data/adapter/rest';
+import AdapterError, { InvalidError, errorsHashToArray } from '@ember-data/adapter/error';
 import { pluralize } from 'ember-inflector';
 import ModelRegistry from 'ember-data/types/registries/model';
-import RESTAdapter from 'ember-data/adapters/rest';
 import { AnyObject } from 'active-model-adapter';
 import { decamelize, underscore } from '@ember/string';
-import { InvalidError, errorsHashToArray } from 'ember-data/adapters/errors';
 
 interface ActiveModelPayload {
   errors: AnyObject;
@@ -141,13 +140,13 @@ export default class ActiveModelAdapter extends RESTAdapter {
    * @param  {Number} status
    * @param  {Object} headers
    * @param  {Object} payload
-   * @return {Object | DS.AdapterError} response
+   * @return {Object | AdapterError} response
    */
   handleResponse(
     status: number,
     headers: AnyObject,
     payload: ActiveModelPayload,
-    requestData: AnyObject | DS.AdapterError
+    requestData: AnyObject | AdapterError
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ): any {
     if (this.isInvalid(status, headers, payload)) {

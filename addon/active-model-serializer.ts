@@ -1,18 +1,17 @@
+import RESTSerializer from '@ember-data/serializer/rest';
+import Store, { normalizeModelName } from '@ember-data/store';
+import Model from '@ember-data/model';
 import DS from 'ember-data';
 import { singularize, pluralize } from 'ember-inflector';
 import { classify, decamelize, camelize, underscore } from '@ember/string';
 import { inject as service } from '@ember/service';
-import Store from 'ember-data/store';
-import RESTSerializer from 'ember-data/serializers/rest';
 import { isNone } from '@ember/utils';
 import { AnyObject } from 'active-model-adapter';
-import Model from 'ember-data/model';
 
 /**
   @module ember-data
  */
 
-const { normalizeModelName } = DS;
 type RelationshipKind = 'belongsTo' | 'hasMany';
 
 /**
@@ -196,7 +195,7 @@ export default class ActiveModelSerializer extends RESTSerializer {
     }
     ```
   */
-  normalize(typeClass: DS.Model, hash: AnyObject, prop: string): AnyObject {
+  normalize(typeClass: Model, hash: AnyObject, prop: string): AnyObject {
     this.normalizeLinks(hash);
     return super.normalize(typeClass, hash, prop);
   }
@@ -236,7 +235,7 @@ export default class ActiveModelSerializer extends RESTSerializer {
   }
 
   extractRelationships(
-    modelClass: DS.Model,
+    modelClass: Model,
     resourceHash: AnyObject
   ): AnyObject {
     modelClass.eachRelationship<Model>(
