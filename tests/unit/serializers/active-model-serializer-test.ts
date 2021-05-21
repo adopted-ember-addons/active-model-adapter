@@ -8,50 +8,50 @@ import Pretender from 'pretender';
 import Store from 'ember-data/store';
 import { get } from '@ember/object';
 import Model, { attr, belongsTo, hasMany } from '@ember-data/model';
+import { resolve } from 'rsvp';
+import type ModelRegistry from 'ember-data/types/registries/model';
 
 class ApplicationAdapter extends ActiveModelAdapter {}
 
 class User extends Model {
-  @attr('string')
-  declare firstName?: string;
+  @attr
+  firstName?: string;
 }
 
-class TestSerializer extends ActiveModelSerializer {
-  isNewSerializerAPI = true;
-}
+class TestSerializer extends ActiveModelSerializer {}
 
 class SuperVillain extends Model {
-  @attr('string')
+  @attr
   declare firstName?: string;
 
-  @attr('string')
+  @attr
   declare lastName?: string;
 
-  @belongsTo('home-planet')
+  @belongsTo('home-planet', { async: true, inverse: 'superVillains' })
   declare homePlanet: DS.PromiseObject<HomePlanet>;
 
-  @hasMany('evil-minion')
+  @hasMany('evil-minion', { async: true, inverse: 'superVillain' })
   declare evilMinions: DS.PromiseManyArray<EvilMinion>;
 }
 
 class SuperVillainExtended extends SuperVillain {
-  @belongsTo('yellow-minion')
+  @belongsTo('yellow-minion', { async: true, inverse: null })
   declare yellowMinion: DS.PromiseObject<YellowMinion>;
 }
 
 class HomePlanet extends Model {
-  @attr('string')
+  @attr
   declare name?: string;
 
-  @hasMany('super-villain')
+  @hasMany('super-villain', { async: true, inverse: 'homePlanet' })
   declare superVillains: DS.PromiseManyArray<SuperVillain>;
 }
 
 class EvilMinion extends Model {
-  @attr('string')
+  @attr
   declare name?: string;
 
-  @belongsTo('super-villain')
+  @belongsTo('super-villain', { async: true, inverse: 'evilMinions' })
   declare superVillain: DS.PromiseObject<SuperVillain>;
 
   toString() {
@@ -65,25 +65,26 @@ class YellowMinion extends EvilMinion {
 }
 
 class DoomsdayDevice extends Model {
-  @attr('string')
+  @attr
   declare name?: string;
 
-  @belongsTo('evil-minion', { polymorphic: true, async: false })
+  @belongsTo('evil-minion', { polymorphic: true, async: false, inverse: null })
   declare evilMinion: EvilMinion;
 }
 
 class MediocreVillain extends Model {
-  @attr('string')
+  @attr
   declare name?: string;
 
-  @hasMany('evil-minion', { polymorphic: true })
+  @hasMany('evil-minion', { polymorphic: true, async: true, inverse: null })
   declare evilMinions: DS.PromiseManyArray<EvilMinion>;
 }
 
 let pretender: Pretender;
 
-type Context = TestContext & {
+interface Context extends TestContext {
   amsSerializer: ActiveModelSerializer;
+  store: Store;
 };
 
 declare module 'ember-data/types/registries/serializer' {
@@ -166,7 +167,30 @@ module('Unit | Serializer | active model serializer', function(hooks) {
     }
   });
 
-  test('serialize', function(this: Context, assert) {
+  test('serialize', async function(this: Context, assert) {
+    assert.expect(3)
+    this.owner.unregister('adapter:application');
+    this.owner.register('adapter:application', class TestAdapter extends ActiveModelAdapter {
+      createRecord<K extends keyof ModelRegistry>(store: Store, schema: ModelRegistry[K], snapshot: DS.Snapshot) {
+        const serializer = store.serializerFor('application');
+        type SerializationResult = { super_villain: { [key: string]: string } };
+        const serialized: SerializationResult = {} as SerializationResult;
+        serializer.serializeIntoHash(serialized, schema, snapshot, { includeId: true });
+
+        assert.strictEqual(serializer instanceof ActiveModelSerializer, true, 'We are testing the active model serializer');
+        assert.deepEqual(serialized, {
+          super_villain: {
+            first_name: 'Tom',
+            last_name: 'Dale',
+            home_planet_id: get(league, 'id')
+          }
+        }, 'we serialized correctly');
+
+        serialized.super_villain.id = '1';
+        return resolve(serialized);
+      }
+    });
+
     const league = this.store.createRecord('home-planet', {
       name: 'Villain League',
       id: '123'
@@ -178,13 +202,9 @@ module('Unit | Serializer | active model serializer', function(hooks) {
       homePlanet: league
     });
 
-    const json = this.amsSerializer.serialize(tom._createSnapshot(), {});
+    await tom.save();
 
-    assert.deepEqual(json, {
-      first_name: 'Tom',
-      last_name: 'Dale',
-      home_planet_id: get(league, 'id')
-    });
+    assert.strictEqual(tom.id, '1', 'We saved correctly');
   });
 
   test('serializeIntoHash', function(this: Context, assert) {
@@ -866,8 +886,6 @@ module('Unit | Serializer | active model serializer', function(hooks) {
     this.owner.register(
       'serializer:mediocre-villain',
       ActiveModelSerializer.extend(DS.EmbeddedRecordsMixin, {
-        isNewSerializerAPI: true,
-
         attrs: {
           evilMinions: { serialize: false, deserialize: 'records' }
         }
