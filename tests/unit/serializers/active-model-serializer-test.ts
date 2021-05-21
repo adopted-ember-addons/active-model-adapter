@@ -111,7 +111,7 @@ module('Unit | Serializer | active model serializer', function(hooks) {
         id: 1
       }
     });
-    const user = store.peekRecord('user', 1);
+    const user = store.peekRecord('user', 1) as User;
 
     pretender.put('/users/1', function() {
       const response = {
@@ -387,7 +387,7 @@ module('Unit | Serializer | active model serializer', function(hooks) {
 
     this.store.push(array);
 
-    const device = this.store.peekRecord('doomsday-device', '12');
+    const device = this.store.peekRecord('doomsday-device', '12') as DoomsdayDevice;
     assert.equal(device.get('evilMinion'), null);
   });
 
@@ -862,7 +862,7 @@ module('Unit | Serializer | active model serializer', function(hooks) {
         'findRecord'
       );
     this.store.push(json);
-    const villain = this.store.peekRecord('mediocre-villain', '1');
+    const villain = this.store.peekRecord('mediocre-villain', '1') as MediocreVillain;
 
     assert.equal(villain.get('evilMinions.firstObject.name'), 'tom dale');
   });
@@ -888,7 +888,7 @@ module('Unit | Serializer | active model serializer', function(hooks) {
       .normalizeResponse(this.store, SuperVillain, payload, '1', 'findRecord');
     this.store.push(json);
 
-    const villain = this.store.peekRecord('super-villain', 1);
+    const villain = this.store.peekRecord('super-villain', 1) as SuperVillain;
 
     assert.equal(villain.get('homePlanet.id'), '1');
   });
@@ -914,7 +914,7 @@ module('Unit | Serializer | active model serializer', function(hooks) {
 
     this.store.push(json);
 
-    const homePlanet = this.store.peekRecord('home-planet', 1);
+    const homePlanet = this.store.peekRecord('home-planet', 1) as HomePlanet;
 
     const superVillains = await homePlanet.get('superVillains');
 
