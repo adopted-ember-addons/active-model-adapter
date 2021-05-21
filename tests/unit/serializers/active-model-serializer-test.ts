@@ -1,9 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import ActiveModelAdapter, {
-  ActiveModelSerializer
-} from 'active-model-adapter';
+import ActiveModelAdapter, { ActiveModelSerializer } from 'active-model-adapter';
 import { TestContext } from 'ember-test-helpers';
 import DS from 'ember-data';
 import Pretender from 'pretender';
@@ -147,7 +145,7 @@ module('Unit | Serializer | active model serializer', function(hooks) {
       await user.save();
     } catch (error) {
       assert.ok(
-        user.get('errors').length === 1,
+        user.errors.length === 1,
         'there are errors for the firstName attribute'
       );
       assert.deepEqual(user.get('errors.messages'), ['firstName error']);
