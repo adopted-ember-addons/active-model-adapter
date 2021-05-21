@@ -96,6 +96,20 @@ declare module 'ember-data/types/registries/serializer' {
   }
 }
 
+declare module 'ember-data/types/registries/model' {
+  // eslint-disable-next-line ember/no-test-import-export
+  export default interface ModelRegistry {
+    user: User;
+    'super-villain': SuperVillain;
+    'super-villain-extended': SuperVillainExtended;
+    'home-planet': HomePlanet;
+    'evil-minion': EvilMinion;
+    'yellow-minion': YellowMinion;
+    'doomsday-device': DoomsdayDevice;
+    'mediocre-villain': MediocreVillain;
+  }
+}
+
 module('Unit | Serializer | active model serializer', function(hooks) {
   setupTest(hooks);
 
@@ -807,12 +821,12 @@ module('Unit | Serializer | active model serializer', function(hooks) {
     );
     this.store.push(json);
 
-    const minion = this.store.peekRecord('doomsday-device', 1);
+    const device = this.store.peekRecord('doomsday-device', 1) as DoomsdayDevice;
 
-    assert.equal(minion.get('evilMinion.name'), 'Sally');
+    assert.equal(device.evilMinion.name, 'Sally');
   });
 
-  test('supports the default format for polymorphic hasMany', function(this: Context, assert) {
+  test('supports the default format for polymorphic hasMany', async function(this: Context, assert) {
     const MediocreVillain = this.store.modelFor('mediocre-villain');
     const payload = {
       mediocre_villain: {
@@ -840,12 +854,14 @@ module('Unit | Serializer | active model serializer', function(hooks) {
       'findRecord'
     );
     this.store.push(json);
-    const villain = this.store.peekRecord('mediocre-villain', '1');
 
-    assert.equal(villain.get('evilMinions.firstObject.name'), 'Harry');
+    const villain = this.store.peekRecord('mediocre-villain', '1') as MediocreVillain;
+    const assocMinions = await villain.evilMinions;
+
+    assert.equal(assocMinions.get('firstObject.name'), 'Harry');
   });
 
-  test('when using the DS.EmbeddedRecordsMixin, does not erase attributes for polymorphic embedded models', function(this: Context, assert) {
+  test('when using the DS.EmbeddedRecordsMixin, does not erase attributes for polymorphic embedded models', async function(this: Context, assert) {
     const MediocreVillain = this.store.modelFor('mediocre-villain');
     this.owner.register(
       'serializer:mediocre-villain',
@@ -881,9 +897,11 @@ module('Unit | Serializer | active model serializer', function(hooks) {
         'findRecord'
       );
     this.store.push(json);
-    const villain = this.store.peekRecord('mediocre-villain', '1') as MediocreVillain;
 
-    assert.equal(villain.get('evilMinions.firstObject.name'), 'tom dale');
+    const villain = this.store.peekRecord('mediocre-villain', '1') as MediocreVillain;
+    const assocMinions = await villain.evilMinions;
+
+    assert.equal(assocMinions.get('firstObject.name'), 'tom dale');
   });
 
   // FIXME - id is undefined
@@ -909,7 +927,7 @@ module('Unit | Serializer | active model serializer', function(hooks) {
 
     const villain = this.store.peekRecord('super-villain', 1) as SuperVillain;
 
-    assert.equal(villain.get('homePlanet.id'), '1');
+    assert.equal(villain.belongsTo('homePlanet').id(), '1');
   });
 
   test('can have id-less belongsTo relationship part 2', async function(assert) {

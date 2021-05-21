@@ -3,8 +3,18 @@ import { setupTest } from 'ember-qunit';
 import { ActiveModelAdapter } from 'active-model-adapter';
 import { TestContext } from 'ember-test-helpers';
 import AdapterError from '@ember-data/adapter/error';
+import Model from '@ember-data/model';
 
 type AdapterContext = TestContext & { adapter: ActiveModelAdapter };
+
+class SuperUser extends Model {}
+
+declare module 'ember-data/types/registries/model' {
+  // eslint-disable-next-line ember/no-test-import-export
+  export default interface ModelRegistry {
+    'superUser': SuperUser;
+  }
+}
 
 module('Unit | Initializer | active-model-adapter', function(hooks) {
   setupTest(hooks);
