@@ -1713,9 +1713,9 @@
   integrity sha512-Xw9RxFizB8guT6YGg3VNi5tjbzAjqk+bLtAJ1oVl2I1FylKrRFh0bwobxT2K0BF/i0QFEYlqckHpN/OoCpkvkA==
 
 "@types/ember__routing@*", "@types/ember__routing@^3.16.13":
-  version "3.16.13"
-  resolved "https://registry.yarnpkg.com/@types/ember__routing/-/ember__routing-3.16.13.tgz#d705101ff3f9071bceb05ba442ba3a4bce3685bb"
-  integrity sha512-OesO+0z8B4fWJI1qJAsM9pOYXB9WueaXCAdtkOrAn4yzzaTjDR/XfZ47wDJpO8gmqNtm9wmrycKfDyQRAqH7YA==
+  version "3.16.14"
+  resolved "https://registry.yarnpkg.com/@types/ember__routing/-/ember__routing-3.16.14.tgz#11ba8aa08db7eca331b26c36a2062c6335dd098e"
+  integrity sha512-i7eg9+4ZeEwNE/rC1An91pc2uHp7e6l9lxRDgZIkkZJRjFhvH1zHdAs//FAysyIkGn+Y0xerJd7OyUxwaWrNTQ==
   dependencies:
     "@types/ember__component" "*"
     "@types/ember__controller" "*"
@@ -1890,9 +1890,9 @@
     "@types/mime" "*"
 
 "@types/sizzle@*":
-  version "2.3.2"
-  resolved "https://registry.yarnpkg.com/@types/sizzle/-/sizzle-2.3.2.tgz#a811b8c18e2babab7d542b3365887ae2e4d9de47"
-  integrity sha512-7EJYyKTL7tFR8+gDbB6Wwz/arpGa0Mywk1TJbNzKzHtzbwVmY4HR9WqS5VV7dsBUKQmPNr192jHr/VpBluj/hg==
+  version "2.3.3"
+  resolved "https://registry.yarnpkg.com/@types/sizzle/-/sizzle-2.3.3.tgz#ff5e2f1902969d305225a047c8a0fd5c915cebef"
+  integrity sha512-JYM8x9EGF163bEyhdJBpR2QX1R5naCJHC8ucJylJ3w9/CVBaskdQ8WqBf8MmQrd1kRvp/a4TS8HJ+bxzR7ZJYQ==
 
 "@types/symlink-or-copy@^1.2.0":
   version "1.2.0"
