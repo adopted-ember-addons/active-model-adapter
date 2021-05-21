@@ -31,7 +31,7 @@ class SuperVillain extends Model {
   declare homePlanet: DS.PromiseObject<HomePlanet>;
 
   @hasMany('evil-minion')
-  declare evilMinions: DS.PromiseArray<EvilMinion>;
+  declare evilMinions: DS.PromiseManyArray<EvilMinion>;
 }
 
 class SuperVillainExtended extends SuperVillain {
@@ -44,7 +44,7 @@ class HomePlanet extends Model {
   declare name?: string;
 
   @hasMany('super-villain')
-  declare superVillains: DS.PromiseArray<SuperVillain>;
+  declare superVillains: DS.PromiseManyArray<SuperVillain>;
 }
 
 class EvilMinion extends Model {
@@ -77,7 +77,7 @@ class MediocreVillain extends Model {
   declare name?: string;
 
   @hasMany('evil-minion', { polymorphic: true })
-  declare evilMinions: DS.PromiseArray<EvilMinion>;
+  declare evilMinions: DS.PromiseManyArray<EvilMinion>;
 }
 
 let pretender: Pretender;
