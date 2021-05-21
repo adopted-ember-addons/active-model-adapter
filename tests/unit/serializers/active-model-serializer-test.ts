@@ -6,15 +6,13 @@ import ActiveModelAdapter, {
 } from 'active-model-adapter';
 import { TestContext } from 'ember-test-helpers';
 import DS from 'ember-data';
-import { belongsTo, hasMany } from 'ember-data/relationships';
-import attr from 'ember-data/attr';
 import Pretender from 'pretender';
 import Store from 'ember-data/store';
 import { get } from '@ember/object';
-import Model from 'ember-data/model';
+import Model, { attr, belongsTo, hasMany } from '@ember-data/model';
 
 class ApplicationAdapter extends ActiveModelAdapter {}
-class User extends DS.Model {
+class User extends Model {
   @attr('string') firstName!: string;
 }
 
@@ -789,12 +787,12 @@ module('Unit | Serializer | active model serializer', function(hooks) {
       'findRecord'
     );
     this.store.push(json);
+
     const minion = this.store.peekRecord('doomsday-device', 1);
 
     assert.equal(minion.get('evilMinion.name'), 'Sally');
   });
 
-  // FIXME - fails on `this.store` is undefined
   test('supports the default format for polymorphic hasMany', function(this: Context, assert) {
     const MediocreVillain = this.store.modelFor('mediocre-villain');
     const payload = {
@@ -889,6 +887,7 @@ module('Unit | Serializer | active model serializer', function(hooks) {
       .serializerFor('super-villain')
       .normalizeResponse(this.store, SuperVillain, payload, '1', 'findRecord');
     this.store.push(json);
+
     const villain = this.store.peekRecord('super-villain', 1);
 
     assert.equal(villain.get('homePlanet.id'), '1');
@@ -918,6 +917,7 @@ module('Unit | Serializer | active model serializer', function(hooks) {
     const homePlanet = this.store.peekRecord('home-planet', 1);
 
     const superVillains = await homePlanet.get('superVillains');
+
     assert.deepEqual(superVillains.toArray().map((v: any) => v.get('id')), [
       '1'
     ]);
