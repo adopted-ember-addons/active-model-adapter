@@ -12,8 +12,10 @@ import { get } from '@ember/object';
 import Model, { attr, belongsTo, hasMany } from '@ember-data/model';
 
 class ApplicationAdapter extends ActiveModelAdapter {}
+
 class User extends Model {
-  @attr('string') firstName!: string;
+  @attr('string')
+  declare firstName?: string;
 }
 
 class TestSerializer extends ActiveModelSerializer {
@@ -21,24 +23,38 @@ class TestSerializer extends ActiveModelSerializer {
 }
 
 class SuperVillain extends Model {
-  @attr('string') firstName!: string;
-  @attr('string') lastName!: string;
-  @belongsTo('home-planet') homePlanet?: HomePlanet;
-  @hasMany('evil-minion') evilMinions?: EvilMinion[];
+  @attr('string')
+  declare firstName?: string;
+
+  @attr('string')
+  declare lastName?: string;
+
+  @belongsTo('home-planet')
+  declare homePlanet: DS.PromiseObject<HomePlanet>;
+
+  @hasMany('evil-minion')
+  declare evilMinions: DS.PromiseArray<EvilMinion>;
 }
 
 class SuperVillainExtended extends SuperVillain {
-  @belongsTo('yellow-minion') yellowMinion?: YellowMinion;
+  @belongsTo('yellow-minion')
+  declare yellowMinion: DS.PromiseObject<YellowMinion>;
 }
 
 class HomePlanet extends Model {
-  @attr('string') name!: string;
-  @hasMany('super-villain', { async: true }) superVillains?: SuperVillain[];
+  @attr('string')
+  declare name?: string;
+
+  @hasMany('super-villain')
+  declare superVillains: DS.PromiseArray<SuperVillain>;
 }
 
 class EvilMinion extends Model {
-  @belongsTo('super-villain') superVillain?: SuperVillain;
-  @attr('string') name!: string;
+  @attr('string')
+  declare name?: string;
+
+  @belongsTo('super-villain')
+  declare superVillain: DS.PromiseObject<SuperVillain>;
 
   toString() {
     return 'EvilMinion';
@@ -51,14 +67,19 @@ class YellowMinion extends EvilMinion {
 }
 
 class DoomsdayDevice extends Model {
-  @attr('string') name!: string;
+  @attr('string')
+  declare name?: string;
+
   @belongsTo('evil-minion', { polymorphic: true, async: false })
-  evilMinion?: EvilMinion;
+  declare evilMinion: EvilMinion;
 }
 
 class MediocreVillain extends Model {
-  @attr('string') name!: string;
-  @hasMany('evil-minion', { polymorphic: true }) evilMinions?: EvilMinion[];
+  @attr('string')
+  declare name?: string;
+
+  @hasMany('evil-minion', { polymorphic: true })
+  declare evilMinions: DS.PromiseArray<EvilMinion>;
 }
 
 let pretender: Pretender;
@@ -583,7 +604,7 @@ module('Unit | Serializer | active model serializer', function(hooks) {
 
   test('belongsTo (weird format) does not screw if there is a relationshipType attribute', function(this: Context, assert) {
     class MoreDoom extends DoomsdayDevice {
-      @attr() evilMinionType!: any;
+      @attr() declare evilMinionType?: any;
     }
 
     this.owner.register('model:doomsday-device', MoreDoom);

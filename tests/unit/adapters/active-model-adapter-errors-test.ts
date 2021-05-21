@@ -10,8 +10,11 @@ import ActiveModelAdapter, {ActiveModelSerializer} from 'active-model-adapter';
 import { AdapterError } from 'ember-data/adapters/errors';
 
 class Book extends Model {
-  @attr('string') name!: string;
-  @attr('string') genre!: string;
+  @attr('string')
+  declare name?: string;
+
+  @attr('string')
+  declare genre?: string;
 }
 
 class ApplicationAdapter extends ActiveModelAdapter {}
