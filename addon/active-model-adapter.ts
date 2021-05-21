@@ -1,7 +1,6 @@
 import RESTAdapter from '@ember-data/adapter/rest';
 import AdapterError, { InvalidError, errorsHashToArray } from '@ember-data/adapter/error';
 import { pluralize } from 'ember-inflector';
-import ModelRegistry from 'ember-data/types/registries/model';
 import { AnyObject } from 'active-model-adapter';
 import { decamelize, underscore } from '@ember/string';
 
@@ -118,7 +117,7 @@ export default class ActiveModelAdapter extends RESTAdapter {
    * @param {String} modelName
    * @return String
    */
-  pathForType<K extends keyof ModelRegistry>(modelName: K): string {
+  pathForType(modelName: string): string {
     const decamelized = decamelize(modelName as string);
     const underscored = underscore(decamelized);
     return pluralize(underscored);
