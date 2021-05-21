@@ -2,7 +2,7 @@ import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import { ActiveModelAdapter } from 'active-model-adapter';
 import { TestContext } from 'ember-test-helpers';
-import DS from 'ember-data';
+import AdapterError from '@ember-data/adapter/error';
 
 type AdapterContext = TestContext & { adapter: ActiveModelAdapter };
 
@@ -68,8 +68,8 @@ module('Unit | Initializer | active-model-adapter', function(hooks) {
     );
 
     assert.ok(
-      responseType instanceof DS.AdapterError,
-      'must be a DS.AdapterError'
+      responseType instanceof AdapterError,
+      'must be an AdapterError'
     );
   });
 });

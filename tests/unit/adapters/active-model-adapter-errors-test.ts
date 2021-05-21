@@ -5,8 +5,7 @@ import { TestContext } from 'ember-test-helpers';
 
 let pretender: Pretender;
 
-import Model from 'ember-data/model';
-import attr from 'ember-data/attr';
+import Model, { attr } from '@ember-data/model';
 import ActiveModelAdapter, {ActiveModelSerializer} from 'active-model-adapter';
 import { AdapterError } from 'ember-data/adapters/errors';
 
