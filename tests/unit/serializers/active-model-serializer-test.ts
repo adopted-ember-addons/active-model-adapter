@@ -169,7 +169,9 @@ module('Unit | Serializer | active model serializer', function(hooks) {
 
   test('serialize', async function(this: Context, assert) {
     assert.expect(3)
+
     this.owner.unregister('adapter:application');
+
     this.owner.register('adapter:application', class TestAdapter extends ActiveModelAdapter {
       createRecord<K extends keyof ModelRegistry>(store: Store, schema: ModelRegistry[K], snapshot: DS.Snapshot) {
         const serializer = store.serializerFor('application');
@@ -207,46 +209,40 @@ module('Unit | Serializer | active model serializer', function(hooks) {
     assert.strictEqual(tom.id, '1', 'We saved correctly');
   });
 
-  test('serializeIntoHash', function(this: Context, assert) {
-    const HomePlanet = this.store.modelFor('home-planet');
+  test('serializeIntoHash', async function(this: Context, assert) {
+    this.owner.unregister('adapter:application');
+
+    this.owner.register('adapter:application', class TestAdapter extends ActiveModelAdapter {
+      createRecord<K extends keyof ModelRegistry>(store: Store, schema: ModelRegistry[K], snapshot: DS.Snapshot) {
+        const serializer = store.serializerFor('application');
+
+        type SerializationResult = { home_planet: { [key: string]: string } };
+
+        const serialized: SerializationResult = {} as SerializationResult;
+        serializer.serializeIntoHash(serialized, schema, snapshot, { includeId: true });
+
+        assert.strictEqual(serializer instanceof ActiveModelSerializer, true, 'We are testing the active model serializer');
+
+        assert.deepEqual(serialized, {
+          home_planet: {
+            id: '123',
+            name: 'Umber',
+          }
+        }, 'we serialized correctly');
+
+        serialized.home_planet.id = '123';
+        return resolve(serialized);
+      }
+    });
+
     const league = this.store.createRecord('home-planet', {
       name: 'Umber',
       id: '123'
     });
-    const json = {};
 
-    this.amsSerializer.serializeIntoHash(
-      json,
-      HomePlanet,
-      league._createSnapshot()
-    );
+    await league.save();
 
-    assert.deepEqual(json, {
-      home_planet: {
-        name: 'Umber'
-      }
-    });
-  });
-
-  test('serializeIntoHash with decamelized types', function(this: Context, assert) {
-    const HomePlanet = this.store.modelFor('home-planet');
-    const league = this.store.createRecord('home-planet', {
-      name: 'Umber',
-      id: '123'
-    });
-    const json = {};
-
-    this.amsSerializer.serializeIntoHash(
-      json,
-      HomePlanet,
-      league._createSnapshot()
-    );
-
-    assert.deepEqual(json, {
-      home_planet: {
-        name: 'Umber'
-      }
-    });
+    assert.strictEqual(league.id, '123', 'save was correct');
   });
 
   test('normalize links', function(this: Context, assert) {
@@ -444,47 +440,120 @@ module('Unit | Serializer | active model serializer', function(hooks) {
     assert.equal(device.get('evilMinion'), null);
   });
 
-  test('serialize polymorphic', function(this: Context, assert) {
+  test('serialize polymorphic', async function(this: Context, assert) {
+    assert.expect(3);
+
+    this.owner.register('adapter:application', class TestAdapter extends ActiveModelAdapter {
+      createRecord<K extends keyof ModelRegistry>(store: Store, schema: ModelRegistry[K], snapshot: DS.Snapshot) {
+        const serializer = store.serializerFor('application');
+
+        type SerializationResult = { doomsday_device: { [key: string]: string } };
+
+        const serialized: SerializationResult = {} as SerializationResult;
+        serializer.serializeIntoHash(serialized, schema, snapshot, { includeId: true });
+
+        assert.strictEqual(serializer instanceof ActiveModelSerializer, true, 'We are testing the active model serializer');
+
+        assert.deepEqual(serialized, {
+          doomsday_device: {
+            name: 'DeathRay',
+            evil_minion_type: 'YellowMinion',
+            evil_minion_id: '124'
+          },
+        }, 'we serialized correctly');
+
+        serialized.doomsday_device.id = '456';
+        return resolve(serialized);
+      }
+    });
+
     const tom = this.store.createRecord('yellow-minion', {
       name: 'Alex',
       id: '124'
     });
+
     const ray = this.store.createRecord('doomsday-device', {
       evilMinion: tom,
       name: 'DeathRay'
     });
 
-    const json = this.amsSerializer.serialize(ray._createSnapshot(), {});
+    await ray.save();
 
-    assert.deepEqual(json, {
-      name: 'DeathRay',
-      evil_minion_type: 'YellowMinion',
-      evil_minion_id: '124'
-    });
+    assert.strictEqual(ray.id, '456', 'save was correct')
   });
 
-  test('serialize polymorphic when type key is not camelized', function(this: Context, assert) {
+  test('serialize polymorphic when type key is not camelized', async function(this: Context, assert) {
+    assert.expect(2);
+
+    this.owner.register('adapter:application', class TestAdapter extends ActiveModelAdapter {
+      createRecord<K extends keyof ModelRegistry>(store: Store, schema: ModelRegistry[K], snapshot: DS.Snapshot) {
+        const serializer = store.serializerFor('application');
+
+        type SerializationResult = { doomsday_device: { [key: string]: string } };
+
+        const serialized: SerializationResult = {} as SerializationResult;
+        serializer.serializeIntoHash(serialized, schema, snapshot, { includeId: true });
+
+        assert.strictEqual(serializer instanceof ActiveModelSerializer, true, 'We are testing the active model serializer');
+
+        assert.deepEqual(serialized, {
+          doomsday_device: {
+            name: 'DeathRay',
+            evil_minion_type: 'YellowMinion',
+            evil_minion_id: '124'
+          },
+        }, 'we serialized correctly');
+
+        serialized.doomsday_device.id = '456';
+        return resolve(serialized);
+      }
+    });
+
     const tom = this.store.createRecord('yellow-minion', {
       name: 'Alex',
       id: '124'
     });
+
     const ray = this.store.createRecord('doomsday-device', {
       evilMinion: tom,
       name: 'DeathRay'
     });
 
-    const json: any = this.amsSerializer.serialize(ray._createSnapshot(), {});
-
-    assert.deepEqual(json['evil_minion_type'], 'YellowMinion');
+    await ray.save();
   });
 
-  test('serialize polymorphic when associated object is null', function(this: Context, assert) {
+  test('serialize polymorphic when associated object is null', async function(this: Context, assert) {
+    assert.expect(2);
+
+    this.owner.register('adapter:application', class TestAdapter extends ActiveModelAdapter {
+      createRecord<K extends keyof ModelRegistry>(store: Store, schema: ModelRegistry[K], snapshot: DS.Snapshot) {
+        const serializer = store.serializerFor('application');
+
+        type SerializationResult = { doomsday_device: { [key: string]: string | null } };
+
+        const serialized: SerializationResult = {} as SerializationResult;
+        serializer.serializeIntoHash(serialized, schema, snapshot, { includeId: true });
+
+        assert.strictEqual(serializer instanceof ActiveModelSerializer, true, 'We are testing the active model serializer');
+
+        assert.deepEqual(serialized, {
+          doomsday_device: {
+            name: 'DeathRay',
+            evil_minion_type: null,
+            evil_minion_id: null
+          },
+        }, 'we serialized correctly');
+
+        serialized.doomsday_device.id = '456';
+        return resolve(serialized);
+      }
+    });
+
     const ray = this.store.createRecord('doomsday-device', {
       name: 'DeathRay'
     });
-    const json: any = this.amsSerializer.serialize(ray._createSnapshot(), {});
 
-    assert.deepEqual(json['evil_minion_type'], null);
+    await ray.save();
   });
 
   test('extractPolymorphic hasMany', function(this: Context, assert) {
