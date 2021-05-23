@@ -15,7 +15,6 @@
   "scripts": {
     "build": "ember build --environment=production",
     "lint": "npm-run-all --aggregate-output --continue-on-error --parallel lint:*",
-    "lint:hbs": "ember-template-lint .",
     "lint:js": "eslint .",
     "lint:ts": "ember ts:precompile",
     "start": "ember serve",
@@ -85,7 +84,6 @@
     "ember-resolver": "^8.0.0",
     "ember-source": "^3.19.0",
     "ember-source-channel-url": "^2.0.1",
-    "ember-template-lint": "^2.6.0",
     "ember-try": "^1.4.0",
     "eslint": "^7.2.0",
     "eslint-config-prettier": "^6.11.0",
