@@ -160,10 +160,13 @@ module('Unit | Serializer | active model serializer', function(hooks) {
       await user.save();
     } catch (error) {
       assert.ok(
-        user.errors.length === 1,
+        user.errors.has('firstName'),
         'there are errors for the firstName attribute'
       );
-      assert.deepEqual(user.errors.messages, ['firstName error']);
+      assert.deepEqual(
+        user.errors.errorsFor('firstName'),
+        [{ attribute: 'firstName', message: 'firstName error'}]
+      );
     }
   });
 
