@@ -163,7 +163,7 @@ module('Unit | Serializer | active model serializer', function(hooks) {
         user.errors.length === 1,
         'there are errors for the firstName attribute'
       );
-      assert.deepEqual(user.get('errors.messages'), ['firstName error']);
+      assert.deepEqual(user.errors.messages, ['firstName error']);
     }
   });
 

@@ -74,12 +74,12 @@ module('Unit | Adapter | active model adapter errors test', function(hooks) {
       assert.ok(e instanceof AdapterError);
 
       assert.equal(
-        post.get('errors.name')[0].message,
+        post.errors.errorsFor('name')[0].message,
         'rejected',
         'model.errors.attribute_name works'
       );
       assert.deepEqual(
-        post.get('errors.messages'),
+        post.errors.messages,
         ['rejected', 'rejected'],
         'errors.messages works'
       );
