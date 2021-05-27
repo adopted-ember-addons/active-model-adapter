@@ -7,6 +7,30 @@ import { classify, decamelize, camelize, underscore } from '@ember/string';
 import { inject as service } from '@ember/service';
 import { isNone } from '@ember/utils';
 import { AnyObject } from 'active-model-adapter';
+import type ModelRegistry from 'ember-data/types/registries/model';
+
+type ModelKeys<K> = Exclude<keyof K, keyof DS.Model>;
+type RelationshipsFor<K extends keyof ModelRegistry> = ModelKeys<ModelRegistry[K]>;
+
+interface RelationshipMetaOptions {
+  async?: boolean; // unspecified defaults relationship to "true"
+  inverse?: string; // unspecified defaults to a lookup, which could be null but could find an inverse
+  polymorphic?: boolean; // unspecified defaults to false
+  [k: string]: unknown;
+}
+
+interface RelationshipMeta<K extends keyof ModelRegistry> {
+  key: RelationshipsFor<K>;
+  kind: 'belongsTo' | 'hasMany';
+  type: keyof ModelRegistry;
+  options: RelationshipMetaOptions;
+  name: RelationshipsFor<K>;
+  isRelationship: true;
+}
+
+interface Payload {
+  [key: string]: unknown;
+}
 
 /**
   @module ember-data
@@ -149,10 +173,10 @@ export default class ActiveModelSerializer extends RESTSerializer {
   /**
     Serializes a polymorphic type as a fully capitalized model name.
   */
-  serializePolymorphicType(
-    snapshot: DS.Snapshot,
+  serializePolymorphicType<K extends keyof ModelRegistry>(
+    snapshot: DS.Snapshot<K>,
     json: Payload,
-    relationship: Relationship
+    relationship: RelationshipMeta<K>
   ): void {
     const key = relationship.key;
     const belongsTo = snapshot.belongsTo(key);
@@ -292,7 +316,7 @@ export default class ActiveModelSerializer extends RESTSerializer {
     return super.extractRelationships(modelClass, resourceHash);
   }
 
-  modelNameFromPayloadKey(key: string): string {
+  modelNameFromPayloadKey(key: string): keyof ModelRegistry {
     const convertedFromRubyModule = singularize(key.replace('::', '/'));
     return normalizeModelName(convertedFromRubyModule);
   }
@@ -311,12 +335,4 @@ function extractPolymorphicRelationships(
   if (hash !== null && typeof hash === 'object') {
     resourceHash[relationshipKey] = hash;
   }
-}
-
-interface Payload {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [key: string]: any;
-}
-interface Relationship {
-  key: string;
 }
