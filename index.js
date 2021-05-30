@@ -1,6 +1,6 @@
-/* jshint node: true */
 'use strict';
 
 module.exports = {
-  name: 'active-model-adapter'
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  name: require('./package').name
 };

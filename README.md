@@ -1,25 +1,10 @@
-# Ember Data ActiveModel Adapter [![Build Status](https://travis-ci.org/adopted-ember-addons/active-model-adapter.svg?branch=master)](https://travis-ci.org/adopted-ember-addons/active-model-adapter)
+# Ember Data ActiveModel Adapter [![Build Status](https://github.com/adopted-ember-addons/active-model-adapter/actions/workflows/ci.yml/badge.svg)](https://github.com/<OWNER>/<REPOSITORY>/actions/workflows/ci.yml/badge.svg)
 
 ## Installation
 
 ### Ember CLI
 
 `ember install active-model-adapter`
-
-### Rails
-
-Prior to v3, this ember addon used to be published on rubygems.
-
-Indeed, the gem comes bundled with [Ember
-Rails](https://github.com/emberjs/ember-rails).
-
-### Bower
-
-`bower install --save active-model-adapter`
-
-### Script Tags
-
-Grab a copy of active-model-adapter.js from http://github.com/adopted-ember-addons/active-model-adapter-dist
 
 ## Usage
 
@@ -29,7 +14,7 @@ You should make an `ApplicationAdapter` if you don't already have one:
 // app/adapters/application.js
 import ActiveModelAdapter from 'active-model-adapter';
 
-export default ActiveModelAdapter.extend();
+export default class ApplicationAdapter extends ActiveModelAdapter {}
 ```
 
 If you need to subclass the `ActiveModelSerializer`, you can import it
@@ -40,7 +25,7 @@ into your serializer:
 
 import { ActiveModelSerializer } from 'active-model-adapter';
 
-export default ActiveModelSerializer.extend();
+export default class PostSerializer extends ActiveModelSerializer {}
 ```
 
 ## Description
@@ -73,7 +58,7 @@ For example, if you have a `Person` model:
 ```js
 // app/models/famous-person.js
 
-export default var FamousPerson = DS.Model.extend({
+export default DS.Model.extend({
   firstName: DS.attr('string'),
   lastName: DS.attr('string'),
   occupation: DS.attr('string')
@@ -98,14 +83,14 @@ Let's imagine that `Occupation`  and `Person` are just another model:
 ```js
 // app/models/person.js
 
-export default var Person = DS.Model.extend({
+export default DS.Model.extend({
   firstName: DS.attr('string'),
   lastName: DS.attr('string'),
   occupation: DS.belongsTo('occupation')
 });
 
 // app/models/occupation.js
-App.Occupation = DS.Model.extend({
+export default DS.Model.extend({
   name: DS.attr('string'),
   salary: DS.attr('number'),
   people: DS.hasMany('person')
@@ -155,13 +140,13 @@ For example, given the following model definitions:
 
 ```javascript
 // app/models/book.js
-export default var Book = DS.Model.extend({
+export default DS.Model.extend({
   name: DS.attr(),
   author: DS.belongsTo('person', {polymorphic: true})
 });
 
 // app/models/author.js
-export default var Person = DS.Model.extend({
+export default DS.Model.extend({
   name: DS.attr(),
   books: DS.hasMany('book')
 });
@@ -237,8 +222,7 @@ The full response would be look like this:
 ## Development Installation
 
 * `git clone` this repository
-* `npm install`
-* `bower install`
+* `npm install` or  `yarn install`
 
 ## Running Tests
 
