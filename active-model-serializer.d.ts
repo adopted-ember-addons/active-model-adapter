@@ -5,20 +5,22 @@ import DS from 'ember-data';
 import { AnyObject } from 'active-model-adapter';
 import type ModelRegistry from 'ember-data/types/registries/model';
 declare type ModelKeys<K> = Exclude<keyof K, keyof DS.Model>;
-declare type RelationshipsFor<K extends keyof ModelRegistry> = ModelKeys<ModelRegistry[K]>;
+declare type RelationshipsFor<K extends keyof ModelRegistry> = ModelKeys<
+  ModelRegistry[K]
+>;
 interface RelationshipMetaOptions {
-    async?: boolean;
-    inverse?: string;
-    polymorphic?: boolean;
-    [k: string]: unknown;
+  async?: boolean;
+  inverse?: string;
+  polymorphic?: boolean;
+  [k: string]: unknown;
 }
 interface RelationshipMeta<K extends keyof ModelRegistry> {
-    key: RelationshipsFor<K>;
-    kind: 'belongsTo' | 'hasMany';
-    type: keyof ModelRegistry;
-    options: RelationshipMetaOptions;
-    name: RelationshipsFor<K>;
-    isRelationship: true;
+  key: RelationshipsFor<K>;
+  kind: 'belongsTo' | 'hasMany';
+  type: keyof ModelRegistry;
+  options: RelationshipMetaOptions;
+  name: RelationshipsFor<K>;
+  isRelationship: true;
 }
 /**
   @module ember-data
@@ -108,32 +110,36 @@ declare type RelationshipKind = 'belongsTo' | 'hasMany';
   ```
 */
 export default class ActiveModelSerializer extends RESTSerializer {
-    store: Store;
-    /**
+  store: Store;
+  /**
       Converts camelCased attributes to underscored when serializing.
     */
-    keyForAttribute(attr: string): string;
-    /**
+  keyForAttribute(attr: string): string;
+  /**
       Underscores relationship names and appends "_id" or "_ids" when serializing
       relationship keys.
     */
-    keyForRelationship(relationshipModelName: string, kind?: string): string;
-    /**
+  keyForRelationship(relationshipModelName: string, kind?: string): string;
+  /**
      `keyForLink` can be used to define a custom key when deserializing link
      properties. The `ActiveModelSerializer` camelizes link keys by default.
   
     */
-    keyForLink(key: string, _relationshipKind: RelationshipKind): string;
-    serializeHasMany(): void;
-    /**
+  keyForLink(key: string, _relationshipKind: RelationshipKind): string;
+  serializeHasMany(): void;
+  /**
      Underscores the JSON root keys when serializing.
     */
-    payloadKeyFromModelName(modelName: string | number): string;
-    /**
+  payloadKeyFromModelName(modelName: string | number): string;
+  /**
       Serializes a polymorphic type as a fully capitalized model name.
     */
-    serializePolymorphicType<K extends keyof ModelRegistry>(snapshot: DS.Snapshot<K>, json: Payload, relationship: RelationshipMeta<K>): void;
-    /**
+  serializePolymorphicType<K extends keyof ModelRegistry>(
+    snapshot: DS.Snapshot<K>,
+    json: Payload,
+    relationship: RelationshipMeta<K>
+  ): void;
+  /**
       Add extra step to `DS.RESTSerializer.normalize` so links are normalized.
   
       If your payload looks like:
@@ -160,19 +166,22 @@ export default class ActiveModelSerializer extends RESTSerializer {
       }
       ```
     */
-    normalize(typeClass: Model, hash: AnyObject, prop: string): AnyObject;
-    /**
+  normalize(typeClass: Model, hash: AnyObject, prop: string): AnyObject;
+  /**
       Convert `snake_cased` links  to `camelCase`
     */
-    normalizeLinks(data: any): void;
-    /**
-     * @private
-     */
-    _keyForIDLessRelationship(key: string, relationshipType: RelationshipKind): string;
-    extractRelationships(modelClass: Model, resourceHash: AnyObject): AnyObject;
-    modelNameFromPayloadKey(key: string): string;
+  normalizeLinks(data: any): void;
+  /**
+   * @private
+   */
+  _keyForIDLessRelationship(
+    key: string,
+    relationshipType: RelationshipKind
+  ): string;
+  extractRelationships(modelClass: Model, resourceHash: AnyObject): AnyObject;
+  modelNameFromPayloadKey(key: string): string;
 }
 interface Payload {
-    [key: string]: any;
+  [key: string]: any;
 }
 export {};

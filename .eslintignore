@@ -20,3 +20,7 @@
 /package.json.ember-try
 ember-try.js
 ember-cli-build.js
+
+# generated output
+/active-model-adapter.d.ts
+/active-model-serializer.d.ts

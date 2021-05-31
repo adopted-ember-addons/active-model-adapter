@@ -6,7 +6,9 @@ import { TestContext } from 'ember-test-helpers';
 let pretender: Pretender;
 
 import Model, { attr } from '@ember-data/model';
-import ActiveModelAdapter, {ActiveModelSerializer} from 'active-model-adapter';
+import ActiveModelAdapter, {
+  ActiveModelSerializer,
+} from 'active-model-adapter';
 import { AdapterError } from 'ember-data/adapters/errors';
 
 class Book extends Model {
@@ -20,22 +22,22 @@ class Book extends Model {
 class ApplicationAdapter extends ActiveModelAdapter {}
 class ApplicationSerializer extends ActiveModelSerializer {}
 
-module('Unit | Adapter | active model adapter errors test', function(hooks) {
+module('Unit | Adapter | active model adapter errors test', function (hooks) {
   setupTest(hooks);
 
-  hooks.beforeEach(function(this: TestContext) {
+  hooks.beforeEach(function (this: TestContext) {
     // eslint-disable-next-line @typescript-eslint/no-empty-function
-    pretender = new Pretender(function() {});
+    pretender = new Pretender(function () {});
     this.owner.register('adapter:application', ApplicationAdapter);
     this.owner.register('serializer:application', ApplicationSerializer);
     this.owner.register('model:book', Book);
   });
 
-  hooks.afterEach(function() {
+  hooks.afterEach(function () {
     pretender.shutdown();
   });
 
-  test('errors can be iterated once intercepted by the adapter', async function(this: TestContext, assert) {
+  test('errors can be iterated once intercepted by the adapter', async function (this: TestContext, assert) {
     assert.expect(3);
 
     const store = this.owner.lookup('service:store');
@@ -45,27 +47,27 @@ module('Unit | Adapter | active model adapter errors test', function(hooks) {
         type: 'book',
         id: '1',
         name: 'Bossypants',
-        genre: 'Memoir'
-      }
+        genre: 'Memoir',
+      },
     });
 
     const post = store.peekRecord('book', 1);
 
-    pretender.put('/books/1', function() {
+    pretender.put('/books/1', function () {
       const headers = {};
       const httpStatus = 422;
       const payload = {
         errors: {
           name: ['rejected'],
-          genre: ['rejected']
-        }
+          genre: ['rejected'],
+        },
       };
       return [httpStatus, headers, JSON.stringify(payload)];
     });
 
     post.setProperties({
       name: 'Yes, Please',
-      memoir: 'Comedy'
+      memoir: 'Comedy',
     });
 
     try {

@@ -1,4 +1,4 @@
 export {
   default,
-  initialize
+  initialize,
 } from 'active-model-adapter/initializers/active-model-adapter';
