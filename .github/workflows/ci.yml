@@ -22,7 +22,7 @@
 #$   - scenario: ember-canary
 #$   - scenario: ember-default-with-jquery
 #$   - scenario: ember-classic
-#$ nodeVersion: 10.x
+#$ nodeVersion: 14.x
 #$ packageManager: yarn
 #
 
@@ -74,7 +74,6 @@ jobs:
 
     - name: Lint
       run: yarn lint
-
 
   test:
     name: Tests
