@@ -10,7 +10,7 @@
 
 You should make an `ApplicationAdapter` if you don't already have one:
 
-```js
+```javascript
 // app/adapters/application.js
 import ActiveModelAdapter from 'active-model-adapter';
 
@@ -20,7 +20,7 @@ export default class ApplicationAdapter extends ActiveModelAdapter {}
 If you need to subclass the `ActiveModelSerializer`, you can import it
 into your serializer:
 
-```js
+```javascript
 // app/serializers/post.js
 
 import { ActiveModelSerializer } from 'active-model-adapter';
@@ -55,19 +55,19 @@ Attribute names in your JSON payload should be the underscored versions of
 the attributes in your Ember.js models.
 For example, if you have a `Person` model:
 
-```js
+```javascript
 // app/models/famous-person.js
 
-export default DS.Model.extend({
-  firstName: DS.attr('string'),
-  lastName: DS.attr('string'),
-  occupation: DS.attr('string')
-});
+export default class FamousPerson extends Model {
+  @attr() firstName;
+  @attr() lastName;
+  @attr() occupation;
+}
 ```
 
 The JSON returned should look like this:
 
-```js
+```json
 {
   "famous_person": {
     "id": 1,
@@ -80,26 +80,26 @@ The JSON returned should look like this:
 
 Let's imagine that `Occupation`  and `Person` are just another model:
 
-```js
+```javascript
 // app/models/person.js
 
-export default DS.Model.extend({
-  firstName: DS.attr('string'),
-  lastName: DS.attr('string'),
-  occupation: DS.belongsTo('occupation')
-});
+export default class Person extends Model {
+  @attr() firstName;
+  @attr() lastName;
+  @belongsTo('occupation') occupation;
+}
 
 // app/models/occupation.js
-export default DS.Model.extend({
-  name: DS.attr('string'),
-  salary: DS.attr('number'),
-  people: DS.hasMany('person')
-});
+export default class Occupation extends Model {
+  @attr() name;
+  @attr('number') salary;
+  @hasMany('person') people;
+}
 ```
 
 The JSON needed to avoid extra server calls, should look like this:
 
-```js
+```json
 {
   "people": [{
     "id": 1,
@@ -140,16 +140,16 @@ For example, given the following model definitions:
 
 ```javascript
 // app/models/book.js
-export default DS.Model.extend({
-  name: DS.attr(),
-  author: DS.belongsTo('person', {polymorphic: true})
-});
+export default class Book extends Model {
+  @attr() name;
+  @belongsTo('person', { polymorphic: true }) author;
+}
 
 // app/models/author.js
-export default DS.Model.extend({
-  name: DS.attr(),
-  books: DS.hasMany('book')
-});
+export default class Author extends Model {
+  @attr() name;
+  @hasMany('book') books;
+}
 ```
 
 The object would look like:
@@ -194,7 +194,7 @@ like this:
   "book": {
     "id": "1",
     "name": "Yes, Please",
-    "author_id": 1, // these two lines
+    "author_id": 1,         // these two lines
     "author_type": "person" // tell Ember Data what the polymorphic
                             // relationship is.
   }
@@ -208,7 +208,7 @@ The full response would be look like this:
   "book": {
     "id": "1",
     "name": "Yes, Please",
-    "author_id": 1, // these two lines
+    "author_id": 1,         // these two lines
     "author_type": "person" // tell Ember Data what the polymorphic
                             // relationship is.
   },
@@ -222,7 +222,7 @@ The full response would be look like this:
 ## Development Installation
 
 * `git clone` this repository
-* `npm install` or  `yarn install`
+* `yarn install`
 
 ## Running Tests
 

@@ -64,17 +64,17 @@ type RelationshipKind = 'belongsTo' | 'hasMany';
 
   For example, if you have a `Person` model:
 
-  ```js
-  export default DS.Model.extend({
-    firstName: DS.attr('string'),
-    lastName: DS.attr('string'),
-    occupation: DS.attr('string')
-  });
+  ```javascript
+  export default class Person extends Model {
+    @attr() firstName;
+    @attr() lastName;
+    @belongsTo('occupation') occupation;
+  }
   ```
 
   The JSON returned should look like this:
 
-  ```js
+  ```json
   {
     "famous_person": {
       "id": 1,
@@ -87,23 +87,23 @@ type RelationshipKind = 'belongsTo' | 'hasMany';
 
   Let's imagine that `Occupation` is just another model:
 
-  ```js
-  export default DS.Model.extend({
-    firstName: DS.attr('string'),
-    lastName: DS.attr('string'),
-    occupation: DS.belongsTo('occupation')
-  });
+  ```javascript
+  export default class Person extends Model {
+    @attr() firstName;
+    @attr() lastName;
+    @belongsTo('occupation') occupation;
+  }
 
-  export default DS.Model.extend({
-    name: DS.attr('string'),
-    salary: DS.attr('number'),
-    people: DS.hasMany('person')
-  });
+  export default class Occupation extends Model {
+    @attr() name;
+    @attr('number') salary;
+    @hasMany('person') people;
+  }
   ```
 
   The JSON needed to avoid extra server calls, should look like this:
 
-  ```js
+  ```json
   {
     "people": [{
       "id": 1,
@@ -197,7 +197,7 @@ export default class ActiveModelSerializer extends RESTSerializer {
 
     If your payload looks like:
 
-    ```js
+    ```json
     {
       "post": {
         "id": 1,
@@ -209,7 +209,7 @@ export default class ActiveModelSerializer extends RESTSerializer {
 
     The normalized version would look like this
 
-    ```js
+    ```json
     {
       "post": {
         "id": 1,
