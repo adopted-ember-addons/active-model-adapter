@@ -10,7 +10,9 @@ import { AnyObject } from 'active-model-adapter';
 import type ModelRegistry from 'ember-data/types/registries/model';
 
 type ModelKeys<K> = Exclude<keyof K, keyof DS.Model>;
-type RelationshipsFor<K extends keyof ModelRegistry> = ModelKeys<ModelRegistry[K]>;
+type RelationshipsFor<K extends keyof ModelRegistry> = ModelKeys<
+  ModelRegistry[K]
+>;
 
 interface RelationshipMetaOptions {
   async?: boolean; // unspecified defaults relationship to "true"
@@ -258,10 +260,7 @@ export default class ActiveModelSerializer extends RESTSerializer {
     }
   }
 
-  extractRelationships(
-    modelClass: Model,
-    resourceHash: AnyObject
-  ): AnyObject {
+  extractRelationships(modelClass: Model, resourceHash: AnyObject): AnyObject {
     modelClass.eachRelationship<Model>(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (key: string, relationshipMeta: Record<string, any>) => {

@@ -2,7 +2,7 @@
 
 const getChannelURL = require('ember-source-channel-url');
 
-module.exports = async function() {
+module.exports = async function () {
   return {
     useYarn: true,
     scenarios: [
@@ -11,18 +11,18 @@ module.exports = async function() {
         npm: {
           devDependencies: {
             'ember-source': '~3.20.0',
-            'ember-data': '~3.20.0'
-          }
-        }
+            'ember-data': '~3.20.0',
+          },
+        },
       },
       {
         name: 'ember-lts-3.24',
         npm: {
           devDependencies: {
             'ember-source': '~3.24.0',
-            'ember-data': '~3.24.0'
-          }
-        }
+            'ember-data': '~3.24.0',
+          },
+        },
       },
       {
         name: 'ember-release',
@@ -30,8 +30,8 @@ module.exports = async function() {
           devDependencies: {
             'ember-source': await getChannelURL('release'),
             'ember-data': 'latest',
-          }
-        }
+          },
+        },
       },
       {
         name: 'ember-beta',
@@ -39,8 +39,8 @@ module.exports = async function() {
           devDependencies: {
             'ember-source': await getChannelURL('beta'),
             'ember-data': 'beta',
-          }
-        }
+          },
+        },
       },
       {
         name: 'ember-canary',
@@ -48,8 +48,8 @@ module.exports = async function() {
           devDependencies: {
             'ember-source': await getChannelURL('canary'),
             'ember-data': 'canary',
-          }
-        }
+          },
+        },
       },
       // The default `.travis.yml` runs this scenario via `yarn test`,
       // not via `ember try`. It's still included here so that running
@@ -58,21 +58,21 @@ module.exports = async function() {
       {
         name: 'ember-default',
         npm: {
-          devDependencies: {}
-        }
+          devDependencies: {},
+        },
       },
       {
         name: 'ember-default-with-jquery',
         env: {
           EMBER_OPTIONAL_FEATURES: JSON.stringify({
-            'jquery-integration': true
-          })
+            'jquery-integration': true,
+          }),
         },
         npm: {
           devDependencies: {
-            '@ember/jquery': '^0.5.1'
-          }
-        }
+            '@ember/jquery': '^0.5.1',
+          },
+        },
       },
       {
         name: 'ember-classic',
@@ -80,15 +80,15 @@ module.exports = async function() {
           EMBER_OPTIONAL_FEATURES: JSON.stringify({
             'application-template-wrapper': true,
             'default-async-observers': false,
-            'template-only-glimmer-components': false
-          })
+            'template-only-glimmer-components': false,
+          }),
         },
         npm: {
           ember: {
-            edition: 'classic'
-          }
-        }
-      }
-    ]
+            edition: 'classic',
+          },
+        },
+      },
+    ],
   };
 };

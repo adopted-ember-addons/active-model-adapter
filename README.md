@@ -34,7 +34,7 @@ The ActiveModelAdapter is a subclass of the RESTAdapter designed to integrate
 with a JSON API that uses an underscored naming convention instead of camelCasing.
 
 It has been designed to work out of the box with the
-[active\_model\_serializers](http://github.com/rails-api/active_model_serializers)
+[active_model_serializers](http://github.com/rails-api/active_model_serializers)
 Ruby gem. This Adapter expects specific settings using ActiveModel::Serializers,
 `embed :ids, embed_in_root: true` which sideloads the records.
 
@@ -43,11 +43,11 @@ Ruby gem. This Adapter expects specific settings using ActiveModel::Serializers,
 The ActiveModelAdapter expects the JSON returned from your server to follow
 the REST adapter conventions substituting underscored keys for camelcased ones.
 Unlike the DS.RESTAdapter, async relationship keys must be the singular form
-of the relationship name, followed by "_id" for DS.belongsTo relationships,
-or "_ids" for DS.hasMany relationships.
+of the relationship name, followed by "\_id" for DS.belongsTo relationships,
+or "\_ids" for DS.hasMany relationships.
 
-Since ActiveModelAdapter 2.1.0 however, you don't need the "_id" or
-"_ids" suffix on keys for relationships.
+Since ActiveModelAdapter 2.1.0 however, you don't need the "\_id" or
+"\_ids" suffix on keys for relationships.
 
 ### Conventional Names
 
@@ -78,7 +78,7 @@ The JSON returned should look like this:
 }
 ```
 
-Let's imagine that `Occupation`  and `Person` are just another model:
+Let's imagine that `Occupation` and `Person` are just another model:
 
 ```javascript
 // app/models/person.js
@@ -101,18 +101,22 @@ The JSON needed to avoid extra server calls, should look like this:
 
 ```json
 {
-  "people": [{
-    "id": 1,
-    "first_name": "Barack",
-    "last_name": "Obama",
-    "occupation_id": 1
-  }],
-  "occupations": [{
-    "id": 1,
-    "name": "President",
-    "salary": 100000,
-    "person_ids": [1]
-  }]
+  "people": [
+    {
+      "id": 1,
+      "first_name": "Barack",
+      "last_name": "Obama",
+      "occupation_id": 1
+    }
+  ],
+  "occupations": [
+    {
+      "id": 1,
+      "name": "President",
+      "salary": 100000,
+      "person_ids": [1]
+    }
+  ]
 }
 ```
 
@@ -134,7 +138,6 @@ end
 
 The first, and preferred format, is to use the name of the relationship
 as the key and an object with the type and foreign key as the value.
-
 
 For example, given the following model definitions:
 
@@ -221,16 +224,16 @@ The full response would be look like this:
 
 ## Development Installation
 
-* `git clone` this repository
-* `yarn install`
+- `git clone` this repository
+- `yarn install`
 
 ## Running Tests
 
-* `ember test`
-* `ember test --server`
+- `ember test`
+- `ember test --server`
 
 ## Building
 
-* `ember build`
+- `ember build`
 
 For more information on using ember-cli, visit [http://www.ember-cli.com/](http://www.ember-cli.com/).

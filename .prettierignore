@@ -6,8 +6,3 @@ lib/
 public/
 tmp/
 vendor/
-
-package.json
-ember-cli-build.js
-testem.js
-.eslintrc.js
