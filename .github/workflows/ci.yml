@@ -75,6 +75,9 @@ jobs:
       - name: Lint
         run: yarn lint
 
+      - name: TSC Build
+        run: yarn tsc --build
+
   test:
     name: Tests
     runs-on: ${{ matrix.os }}
