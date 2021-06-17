@@ -21,7 +21,6 @@ module.exports = {
     browser: true,
   },
   rules: {
-    'ember/no-jquery': 'error',
     'ember/use-ember-data-rfc-395-imports': 'off',
   },
   overrides: [
@@ -29,6 +28,7 @@ module.exports = {
     {
       files: [
         '.eslintrc.js',
+        '.prettierrc.js',
         '.template-lintrc.js',
         'ember-cli-build.js',
         'index.js',
@@ -51,14 +51,7 @@ module.exports = {
         node: true,
       },
       plugins: ['node'],
-      rules: Object.assign(
-        {},
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        require('eslint-plugin-node').configs.recommended.rules,
-        {
-          // add your custom rules and overrides for node files here
-        }
-      ),
+      extends: ['plugin:node/recommended'],
     },
   ],
 };

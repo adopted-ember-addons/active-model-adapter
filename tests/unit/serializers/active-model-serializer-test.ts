@@ -8,7 +8,6 @@ import { TestContext } from 'ember-test-helpers';
 import DS from 'ember-data';
 import Pretender from 'pretender';
 import Store from 'ember-data/store';
-import { get } from '@ember/object';
 import Model, { attr, belongsTo, hasMany } from '@ember-data/model';
 import { resolve } from 'rsvp';
 import type ModelRegistry from 'ember-data/types/registries/model';
@@ -204,7 +203,7 @@ module('Unit | Serializer | active model serializer', function (hooks) {
               super_villain: {
                 first_name: 'Tom',
                 last_name: 'Dale',
-                home_planet_id: get(league, 'id'),
+                home_planet_id: league.id,
               },
             },
             'we serialized correctly'
