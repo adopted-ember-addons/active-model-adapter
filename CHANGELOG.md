@@ -1,5 +1,11 @@
 # Changelog
 
+## v3.0.0-0 (2021-07-22)
+
+This release previews a massive rewrite of this addon including updates to Ember,
+Typescript, and more. Please give this a test!
+
+
 ## Master
 
 ## 2.2.0 December 22, 2017
