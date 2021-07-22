@@ -315,7 +315,7 @@ export default class ActiveModelSerializer extends RESTSerializer {
     return super.extractRelationships(modelClass, resourceHash);
   }
 
-  modelNameFromPayloadKey(key: string): keyof ModelRegistry {
+  modelNameFromPayloadKey(key: string): string {
     const convertedFromRubyModule = singularize(key.replace('::', '/'));
     return normalizeModelName(convertedFromRubyModule);
   }

@@ -13,6 +13,8 @@ declare module 'ember-data/types/registries/model' {
   // eslint-disable-next-line ember/no-test-import-export
   export default interface ModelRegistry {
     superUser: SuperUser;
+    'super-user': SuperUser; // << Make TS Happy
+    super_user: SuperUser;   // << Make TS Happy
   }
 }
 
