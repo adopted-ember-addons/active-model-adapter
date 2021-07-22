@@ -11,8 +11,6 @@ This release previews a massive rewrite of this addon including updates to Ember
 Typescript, and more. Please give this a test!
 
 
-## Master
-
 ## 2.2.0 December 22, 2017
 - Fix ember-inflector deprecations
 - Add more Ember Data scenarios for ember-try
