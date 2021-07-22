@@ -6,6 +6,7 @@ import AdapterError, {
 import { pluralize } from 'ember-inflector';
 import { AnyObject } from 'active-model-adapter';
 import { decamelize, underscore } from '@ember/string';
+import ModelRegistry from 'ember-data/types/registries/model';
 
 interface ActiveModelPayload {
   errors: AnyObject;
@@ -120,7 +121,7 @@ export default class ActiveModelAdapter extends RESTAdapter {
    * @param {String} modelName
    * @return String
    */
-  pathForType(modelName: string): string {
+  pathForType<K extends keyof ModelRegistry>(modelName: K): string {
     const decamelized = decamelize(modelName as string);
     const underscored = underscore(decamelized);
     return pluralize(underscored);

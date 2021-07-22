@@ -1,3 +1,5 @@
-<h2 id='title'>Welcome to Ember</h2>
-
-{{outlet}}
+<ul>
+  {{#each @model as |car|}}
+    <li>{{car.brand}}</li>
+  {{/each}}
+</ul>
