@@ -1,5 +1,10 @@
 # Changelog
 
+## v3.0.0-1 (2021-07-22)
+
+Resolves some problems with types
+
+
 ## v3.0.0-0 (2021-07-22)
 
 This release previews a massive rewrite of this addon including updates to Ember,
