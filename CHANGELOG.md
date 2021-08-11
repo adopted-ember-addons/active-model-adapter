@@ -1,5 +1,10 @@
 # Changelog
 
+## v3.0.1 (2021-08-11)
+
+Oops! I missed a commit in the previous release that contained a package update.
+
+
 ## v3.0.0-1 (2021-07-22)
 
 Resolves some problems with types
