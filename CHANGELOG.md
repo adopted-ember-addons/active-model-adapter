@@ -1,5 +1,11 @@
 # Changelog
 
+## v3.0.0 (2021-08-11)
+
+This is a non-breaking change from the previous release, outside of dropping
+support for older Embers.
+
+
 ## v3.0.0-1 (2021-07-22)
 
 Resolves some problems with types
