@@ -347,7 +347,7 @@ module('Unit | Serializer | active model serializer', function (hooks) {
     });
   });
 
-  test('normalizeResponse', function (this: Context, assert) {
+  test('normalizeResponse for hash', function (this: Context, assert) {
     const HomePlanet = this.store.modelFor('home-planet');
     this.owner.register('adapter:superVillain', ActiveModelAdapter);
 
@@ -402,7 +402,7 @@ module('Unit | Serializer | active model serializer', function (hooks) {
     });
   });
 
-  test('normalizeResponse', function (this: Context, assert) {
+  test('normalizeResponse for array', function (this: Context, assert) {
     const HomePlanet = this.store.modelFor('home-planet');
     this.owner.register('adapter:superVillain', ActiveModelAdapter);
 
