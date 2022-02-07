@@ -7,7 +7,6 @@ import { classify, decamelize, camelize, underscore } from '@ember/string';
 import { inject as service } from '@ember/service';
 import { isNone } from '@ember/utils';
 import { AnyObject } from 'active-model-adapter';
-
 // eslint-disable-next-line ember/use-ember-data-rfc-395-imports
 import DS from 'ember-data';
 // eslint-disable-next-line ember/use-ember-data-rfc-395-imports
@@ -319,8 +318,8 @@ export default class ActiveModelSerializer extends RESTSerializer {
     return super.extractRelationships(modelClass, resourceHash);
   }
 
-  modelNameFromPayloadKey(key: string): string {
-    const convertedFromRubyModule = singularize(key.replace('::', '/'));
+  modelNameFromPayloadKey<K extends keyof ModelRegistry>(key: K): string {
+    const convertedFromRubyModule = singularize(key.replace('::', '/')) as K;
     return normalizeModelName(convertedFromRubyModule);
   }
 }
