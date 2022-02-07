@@ -1,5 +1,6 @@
 import RESTSerializer from '@ember-data/serializer/rest';
-import Store, { normalizeModelName } from '@ember-data/store';
+import { normalizeModelName } from '@ember-data/store';
+import type Store from '@ember-data/store';
 import Model from '@ember-data/model';
 import DS from 'ember-data';
 import { singularize, pluralize } from 'ember-inflector';
@@ -124,7 +125,7 @@ type RelationshipKind = 'belongsTo' | 'hasMany';
   ```
 */
 export default class ActiveModelSerializer extends RESTSerializer {
-  @service store!: Store;
+  @service declare store: Store;
   // SERIALIZE
 
   /**
