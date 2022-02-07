@@ -5,12 +5,15 @@ import ActiveModelAdapter, {
   ActiveModelSerializer,
 } from 'active-model-adapter';
 import { TestContext } from 'ember-test-helpers';
+// eslint-disable-next-line ember/use-ember-data-rfc-395-imports
 import DS from 'ember-data';
 import Pretender from 'pretender';
-import Store from 'ember-data/store';
+import type Store from '@ember-data/store';
 import Model, { attr, belongsTo, hasMany } from '@ember-data/model';
 import { resolve } from 'rsvp';
+// eslint-disable-next-line ember/use-ember-data-rfc-395-imports
 import type ModelRegistry from 'ember-data/types/registries/model';
+import { EmbeddedRecordsMixin } from '@ember-data/serializer/rest';
 
 class ApplicationAdapter extends ActiveModelAdapter {}
 
@@ -1056,15 +1059,15 @@ module('Unit | Serializer | active model serializer', function (hooks) {
   });
 
   test('when using the DS.EmbeddedRecordsMixin, does not erase attributes for polymorphic embedded models', async function (this: Context, assert) {
+    class MediocreVillianSerializer extends ActiveModelSerializer.extend(EmbeddedRecordsMixin) {
+      attrs = {
+        evilMinions: { serialize: false, deserialize: 'records' },
+      };
+    }
+
     const MediocreVillain = this.store.modelFor('mediocre-villain');
-    this.owner.register(
-      'serializer:mediocre-villain',
-      ActiveModelSerializer.extend(DS.EmbeddedRecordsMixin, {
-        attrs: {
-          evilMinions: { serialize: false, deserialize: 'records' },
-        },
-      })
-    );
+
+    this.owner.register('serializer:mediocre-villain', MediocreVillianSerializer);
 
     const payload = {
       mediocre_villain: {

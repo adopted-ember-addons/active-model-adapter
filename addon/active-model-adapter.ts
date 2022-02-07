@@ -6,6 +6,7 @@ import AdapterError, {
 import { pluralize } from 'ember-inflector';
 import { AnyObject } from 'active-model-adapter';
 import { decamelize, underscore } from '@ember/string';
+// eslint-disable-next-line ember/use-ember-data-rfc-395-imports
 import ModelRegistry from 'ember-data/types/registries/model';
 
 interface ActiveModelPayload {

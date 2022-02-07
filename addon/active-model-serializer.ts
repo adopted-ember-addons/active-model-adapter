@@ -2,12 +2,15 @@ import RESTSerializer from '@ember-data/serializer/rest';
 import { normalizeModelName } from '@ember-data/store';
 import type Store from '@ember-data/store';
 import Model from '@ember-data/model';
-import DS from 'ember-data';
 import { singularize, pluralize } from 'ember-inflector';
 import { classify, decamelize, camelize, underscore } from '@ember/string';
 import { inject as service } from '@ember/service';
 import { isNone } from '@ember/utils';
 import { AnyObject } from 'active-model-adapter';
+
+// eslint-disable-next-line ember/use-ember-data-rfc-395-imports
+import DS from 'ember-data';
+// eslint-disable-next-line ember/use-ember-data-rfc-395-imports
 import type ModelRegistry from 'ember-data/types/registries/model';
 
 type ModelKeys<K> = Exclude<keyof K, keyof DS.Model>;
