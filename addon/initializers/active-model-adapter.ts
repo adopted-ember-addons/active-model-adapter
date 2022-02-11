@@ -1,6 +1,5 @@
-import Application from '@ember/application';
-import ActiveModelAdapter from 'active-model-adapter';
-import ActiveModelSerializer from 'active-model-adapter/active-model-serializer';
+import type Application from '@ember/application';
+import { ActiveModelAdapter, ActiveModelSerializer } from 'active-model-adapter';
 
 export function initialize(application: Application): void {
   application.register('adapter:-active-model', ActiveModelAdapter);

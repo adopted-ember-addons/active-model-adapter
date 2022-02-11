@@ -1,5 +1,5 @@
-import { ActiveModelSerializer } from 'ember-cli-mirage';
+import { EmberDataSerializer } from "ember-cli-mirage";
 
-export default ActiveModelSerializer.extend({
+export default EmberDataSerializer.extend({
   serializeIds: 'always',
 });
