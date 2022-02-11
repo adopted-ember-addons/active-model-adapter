@@ -1,7 +1,7 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import { ActiveModelAdapter } from 'active-model-adapter';
-import { TestContext } from 'ember-test-helpers';
+import { TestContext } from '@ember/test-helpers';
 import AdapterError from '@ember-data/adapter/error';
 import Model from '@ember-data/model';
 
@@ -14,7 +14,7 @@ declare module 'ember-data/types/registries/model' {
   export default interface ModelRegistry {
     superUser: SuperUser;
     'super-user': SuperUser; // << Make TS Happy
-    super_user: SuperUser;   // << Make TS Happy
+    super_user: SuperUser; // << Make TS Happy
   }
 }
 
@@ -25,19 +25,19 @@ module('Unit | Initializer | active-model-adapter', function (hooks) {
   });
 
   test('pathForType - works with camelized types', function (this: AdapterContext, assert) {
-    assert.equal(this.adapter.pathForType('superUser'), 'super_users');
+    assert.strictEqual(this.adapter.pathForType('superUser'), 'super_users');
   });
 
   test('pathForType - works with dasherized types', function (this: AdapterContext, assert) {
-    assert.equal(this.adapter.pathForType('super-user'), 'super_users');
+    assert.strictEqual(this.adapter.pathForType('super-user'), 'super_users');
   });
 
   test('pathForType - works with underscored types', function (this: AdapterContext, assert) {
-    assert.equal(this.adapter.pathForType('super_user'), 'super_users');
+    assert.strictEqual(this.adapter.pathForType('super_user'), 'super_users');
   });
 
   test('buildURL - decamelizes names', function (this: AdapterContext, assert) {
-    assert.equal(this.adapter.buildURL('superUser', 1), '/super_users/1');
+    assert.strictEqual(this.adapter.buildURL('superUser', 1), '/super_users/1');
   });
 
   test('handleResponse - returns invalid error if 422 response', function (this: AdapterContext, assert) {
@@ -53,8 +53,8 @@ module('Unit | Initializer | active-model-adapter', function (hooks) {
     const error = this.adapter.handleResponse(jqXHR.status, {}, json, {})
       .errors[0];
 
-    assert.equal(error.detail, "can't be blank");
-    assert.equal(error.source.pointer, '/data/attributes/name');
+    assert.strictEqual(error.detail, "can't be blank");
+    assert.strictEqual(error.source.pointer, '/data/attributes/name');
   });
 
   test('handleResponse - returns ajax response if not 422 response', function (this: AdapterContext, assert) {

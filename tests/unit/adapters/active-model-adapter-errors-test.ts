@@ -1,7 +1,7 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import Pretender from 'pretender';
-import { TestContext } from 'ember-test-helpers';
+import { TestContext } from '@ember/test-helpers';
 
 let pretender: Pretender;
 
@@ -75,7 +75,7 @@ module('Unit | Adapter | active model adapter errors test', function (hooks) {
     } catch (e) {
       assert.ok(e instanceof AdapterError);
 
-      assert.equal(
+      assert.strictEqual(
         post.errors.errorsFor('name')[0].message,
         'rejected',
         'model.errors.attribute_name works'

@@ -4,7 +4,7 @@ import { setupTest } from 'ember-qunit';
 import ActiveModelAdapter, {
   ActiveModelSerializer,
 } from 'active-model-adapter';
-import { TestContext } from 'ember-test-helpers';
+import { TestContext } from '@ember/test-helpers';
 // eslint-disable-next-line ember/use-ember-data-rfc-395-imports
 import DS from 'ember-data';
 import Pretender from 'pretender';
@@ -142,6 +142,8 @@ module('Unit | Serializer | active model serializer', function (hooks) {
   });
 
   test('errors are camelCased and are expected under the `errors` property of the payload', async function (this: Context, assert) {
+    assert.expect(2);
+
     const store: Store = this.owner.lookup('service:store');
     store.push({
       data: {
@@ -195,11 +197,7 @@ module('Unit | Serializer | active model serializer', function (hooks) {
             includeId: true,
           });
 
-          assert.strictEqual(
-            serializer instanceof ActiveModelSerializer,
-            true,
-            'We are testing the active model serializer'
-          );
+          assert.true(serializer instanceof ActiveModelSerializer, 'We are testing the active model serializer');
           assert.deepEqual(
             serialized,
             {
@@ -235,6 +233,8 @@ module('Unit | Serializer | active model serializer', function (hooks) {
   });
 
   test('serializeIntoHash', async function (this: Context, assert) {
+    assert.expect(3);
+
     this.owner.unregister('adapter:application');
 
     this.owner.register(
@@ -254,11 +254,7 @@ module('Unit | Serializer | active model serializer', function (hooks) {
             includeId: true,
           });
 
-          assert.strictEqual(
-            serializer instanceof ActiveModelSerializer,
-            true,
-            'We are testing the active model serializer'
-          );
+          assert.true(serializer instanceof ActiveModelSerializer, 'We are testing the active model serializer');
 
           assert.deepEqual(
             serialized,
@@ -301,7 +297,7 @@ module('Unit | Serializer | active model serializer', function (hooks) {
       'homePlanet'
     );
 
-    assert.equal(
+    assert.strictEqual(
       json.data.relationships.superVillains.links.related,
       '/api/super_villians/1',
       'normalize links'
@@ -482,7 +478,8 @@ module('Unit | Serializer | active model serializer', function (hooks) {
       'doomsday-device',
       '12'
     ) as DoomsdayDevice;
-    assert.equal(device.get('evilMinion'), null);
+
+    assert.strictEqual(device.get('evilMinion'), null);
   });
 
   test('serialize polymorphic', async function (this: Context, assert) {
@@ -507,11 +504,7 @@ module('Unit | Serializer | active model serializer', function (hooks) {
             includeId: true,
           });
 
-          assert.strictEqual(
-            serializer instanceof ActiveModelSerializer,
-            true,
-            'We are testing the active model serializer'
-          );
+          assert.true(serializer instanceof ActiveModelSerializer, 'We are testing the active model serializer');
 
           assert.deepEqual(
             serialized,
@@ -568,11 +561,7 @@ module('Unit | Serializer | active model serializer', function (hooks) {
             includeId: true,
           });
 
-          assert.strictEqual(
-            serializer instanceof ActiveModelSerializer,
-            true,
-            'We are testing the active model serializer'
-          );
+          assert.true(serializer instanceof ActiveModelSerializer, 'We are testing the active model serializer');
 
           assert.deepEqual(
             serialized,
@@ -627,11 +616,7 @@ module('Unit | Serializer | active model serializer', function (hooks) {
             includeId: true,
           });
 
-          assert.strictEqual(
-            serializer instanceof ActiveModelSerializer,
-            true,
-            'We are testing the active model serializer'
-          );
+          assert.true(serializer instanceof ActiveModelSerializer, 'We are testing the active model serializer');
 
           assert.deepEqual(
             serialized,
@@ -1017,7 +1002,7 @@ module('Unit | Serializer | active model serializer', function (hooks) {
       1
     ) as DoomsdayDevice;
 
-    assert.equal(device.evilMinion.name, 'Sally');
+    assert.strictEqual(device.evilMinion.name, 'Sally');
   });
 
   test('supports the default format for polymorphic hasMany', async function (this: Context, assert) {
@@ -1055,11 +1040,13 @@ module('Unit | Serializer | active model serializer', function (hooks) {
     ) as MediocreVillain;
     const assocMinions = await villain.evilMinions;
 
-    assert.equal(assocMinions.get('firstObject.name'), 'Harry');
+    assert.strictEqual(assocMinions.get('firstObject.name'), 'Harry');
   });
 
   test('when using the DS.EmbeddedRecordsMixin, does not erase attributes for polymorphic embedded models', async function (this: Context, assert) {
-    class MediocreVillianSerializer extends ActiveModelSerializer.extend(EmbeddedRecordsMixin) {
+    class MediocreVillianSerializer extends ActiveModelSerializer.extend(
+      EmbeddedRecordsMixin
+    ) {
       attrs = {
         evilMinions: { serialize: false, deserialize: 'records' },
       };
@@ -1067,7 +1054,10 @@ module('Unit | Serializer | active model serializer', function (hooks) {
 
     const MediocreVillain = this.store.modelFor('mediocre-villain');
 
-    this.owner.register('serializer:mediocre-villain', MediocreVillianSerializer);
+    this.owner.register(
+      'serializer:mediocre-villain',
+      MediocreVillianSerializer
+    );
 
     const payload = {
       mediocre_villain: {
@@ -1099,7 +1089,7 @@ module('Unit | Serializer | active model serializer', function (hooks) {
     ) as MediocreVillain;
     const assocMinions = await villain.evilMinions;
 
-    assert.equal(assocMinions.get('firstObject.name'), 'tom dale');
+    assert.strictEqual(assocMinions.get('firstObject.name'), 'tom dale');
   });
 
   // FIXME - id is undefined
@@ -1125,7 +1115,7 @@ module('Unit | Serializer | active model serializer', function (hooks) {
 
     const villain = this.store.peekRecord('super-villain', 1) as SuperVillain;
 
-    assert.equal(villain.belongsTo('homePlanet').id(), '1');
+    assert.strictEqual(villain.belongsTo('homePlanet').id(), '1');
   });
 
   test('can have id-less belongsTo relationship part 2', async function (assert) {

@@ -8,8 +8,8 @@
 
 ## Linting
 
-* `yarn lint`
-* `yarn lint:fix`
+- `yarn lint`
+- `yarn lint:fix`
 
 ## Running tests
 
