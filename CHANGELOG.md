@@ -1,5 +1,11 @@
 # Changelog
 
+## v4.0.0 (2022-02-15)
+
+Mostly a dependency update release. Due to the nature of these updates this release
+_might_ be breaking despite behaviour not changing whatsoever.
+
+
 ## v3.0.1 (2021-08-11)
 
 Oops! I missed a commit in the previous release that contained a package update.
