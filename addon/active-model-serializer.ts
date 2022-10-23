@@ -1,10 +1,10 @@
 import RESTSerializer from '@ember-data/serializer/rest';
-import { normalizeModelName } from '@ember-data/store';
 import type Store from '@ember-data/store';
 import type Model from '@ember-data/model';
 import { singularize, pluralize } from 'ember-inflector';
 import { classify, decamelize, camelize, underscore } from '@ember/string';
 import { inject as service } from '@ember/service';
+import { dasherize } from '@ember/string';
 import { isNone } from '@ember/utils';
 import { AnyObject } from 'active-model-adapter';
 // eslint-disable-next-line ember/use-ember-data-rfc-395-imports
@@ -320,7 +320,7 @@ export default class ActiveModelSerializer extends RESTSerializer {
 
   modelNameFromPayloadKey<K extends keyof ModelRegistry>(key: K): string {
     const convertedFromRubyModule = singularize(key.replace('::', '/')) as K;
-    return normalizeModelName(convertedFromRubyModule);
+    return dasherize(convertedFromRubyModule);
   }
 }
 
