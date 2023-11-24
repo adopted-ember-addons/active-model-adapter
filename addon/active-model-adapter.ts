@@ -27,7 +27,7 @@ type JsonApiError = Record<string, unknown>
  * Types inferred from similar private function
  * https://github.com/emberjs/data/blob/84a15401a7d2a6f8a7efcc2492834c80a27afcc0/packages/legacy-compat/src/legacy-network-handler/legacy-network-handler.ts#L265-L289
  */
-function errorsHashToArray(errors: Record<string, string | string[]>): JsonApiError[] {
+function errorsHashToArray(errors: Record<string, unknown | unknown[]>): JsonApiError[] {
   const out: JsonApiError[] = [];
 
   if (errors) {
