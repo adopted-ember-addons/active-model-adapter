@@ -1,7 +1,6 @@
 import RESTAdapter from '@ember-data/adapter/rest';
 import AdapterError, {
   InvalidError,
-  errorsHashToArray,
 } from '@ember-data/adapter/error';
 import { pluralize } from 'ember-inflector';
 import { AnyObject } from 'active-model-adapter';
@@ -16,6 +15,44 @@ interface ActiveModelPayload {
 /**
   @module ember-data
 */
+
+const PRIMARY_ATTRIBUTE_KEY = 'base';
+function makeArray<T>(value: T | T[]): T[] {
+  return Array.isArray(value) ? value : [value];
+}
+type JsonApiError = Record<string, unknown>
+/**
+ * Copied from ember-data's 4.12.4 implementation after removal in ember-data 5.0
+ * https://github.com/emberjs/data/blob/a0d60c073bc03631277b258aaaadfc910e0a31dc/packages/adapter/src/error.js#L395-L429
+ * Types inferred from similar private function
+ * https://github.com/emberjs/data/blob/84a15401a7d2a6f8a7efcc2492834c80a27afcc0/packages/legacy-compat/src/legacy-network-handler/legacy-network-handler.ts#L265-L289
+ */
+function errorsHashToArray(errors: Record<string, unknown | unknown[]>): JsonApiError[] {
+  const out: JsonApiError[] = [];
+
+  if (errors) {
+    Object.keys(errors).forEach((key) => {
+      const messages = makeArray(errors[key]);
+      for (let i = 0; i < messages.length; i++) {
+        let title = 'Invalid Attribute';
+        let pointer = `/data/attributes/${key}`;
+        if (key === PRIMARY_ATTRIBUTE_KEY) {
+          title = 'Invalid Document';
+          pointer = `/data`;
+        }
+        out.push({
+          title: title,
+          detail: messages[i],
+          source: {
+            pointer: pointer,
+          },
+        });
+      }
+    });
+  }
+
+  return out;
+}
 
 /**
  * The ActiveModelAdapter is a subclass of the RESTAdapter designed to integrate
