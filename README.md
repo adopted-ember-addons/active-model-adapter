@@ -4,15 +4,15 @@
 
 `ember install active-model-adapter`
 
-* Ember.js v3.24 or above
-* Ember CLI v3.24 or above
-* Node.js v12 or above
+- Ember.js v4.12 or above
+- Ember CLI v4.12 or above
+- Node.js v18 or above
 
 You should make an `ApplicationAdapter` if you don't already have one:
 
 ```javascript
 // app/adapters/application.js
-import ActiveModelAdapter from 'active-model-adapter';
+import ActiveModelAdapter from "active-model-adapter";
 
 export default class ApplicationAdapter extends ActiveModelAdapter {}
 ```
@@ -23,7 +23,7 @@ into your serializer:
 ```javascript
 // app/serializers/post.js
 
-import { ActiveModelSerializer } from 'active-model-adapter';
+import { ActiveModelSerializer } from "active-model-adapter";
 
 export default class PostSerializer extends ActiveModelSerializer {}
 ```

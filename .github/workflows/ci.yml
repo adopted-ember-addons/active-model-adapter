@@ -35,18 +35,18 @@ on:
   pull_request:
 
 env:
-  NODE_VERSION: '14.x'
+  NODE_VERSION: '18.x'
 
 jobs:
   lint:
     name: Lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 1
 
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v4
         with:
           node-version: '${{ env.NODE_VERSION }}'
 
@@ -56,7 +56,7 @@ jobs:
 
       - name: Cache package manager's global cache and node_modules
         id: cache-dependencies
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: |
             ${{ steps.global-cache-dir-path.outputs.dir }}
@@ -89,11 +89,11 @@ jobs:
         browser: [chrome]
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 1
 
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v4
         with:
           node-version: '${{ env.NODE_VERSION }}'
 
@@ -103,7 +103,7 @@ jobs:
 
       - name: Cache package manager's global cache and node_modules
         id: cache-dependencies
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: |
             ${{ steps.global-cache-dir-path.outputs.dir }}
@@ -133,11 +133,11 @@ jobs:
         browser: [chrome]
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 1
 
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v4
         with:
           node-version: '${{ env.NODE_VERSION }}'
 
@@ -147,7 +147,7 @@ jobs:
 
       - name: Cache package manager's global cache and node_modules
         id: cache-dependencies
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: |
             ${{ steps.global-cache-dir-path.outputs.dir }}
@@ -163,7 +163,7 @@ jobs:
         run: yarn test:ember --launch ${{ matrix.browser }}
 
   try-scenarios:
-    name: Tests - ${{ matrix.ember-try-scenario }}
+    name: ${{ matrix.try-scenario }}
     runs-on: ubuntu-latest
     continue-on-error: true
     needs: test
@@ -171,24 +171,21 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        ember-try-scenario:
-          [
-            ember-lts-3.24,
-            ember-lts-3.28,
-            ember-release,
-            ember-beta,
-            ember-canary,
-            ember-classic,
-            embroider-safe,
-            embroider-optimized,
-          ]
+        try-scenario:
+          - ember-lts-4.12
+          - ember-lts-5.4
+          - ember-release
+          - ember-beta
+          - ember-canary
+          - embroider-safe
+          - embroider-optimized
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 1
 
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v4
         with:
           node-version: '${{ env.NODE_VERSION }}'
 
