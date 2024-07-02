@@ -105,9 +105,6 @@
     "typescript": "^4.5.5",
     "webpack": "5"
   },
-  "peerDependencies": {
-    "ember-data": "^3.28.0"
-  },
   "engines": {
     "node": "12.* || 14.* || >= 16"
   },
