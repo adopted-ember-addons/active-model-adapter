@@ -1103,7 +1103,7 @@
   resolved "https://registry.yarnpkg.com/@csstools/selector-specificity/-/selector-specificity-3.1.1.tgz#63085d2995ca0f0e55aa8b8a07d69bfd48b844fe"
   integrity sha512-a7cxGcJ2wIlMFLlh8z2ONm+715QkPHiyJcxwQlKOz/03GPw1COpfhcmC9wm4xlZfp//jWHNNMwzjtqHXVWU9KA==
 
-"@ember-data/adapter@5.3.8", "@ember-data/adapter@^5.3.8":
+"@ember-data/adapter@5.3.8":
   version "5.3.8"
   resolved "https://registry.yarnpkg.com/@ember-data/adapter/-/adapter-5.3.8.tgz#31714a01fa08b149d96549d98853a827f46498ad"
   integrity sha512-mlyGQyiNv3C5SN0jRqVboixnSW/h0r1g7wsCus35p51zKYtq7HGyp3EaEQZOt+4dRS0wNfDx4Z95PPbH/rmH0Q==
@@ -1182,7 +1182,7 @@
   resolved "https://registry.yarnpkg.com/@ember-data/rfc395-data/-/rfc395-data-0.0.4.tgz#ecb86efdf5d7733a76ff14ea651a1b0ed1f8a843"
   integrity sha512-tGRdvgC9/QMQSuSuJV45xoyhI0Pzjm7A9o/MVVA3HakXIImJbbzx/k/6dO9CUEQXIyS2y0fW6C1XaYOG7rY0FQ==
 
-"@ember-data/serializer@5.3.8":
+"@ember-data/serializer@5.3.8", "@ember-data/serializer@^5.3.8":
   version "5.3.8"
   resolved "https://registry.yarnpkg.com/@ember-data/serializer/-/serializer-5.3.8.tgz#274849ac944182792b0c97e7f05c147d5531c3fc"
   integrity sha512-EjESckhiZTDtdetihMeup/PXU/pbOTAK8o2SsYGGICwVNpcguH3su9NhoCJQ97/5XL+X5I4KCMm7V8/Lode8vw==
