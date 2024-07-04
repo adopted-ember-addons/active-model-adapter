@@ -1,8 +1,6 @@
 import RESTAdapter from '@ember-data/adapter/rest';
-import AdapterError, {
-  InvalidError,
-  errorsHashToArray,
-} from '@ember-data/adapter/error';
+import AdapterError, { InvalidError } from '@ember-data/adapter/error';
+import errorsHashToArray from './errors-hash-to-array';
 import { pluralize } from 'ember-inflector';
 import { AnyObject } from 'active-model-adapter';
 import { decamelize, underscore } from '@ember/string';
