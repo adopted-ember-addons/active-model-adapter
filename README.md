@@ -12,7 +12,7 @@ You should make an `ApplicationAdapter` if you don't already have one:
 
 ```javascript
 // app/adapters/application.js
-import ActiveModelAdapter from "active-model-adapter";
+import ActiveModelAdapter from 'active-model-adapter';
 
 export default class ApplicationAdapter extends ActiveModelAdapter {}
 ```
@@ -23,7 +23,7 @@ into your serializer:
 ```javascript
 // app/serializers/post.js
 
-import { ActiveModelSerializer } from "active-model-adapter";
+import { ActiveModelSerializer } from 'active-model-adapter';
 
 export default class PostSerializer extends ActiveModelSerializer {}
 ```
