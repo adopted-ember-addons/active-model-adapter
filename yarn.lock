@@ -1182,7 +1182,7 @@
   resolved "https://registry.yarnpkg.com/@ember-data/rfc395-data/-/rfc395-data-0.0.4.tgz#ecb86efdf5d7733a76ff14ea651a1b0ed1f8a843"
   integrity sha512-tGRdvgC9/QMQSuSuJV45xoyhI0Pzjm7A9o/MVVA3HakXIImJbbzx/k/6dO9CUEQXIyS2y0fW6C1XaYOG7rY0FQ==
 
-"@ember-data/serializer@5.3.8", "@ember-data/serializer@^5.3.8":
+"@ember-data/serializer@5.3.8":
   version "5.3.8"
   resolved "https://registry.yarnpkg.com/@ember-data/serializer/-/serializer-5.3.8.tgz#274849ac944182792b0c97e7f05c147d5531c3fc"
   integrity sha512-EjESckhiZTDtdetihMeup/PXU/pbOTAK8o2SsYGGICwVNpcguH3su9NhoCJQ97/5XL+X5I4KCMm7V8/Lode8vw==
