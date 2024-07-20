@@ -37,6 +37,7 @@ module('Unit | Adapter | active model adapter errors test', function (hooks) {
     pretender.shutdown();
   });
 
+  // eslint-disable-next-line qunit/require-expect
   test('errors can be iterated once intercepted by the adapter', async function (this: TestContext, assert) {
     assert.expect(3);
 

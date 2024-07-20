@@ -173,6 +173,7 @@ module('Unit | Serializer | active model serializer', function (hooks) {
     }
   });
 
+  // eslint-disable-next-line qunit/require-expect
   test('serialize', async function (this: Context, assert) {
     assert.expect(3);
 
@@ -483,6 +484,7 @@ module('Unit | Serializer | active model serializer', function (hooks) {
     assert.strictEqual(device.get('evilMinion'), null);
   });
 
+  // eslint-disable-next-line qunit/require-expect
   test('serialize polymorphic', async function (this: Context, assert) {
     assert.expect(3);
 
@@ -543,6 +545,7 @@ module('Unit | Serializer | active model serializer', function (hooks) {
     assert.strictEqual(ray.id, '456', 'save was correct');
   });
 
+  // eslint-disable-next-line qunit/require-expect
   test('serialize polymorphic when type key is not camelized', async function (this: Context, assert) {
     assert.expect(2);
 
@@ -601,6 +604,7 @@ module('Unit | Serializer | active model serializer', function (hooks) {
     await ray.save();
   });
 
+  // eslint-disable-next-line qunit/require-expect
   test('serialize polymorphic when associated object is null', async function (this: Context, assert) {
     assert.expect(2);
 
