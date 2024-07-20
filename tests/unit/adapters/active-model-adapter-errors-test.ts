@@ -75,7 +75,7 @@ module('Unit | Adapter | active model adapter errors test', function (hooks) {
     } catch (e) {
       assert.ok(e instanceof AdapterError);
 
-      assert.equal(
+      assert.strictEqual(
         post.errors.errorsFor('name')[0].message,
         'rejected',
         'model.errors.attribute_name works'
