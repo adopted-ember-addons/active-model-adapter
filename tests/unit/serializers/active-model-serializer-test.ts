@@ -173,6 +173,7 @@ module('Unit | Serializer | active model serializer', function (hooks) {
     }
   });
 
+  // eslint-disable-next-line qunit/require-expect
   test('serialize', async function (this: Context, assert) {
     assert.expect(3);
 
@@ -195,9 +196,8 @@ module('Unit | Serializer | active model serializer', function (hooks) {
             includeId: true,
           });
 
-          assert.strictEqual(
+          assert.true(
             serializer instanceof ActiveModelSerializer,
-            true,
             'We are testing the active model serializer'
           );
           assert.deepEqual(
@@ -254,9 +254,8 @@ module('Unit | Serializer | active model serializer', function (hooks) {
             includeId: true,
           });
 
-          assert.strictEqual(
+          assert.true(
             serializer instanceof ActiveModelSerializer,
-            true,
             'We are testing the active model serializer'
           );
 
@@ -301,7 +300,7 @@ module('Unit | Serializer | active model serializer', function (hooks) {
       'homePlanet'
     );
 
-    assert.equal(
+    assert.strictEqual(
       json.data.relationships.superVillains.links.related,
       '/api/super_villians/1',
       'normalize links'
@@ -482,9 +481,10 @@ module('Unit | Serializer | active model serializer', function (hooks) {
       'doomsday-device',
       '12'
     ) as DoomsdayDevice;
-    assert.equal(device.get('evilMinion'), null);
+    assert.strictEqual(device.get('evilMinion'), null);
   });
 
+  // eslint-disable-next-line qunit/require-expect
   test('serialize polymorphic', async function (this: Context, assert) {
     assert.expect(3);
 
@@ -507,9 +507,8 @@ module('Unit | Serializer | active model serializer', function (hooks) {
             includeId: true,
           });
 
-          assert.strictEqual(
+          assert.true(
             serializer instanceof ActiveModelSerializer,
-            true,
             'We are testing the active model serializer'
           );
 
@@ -546,6 +545,7 @@ module('Unit | Serializer | active model serializer', function (hooks) {
     assert.strictEqual(ray.id, '456', 'save was correct');
   });
 
+  // eslint-disable-next-line qunit/require-expect
   test('serialize polymorphic when type key is not camelized', async function (this: Context, assert) {
     assert.expect(2);
 
@@ -568,9 +568,8 @@ module('Unit | Serializer | active model serializer', function (hooks) {
             includeId: true,
           });
 
-          assert.strictEqual(
+          assert.true(
             serializer instanceof ActiveModelSerializer,
-            true,
             'We are testing the active model serializer'
           );
 
@@ -605,6 +604,7 @@ module('Unit | Serializer | active model serializer', function (hooks) {
     await ray.save();
   });
 
+  // eslint-disable-next-line qunit/require-expect
   test('serialize polymorphic when associated object is null', async function (this: Context, assert) {
     assert.expect(2);
 
@@ -627,9 +627,8 @@ module('Unit | Serializer | active model serializer', function (hooks) {
             includeId: true,
           });
 
-          assert.strictEqual(
+          assert.true(
             serializer instanceof ActiveModelSerializer,
-            true,
             'We are testing the active model serializer'
           );
 
@@ -1017,7 +1016,7 @@ module('Unit | Serializer | active model serializer', function (hooks) {
       1
     ) as DoomsdayDevice;
 
-    assert.equal(device.evilMinion.name, 'Sally');
+    assert.strictEqual(device.evilMinion.name, 'Sally');
   });
 
   test('supports the default format for polymorphic hasMany', async function (this: Context, assert) {
@@ -1055,7 +1054,7 @@ module('Unit | Serializer | active model serializer', function (hooks) {
     ) as MediocreVillain;
     const assocMinions = await villain.evilMinions;
 
-    assert.equal(assocMinions.get('firstObject.name'), 'Harry');
+    assert.strictEqual(assocMinions.get('firstObject.name'), 'Harry');
   });
 
   test('when using the DS.EmbeddedRecordsMixin, does not erase attributes for polymorphic embedded models', async function (this: Context, assert) {
@@ -1099,7 +1098,7 @@ module('Unit | Serializer | active model serializer', function (hooks) {
     ) as MediocreVillain;
     const assocMinions = await villain.evilMinions;
 
-    assert.equal(assocMinions.get('firstObject.name'), 'tom dale');
+    assert.strictEqual(assocMinions.get('firstObject.name'), 'tom dale');
   });
 
   // FIXME - id is undefined
@@ -1125,7 +1124,7 @@ module('Unit | Serializer | active model serializer', function (hooks) {
 
     const villain = this.store.peekRecord('super-villain', 1) as SuperVillain;
 
-    assert.equal(villain.belongsTo('homePlanet').id(), '1');
+    assert.strictEqual(villain.belongsTo('homePlanet').id(), '1');
   });
 
   test('can have id-less belongsTo relationship part 2', async function (assert) {

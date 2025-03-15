@@ -37,6 +37,7 @@ module('Unit | Adapter | active model adapter errors test', function (hooks) {
     pretender.shutdown();
   });
 
+  // eslint-disable-next-line qunit/require-expect
   test('errors can be iterated once intercepted by the adapter', async function (this: TestContext, assert) {
     assert.expect(3);
 
@@ -75,7 +76,7 @@ module('Unit | Adapter | active model adapter errors test', function (hooks) {
     } catch (e) {
       assert.ok(e instanceof AdapterError);
 
-      assert.equal(
+      assert.strictEqual(
         post.errors.errorsFor('name')[0].message,
         'rejected',
         'model.errors.attribute_name works'
