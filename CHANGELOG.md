@@ -1,5 +1,27 @@
 # Changelog
 
+## Release (2026-04-29)
+
+* active-model-adapter 5.0.0 (major)
+
+#### :boom: Breaking Change
+* `active-model-adapter`
+  * [#193](https://github.com/adopted-ember-addons/active-model-adapter/pull/193) Migrate to a V2 addon  ([@BobrImperator](https://github.com/BobrImperator))
+
+#### :rocket: Enhancement
+* `active-model-adapter`
+  * [#192](https://github.com/adopted-ember-addons/active-model-adapter/pull/192) Add errorsHashToArray method ([@lozjackson](https://github.com/lozjackson))
+
+#### :house: Internal
+* `active-model-adapter`
+  * [#196](https://github.com/adopted-ember-addons/active-model-adapter/pull/196) chore: add root entry for pnpm-workspace.yaml ([@BobrImperator](https://github.com/BobrImperator))
+  * [#194](https://github.com/adopted-ember-addons/active-model-adapter/pull/194) start using release-plan ([@mansona](https://github.com/mansona))
+
+#### Committers: 3
+- Bartlomiej Dudzik ([@BobrImperator](https://github.com/BobrImperator))
+- Chris Manson ([@mansona](https://github.com/mansona))
+- Loz Jackson ([@lozjackson](https://github.com/lozjackson))
+
 ## v4.0.0 (2022-02-15)
 
 Mostly a dependency update release. Due to the nature of these updates this release

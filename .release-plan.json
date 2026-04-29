@@ -1,0 +1,26 @@
+{
+  "solution": {
+    "active-model-adapter": {
+      "impact": "major",
+      "oldVersion": "4.0.1",
+      "newVersion": "5.0.0",
+      "tagName": "latest",
+      "constraints": [
+        {
+          "impact": "major",
+          "reason": "Appears in changelog section :boom: Breaking Change"
+        },
+        {
+          "impact": "minor",
+          "reason": "Appears in changelog section :rocket: Enhancement"
+        },
+        {
+          "impact": "patch",
+          "reason": "Appears in changelog section :house: Internal"
+        }
+      ],
+      "pkgJSONPath": "./package.json"
+    }
+  },
+  "description": "## Release (2026-04-29)\n\n* active-model-adapter 5.0.0 (major)\n\n#### :boom: Breaking Change\n* `active-model-adapter`\n  * [#193](https://github.com/adopted-ember-addons/active-model-adapter/pull/193) Migrate to a V2 addon  ([@BobrImperator](https://github.com/BobrImperator))\n\n#### :rocket: Enhancement\n* `active-model-adapter`\n  * [#192](https://github.com/adopted-ember-addons/active-model-adapter/pull/192) Add errorsHashToArray method ([@lozjackson](https://github.com/lozjackson))\n\n#### :house: Internal\n* `active-model-adapter`\n  * [#196](https://github.com/adopted-ember-addons/active-model-adapter/pull/196) chore: add root entry for pnpm-workspace.yaml ([@BobrImperator](https://github.com/BobrImperator))\n  * [#194](https://github.com/adopted-ember-addons/active-model-adapter/pull/194) start using release-plan ([@mansona](https://github.com/mansona))\n\n#### Committers: 3\n- Bartlomiej Dudzik ([@BobrImperator](https://github.com/BobrImperator))\n- Chris Manson ([@mansona](https://github.com/mansona))\n- Loz Jackson ([@lozjackson](https://github.com/lozjackson))\n"
+}
