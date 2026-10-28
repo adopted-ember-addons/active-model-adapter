@@ -1,5 +1,10 @@
 # Changelog
 
+
+
+
+
+
 ## Release (2026-04-29)
 
 * active-model-adapter 5.0.0 (major)
